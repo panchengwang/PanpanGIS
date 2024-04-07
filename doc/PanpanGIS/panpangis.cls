@@ -1312,9 +1312,9 @@
   \setstretch{2.5}
   \hspace{2.5em}
   \begin{minipage}[c]{0.67\linewidth}
-    {\color{darkgray}\bfseries\Large
-      \ifcsname @subtitle\endcsname\@subtitle\\[2ex]\fi}
-    \color{gray}\normalsize
+    {\color{darkgray}\bfseries\large
+      \ifcsname @\endcsname\@subtitle\\[2ex]\fi}
+    \color{black}\normalsize
     {\renewcommand{\arraystretch}{0.618}
     \begin{tabular}{l}
       % \ifcsname @author\endcsname \authorname \@author\\\fi
@@ -1329,10 +1329,10 @@
   \begin{minipage}[c]{0.27\linewidth}
   \begin{tikzpicture}[remember picture,overlay]
     \begin{pgfonlayer}{background}
-      \node[opacity=0.8,
+      \node[opacity=0.5,
             anchor=south east,
             outer sep=0pt,
-            inner sep=0pt] at ($(current page.south east) +(-0.8in,1.5in)$) {
+            inner sep=0pt] at ($(current page.south east) +(-0.8in,2.5in)$) {
               \ifcsname 
               	@logo\endcsname\includegraphics[width=4.2cm]{\@logo} 
               \fi};
