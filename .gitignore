@@ -1,5 +1,5 @@
 .DS_Store
-
+test
 
 
 # latex
@@ -13,3 +13,8 @@
 *.run.xml
 *.synctex.gz
 *.toc
+
+node_modules
+
+
+build-*
