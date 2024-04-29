@@ -16,5 +16,6 @@ test
 
 node_modules
 
+build
 
 build-*

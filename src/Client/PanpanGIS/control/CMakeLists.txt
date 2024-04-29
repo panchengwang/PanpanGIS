@@ -12,9 +12,11 @@ find_package(Qt6 6.5 COMPONENTS Quick QuickControls2 REQUIRED)
 
 if(EMSCRIPTEN)
     qt_add_library(PanControl STATIC)
-else(EMSCRIPTEN)
+elseif(WIN32)
+    qt_add_library(PanControl STATIC)
+else()
     qt_add_library(PanControl SHARED)
-endif(EMSCRIPTEN)
+endif()
 
 
 

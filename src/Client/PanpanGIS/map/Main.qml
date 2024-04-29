@@ -15,4 +15,8 @@ PanApplicationWindow {
         anchors.fill: parent
     }
 
+    Component.onCompleted: {
+        console.log(Screen.width, Screen.devicePixelRatio, Screen.pixelDensity)
+    }
+
 }

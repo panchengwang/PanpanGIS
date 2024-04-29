@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.16)
 project(PanMap VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/.." "${CMAKE_CURRENT_BINARY_DIR}" CACHE STRING "")
+set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/.. ${CMAKE_CURRENT_BINARY_DIR}" CACHE STRING "")
 # set(QML2_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/.." CACHE STRING "")
-# message(STATUS ${QML_IMPORT_PATH})
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Qml QuickControls2)
+message(STATUS ${QML_IMPORT_PATH})
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Qml Gui QuickControls2)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -52,11 +52,29 @@ install(TARGETS PanMap
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(APPLE)
-    target_link_libraries(PanMap
-        PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml
-    )
 
+if(EMSCRIPTEN)
+    target_link_libraries(PanMap
+        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
+    )
+elseif(WIN32)
+    target_link_libraries(PanMap
+        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
+    )
+    add_custom_command(
+        TARGET PanMap
+        POST_BUILD
+            # COMMAND echo "panmap 可执行文件编译完成"
+            # COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+            # COMMAND cp -rf ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/cn
+            # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
+            # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+    )
+elseif(APPLE)
+    target_link_libraries(PanMap
+        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml
+    )
     add_custom_command(
         TARGET PanMap
         POST_BUILD
@@ -67,13 +85,7 @@ if(APPLE)
             # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
             # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
     )
-endif(APPLE)
-
-if(EMSCRIPTEN)
-    target_link_libraries(PanMap
-        PRIVATE Qt6::Quick  Qt6::QuickControls2 PanControlplugin
-    )
-endif(EMSCRIPTEN)
+endif()
 
 
 

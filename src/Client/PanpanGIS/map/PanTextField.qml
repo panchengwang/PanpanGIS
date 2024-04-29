@@ -10,7 +10,7 @@ TextField {
     echoMode: type === "password" ? TextInput.Password:TextInput.Normal
     passwordCharacter: "*"
     placeholderText: qsTr("输入文字")
-    font.pointSize: PanStyles.default_font_size
+    font.pixelSize: PanStyles.default_font_size
     font.family: PanFonts.notoSansSimpleChineseRegular.name
 
     validator: Qt.platform.os === "wasm" ? null : (type === "email" ? emailRegExp : null)

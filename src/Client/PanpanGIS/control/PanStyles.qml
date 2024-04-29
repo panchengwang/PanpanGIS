@@ -25,8 +25,8 @@ QtObject {
     property real default_margin: 8
     property real default_padding: 4
 
-    property real default_font_size: Qt.platform.os === "wasm" ? 11 : 15
-    property real default_icon_size: Qt.platform.os === "wasm" ? 13 : 16
+    property real default_font_size: Qt.platform.os === "wasm" ? 13 : 13
+    property real default_icon_size: Qt.platform.os === "wasm" ? 14 : 14
 
     property string textfield_focus_border_color: ""
     property real textfield_implicit_height: 32
@@ -37,5 +37,5 @@ QtObject {
     property real button_implicit_height: 24
 
     property real header_implicit_height: 40
-    property real header_text_font_size: Qt.platform.os === "wasm" ? 15 : 18
+    property real header_text_font_size: Qt.platform.os === "wasm" ? 17 : 17
 }
