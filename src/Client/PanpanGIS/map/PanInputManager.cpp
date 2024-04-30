@@ -18,6 +18,20 @@ EM_JS(void, initInputBridge,(const char* uuid),{
     var screen = window.document.getElementById("screen");
     screen.style["position"] = "absolute";
     window.document.body.appendChild(input);
+
+    var input_focus_sel = "input:focus { outline: none}";
+    var sheet = window.document.styleSheets[0];
+    let rules = sheet.cssRules;
+    console.log(rules);
+    let input_focus_sel_exists = false;
+    for(let i=0; i<rules.length; i++){
+        if(rules[i].selectorText === "input:focus"){
+            input_focus_sel_exists = true
+        }
+    }
+    if(!input_focus_sel_exists){
+        sheet.insertRule(input_focus_sel, sheet.cssRules.length);
+    }
     //    input.onblur=()=>{
     ////        input.style["display"] = "none";
     //        console.log("blur: " , input.value)
@@ -146,6 +160,7 @@ void PanInputManager::setDefaultText(const QString& text)
 void PanInputManager::setStyle(const QString& key, const QString& value)
 {
 #ifdef Q_OS_WASM
+    qDebug() << _inputId << key << value;
     setInputBridgeStyle(_inputId.toLocal8Bit().data(),key.toLocal8Bit().data(),value.toLocal8Bit().data());
 #endif
 }
@@ -203,6 +218,7 @@ void PanInputManager::deactivate()
         emscripten_set_keydown_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW,this,1,NULL);
         emscripten_set_focus_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW,this,1,NULL);
     }
+    emit backToInput();
 #endif
 }
 

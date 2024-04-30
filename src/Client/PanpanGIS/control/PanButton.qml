@@ -12,7 +12,7 @@ Button {
     property bool rounded: false
 
     hoverEnabled: true
-    font.pixelSize: PanStyles.default_font_size
+    font.pointSize: PanStyles.default_font_size
     clip: true
 
     contentItem: RowLayout{
@@ -25,7 +25,7 @@ Button {
             font.family: iconType.trim() === "gis" ? PanFonts.gis.name : (
                                                          iconType.trim() === "material" ? PanFonts.material.name : ""
                                                          )
-            font.pixelSize: PanStyles.default_icon_size
+            font.pointSize: PanStyles.default_icon_size
             color: PanStyles.color_button_text
             Layout.fillHeight: true
             horizontalAlignment: Text.AlignHCenter

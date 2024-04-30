@@ -29,6 +29,7 @@ public:
 signals:
     void inputTextChanged();
     void tab();
+    void backToInput();
 
 protected:
     QString _inputText;

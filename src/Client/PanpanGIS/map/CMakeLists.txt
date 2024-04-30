@@ -27,7 +27,9 @@ qt_add_qml_module(PanMap
     SOURCES
         PanInputManager.cpp
         PanInputManager.h
-
+        QML_FILES PanDesktop.qml
+    RESOURCES
+        images/wallpaper.webp
 )
 # qt_import_qml_plugins(PanMap
 #     INCLUDE
@@ -52,11 +54,18 @@ install(TARGETS PanMap
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+message(STATUS ${CMAKE_CURRENT_SOURCE_DIR})
 
 if(EMSCRIPTEN)
     target_link_libraries(PanMap
         PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
     )
+    # add_custom_command(
+    #     TARGET PanMap
+    #     POST_BUILD
+    #         # COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
+    #         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
+    # )
 elseif(WIN32)
     target_link_libraries(PanMap
         PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
