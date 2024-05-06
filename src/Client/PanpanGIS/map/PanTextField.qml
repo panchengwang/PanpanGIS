@@ -15,14 +15,15 @@ TextField {
 
     validator: Qt.platform.os === "wasm" ? null : (type === "email" ? emailRegExp : null)
 
+    // padding: PanStyles.default_padding
+
+
     RegularExpressionValidator {
         id: emailRegExp
         regularExpression: /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
     }
 
     background: Rectangle {
-        implicitWidth: 200
-        implicitHeight: 24
         color: control.enabled ? "transparent" : "#ccc"
         border.color: control.focus ? PanStyles.color_primary : PanStyles.color_light_grey
         border.width: 1
@@ -65,6 +66,10 @@ TextField {
         }
         onBackToInput:{
         }
+    }
+
+    Component.onCompleted: {
+        console.log(height)
     }
 }
 

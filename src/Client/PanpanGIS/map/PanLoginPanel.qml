@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import cn.pc.gis.control
-import QtQuick.Effects
+// import QtQuick.Effects
 
 Rectangle {
 
@@ -10,11 +10,13 @@ Rectangle {
     width: 400
     height: 300
 
-    color: PanStyles.color_panel_background
+    color: "#f0f0f0" //PanStyles.color_panel_background
+    radius: PanStyles.default_radius
 
     Rectangle{
         id: panel
         anchors.fill: parent
+        anchors.margins: PanStyles.default_margin
         radius: PanStyles.default_radius
         ColumnLayout{
             spacing: PanStyles.default_spacing
@@ -24,7 +26,7 @@ Rectangle {
                 text: "欢迎来到PanpanGIS世界"
                 horizontalAlignment:  Text.AlignHCenter
                 Layout.fillWidth: true
-                font.pointSize: PanStyles.header_text_font_size-2
+                font.pointSize: PanStyles.header_text_font_size
             }
 
             Rectangle{
@@ -41,13 +43,13 @@ Rectangle {
             }
             PanTextField{
                 id: username
-                type: "email"
+                type: "邮箱地址"
                 Layout.fillWidth: true
                 placeholderText: "请输入电子信箱地址"
             }
             PanLabel{
                 anchors.topMargin: 10
-                text: "Password"
+                text: "密码"
                 horizontalAlignment:  Text.AlignLeft
                 Layout.fillWidth: true
             }
@@ -74,13 +76,13 @@ Rectangle {
             }
         }
 
-
     }
 
-    MultiEffect{
-        source: panel
-        anchors.fill: panel
-        shadowEnabled: true
-        paddingRect: Qt.rect(0,0,40,50)
-    }
+
+    // MultiEffect{
+    //     source: panel
+    //     anchors.fill: panel
+    //     shadowEnabled: true
+    //     paddingRect: Qt.rect(0,0,40,50)
+    // }
 }

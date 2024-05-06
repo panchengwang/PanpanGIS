@@ -15,8 +15,9 @@ ApplicationWindow {
     }
 
     PanLoginPanel{
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: -200
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: Math.max(50 , (parent.height - height)*0.5-50)
+
     }
 
     // header: Rectangle{
