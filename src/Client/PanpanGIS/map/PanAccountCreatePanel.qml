@@ -44,7 +44,7 @@ Rectangle {
 
             PanLabel{
                 anchors.topMargin: 10
-                text: "邮箱地址"
+                text: "请使用一个有效的电子信箱地址作为用户名"
                 horizontalAlignment:  Text.AlignLeft
                 Layout.fillWidth: true
             }
