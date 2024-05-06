@@ -33,6 +33,8 @@ set_source_files_properties(${SINGLETON_QML_FILES}
 list(APPEND QML_FILES
     PanButton.qml
     PanLabel.qml
+    PanTextField.qml
+    PanOkCancelButtons.qml
 )
 
 qt_add_qml_module(PanControl
@@ -52,7 +54,8 @@ qt_add_qml_module(PanControl
     SOURCES
         src/MapCanvas.h
         src/MapCanvas.cpp
-
+        src/PanInputManager.h
+        src/PanInputManager.cpp
 )
 
 set_target_properties(PanControl PROPERTIES
