@@ -18,18 +18,21 @@ qt_add_qml_module(PanMap
     URI cn.pc.gis.map
     VERSION 1.0
     RESOURCE_PREFIX "/"
-    QML_FILES Main.qml
+    QML_FILES
+        Main.qml
+        PanAccountCreatePanel.qml
         PanApplicationWindow.qml
         PanLoginPanel.qml
         PanPanel.qml
         PanHeader.qml
-        PanTextField.qml
+        PanDesktop.qml
+        PanIdentifyCode.qml
+
     SOURCES
-        PanInputManager.cpp
-        PanInputManager.h
-        QML_FILES PanDesktop.qml
+
     RESOURCES
         images/wallpaper.webp
+
 )
 # qt_import_qml_plugins(PanMap
 #     INCLUDE
