@@ -20,7 +20,7 @@ QtObject {
     property string color_text: "#3f3f3f"
     property string color_button_text: "#ffffff"
     property string color_background: "#1976d2"
-    property string color_panel_background: "#ced7e1"
+    property string color_panel_background: "#f0f0f0"
 
     property real default_radius: 4
     property real default_margin: 8
