@@ -363,9 +363,9 @@ QtObject {
     // property string md_comments: "\uf266";
     // property string md_check_all: "\uf267";
     // property string md_check_circle_u: "\uf268";
-    // property string md_check_circle: "\uf269";
+    property string md_check_circle: "\uf269";
     // property string md_check_square: "\uf26a";
-    // property string md_check: "\uf26b";
+    property string md_check: "\uf26b";
     // property string md_circle_o: "\uf26c";
     // property string md_circle: "\uf26d";
     // property string md_dot_circle_alt: "\uf26e";
