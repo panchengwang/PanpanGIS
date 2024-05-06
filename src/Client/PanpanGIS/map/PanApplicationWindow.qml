@@ -5,7 +5,12 @@ import QtQuick.Layouts
 
 ApplicationWindow {
     id: app
-    property ApplicationWindow appWin: app
+    property PanApplicationWindow appWin: app
+
+    property string token: ''
+    property string username: ''
+
+
     color: PanStyles.color_white
 
     Image{
@@ -14,11 +19,15 @@ ApplicationWindow {
         source: "./images/wallpaper.webp"
     }
 
-    PanLoginPanel{
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: Math.max(50 , (parent.height - height)*0.5-50)
+    // PanAccountCreatePanel{
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    //     y: Math.max(50 , (parent.height - height)*0.5-50)
+    // }
 
-    }
+    // PanLoginPanel{
+    //     anchors.horizontalCenter: parent.horizontalCenter
+    //     y: Math.max(50 , (parent.height - height)*0.5-50)
+    // }
 
     // header: Rectangle{
     //     width: parent.width
