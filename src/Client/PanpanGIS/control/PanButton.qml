@@ -18,6 +18,10 @@ Button {
     contentItem: RowLayout{
         anchors.centerIn: parent
         anchors.margins: 0
+        Item{
+            Layout.fillWidth: true
+        }
+
         PanLabel{
             id: fontIcon
             text: icon.name
@@ -35,7 +39,7 @@ Button {
 
         PanLabel {
             Layout.fillHeight: true
-            Layout.fillWidth: true
+            // Layout.fillWidth: true
             text: control.text
             font: control.font
 
@@ -45,6 +49,9 @@ Button {
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             visible: control.text.trim() !== ""
+        }
+        Item{
+            Layout.fillWidth: true
         }
     }
 
