@@ -7,6 +7,7 @@ drop table if exists pan_user;
 create table pan_user(
     id varchar(32) default pan_uuid() primary key,
     username varchar(64) unique not null,
+    nickname varchar(64) NOT NULL default '',
     password varchar(128) not null,
     identify_code varchar(8) default '',
     identify_code_expire timestamp default now() + interval '30 minutes',
@@ -20,3 +21,9 @@ create table pan_user(
 insert into pan_user(username,password)
 values 
     ('admin@12345.com', md5('admin'));
+
+-- 用户pcwang
+insert into pan_user(username,password)
+values
+    ('pcwang251@163.com', md5('pcwang251'));
+
