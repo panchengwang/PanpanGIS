@@ -19,3 +19,4 @@ node_modules
 build
 
 build-*
+/src/MasterService/nbproject/private/
