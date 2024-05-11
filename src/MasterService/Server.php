@@ -25,12 +25,15 @@ class Server {
     }
     // 执行
     public function run() {
-        
+        $this->process();
     }
     
     // 实际的服务处理函数，从Server继承的类应该重新实现此函数
     protected function process(){
-        
+        $this->_request = array(
+            "success" => false,
+            "message" => "need be implimented"
+        );
     } 
 
     // 返回执行结果
