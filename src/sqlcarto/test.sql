@@ -13,6 +13,6 @@ select sc_send_mail(
     'sqlcartotest@126.com',
     '测试一下',
     '这是一个从postgresql sqlcarto扩展发送过来的测试邮件',
-    'smtp.126.com',
+    'smtps://smtp.126.com:465',
     'Sqlcarto251'
 );
