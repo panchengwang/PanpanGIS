@@ -1,6 +1,7 @@
 <?php
 
-include './Server.php';
+
+include './UserServer.php';
 
 if(!isset($_REQUEST["request"])){
     echo json_encode(array(
@@ -12,16 +13,25 @@ if(!isset($_REQUEST["request"])){
 }
 
 $request = json_decode($_REQUEST["request"]);
-if(!$request){
+
+if(!$request || !$request->type){
     echo json_encode(array(
         "success" => false,
         "message" => "Invalid request parameter"
     ));
     
-
     exit(0);
 }
 
-$sv = new Server();
+$sv = null;
+$req_group = explode("_", $request->type)[0];
+
+if($req_group === "USER"){
+    $sv = new UserServer();
+}
+
+if($sv){
+    $sv->run();
+}
 
 echo json_encode($sv->getResponse());
