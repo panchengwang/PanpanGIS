@@ -11,7 +11,7 @@
 create or replace function sc_send_mail(
     sender varchar, 
     reciever varchar, 
-    title varchar, 
+    subject varchar, 
     content text,
     smtp varchar,
     password varchar
