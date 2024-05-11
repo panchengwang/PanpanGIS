@@ -1,7 +1,7 @@
 # contrib/sqlcarto/Makefile
 
 MODULE_big = sqlcarto
-OBJS = email.o
+OBJS = email.o bytea2cstring.o
 
 EXTENSION = sqlcarto
 DATA = sqlcarto--1.0.sql
@@ -14,11 +14,13 @@ REGRESS =
 
 POSTGIS_PATH = 
 PG_CPPFLAGS = \
-	-DPIC 
+	-DPIC \
+	$(shell pkg-config libcurl --cflags)
 
 
 ifeq ($(shell uname),Darwin)
-	SHLIB_LINK_F = 
+	SHLIB_LINK_F = \
+		$(shell pkg-config libcurl --libs)
 		
 endif
 ifeq ($(shell uname),Linux)
