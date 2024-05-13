@@ -17,7 +17,9 @@ PG_CPPFLAGS = \
 	-DPIC \
 	$(shell pkg-config libcurl --cflags)
 
-
+SHLIB_LINK_F = \
+		$(shell pkg-config libcurl --libs)
+		
 ifeq ($(shell uname),Darwin)
 	SHLIB_LINK_F = \
 		$(shell pkg-config libcurl --libs)
