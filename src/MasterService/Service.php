@@ -1,6 +1,6 @@
 <?php
 
-include_once './UserServer.php';
+include_once './DBConf.php';
 
 if (!isset($_REQUEST["request"])) {
     echo json_encode(array(
@@ -11,27 +11,34 @@ if (!isset($_REQUEST["request"])) {
     exit(0);
 }
 
-$request = json_decode($_REQUEST["request"]);
+$request = $_REQUEST["request"];
+//
+//if (!$request || !$request->type) {
+//    echo json_encode(array(
+//        "success" => false,
+//        "message" => "Invalid request parameter"
+//    ));
+//
+//    exit(0);
+//}
 
-if (!$request || !$request->type) {
+
+$connstr = "host=" . HOST . " port=" . PORT . " dbname=" . DBNAME . " user=" . USER . " password=" . PASSWORD;
+$connection = pg_connect($connstr);
+if (!$connection) {
     echo json_encode(array(
         "success" => false,
-        "message" => "Invalid request parameter"
+        "message" => "Can not connect to database"
     ));
-
     exit(0);
 }
 
-$sv = null;
-$req_group = explode("_", $request->type)[0];
 
-if ($req_group === "USER") {
-    $sv = new UserServer();
-}
+$result = pg_query_params($connection,"select pan_server($1::jsonb)",array(
+    $request
+));
+$row = pg_fetch_row($result);
+echo $row[0];
 
-if ($sv) {
-    $sv->setRequest($request);
-    $sv->run();
-}
-
-echo json_encode($sv->getResponse());
+pg_free_result($result);
+pg_close($connection);
