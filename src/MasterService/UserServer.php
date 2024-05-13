@@ -11,10 +11,16 @@ include './Server.php';
 class UserServer extends Server {
 
     #[\Override]
-    protected function process() {
+    public function __construct() {
+        parent::__construct();
         $this->_response = array(
             "success" => false,
             "message" => "用户服务"
         );
+    }
+
+    #[\Override]
+    protected function process() {
+        
     }
 }
