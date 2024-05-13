@@ -43,3 +43,29 @@ $$
         sc_get_configuration('EMAIL_PASSWORD')
     );
 $$ language 'sql';
+
+
+
+create or replace function sc_send_email(
+    sender varchar, 
+    reciever varchar, 
+    subject varchar, 
+    content text,
+    smtp varchar,
+    password varchar
+) 
+returns boolean AS
+$$
+    select sc_send_mail($1,$2,$3,$4,$5,$6);
+$$ LANGUAGE 'sql';
+
+
+create or replace function sc_send_email(
+    reciever varchar, 
+    subject varchar, 
+    content text
+) 
+returns boolean AS
+$$
+    select sc_send_mail($1,$2,$3);
+$$ LANGUAGE 'sql';
