@@ -5,14 +5,15 @@
 PG_MODULE_MAGIC;
 
 //
-struct upload_status
+struct upload_context
 {
+    const char *data; // 需要发送的信息，应该符合email邮件格式
     size_t bytes_read;
 };
 
-static size_t payload_source(char *ptr, size_t size, size_t nmemb, void *userp)
+static size_t read_data(char *ptr, size_t size, size_t nmemb, void *userp)
 {
-    struct upload_status *upload_ctx = (struct upload_status *)userp;
+    struct upload_context *upload_ctx = (struct upload_context *)userp;
     const char *data;
     size_t room = size * nmemb;
 
@@ -21,7 +22,7 @@ static size_t payload_source(char *ptr, size_t size, size_t nmemb, void *userp)
         return 0;
     }
 
-    // data = &payload_text[upload_ctx->bytes_read];
+    data = &upload_ctx->data[upload_ctx->bytes_read];
 
     if (data)
     {
@@ -54,7 +55,26 @@ Datum sc_send_mail(PG_FUNCTION_ARGS)
     CURL *curl;
     CURLcode res = CURLE_OK;
     struct curl_slist *recipients = NULL;
-    struct upload_status upload_ctx = {0};
+    struct upload_context upload_ctx;
+    upload_ctx.bytes_read = 0;
+
+    // 将发送内容组合成符合邮件的格式
+    int32 datalen = strlen("To: ") + strlen(reciever) + 2       // 接收者邮箱地址
+                    + strlen("Subject: ") + strlen(subject) + 2 // 邮件标题
+                    + 2                                         // 标题和邮件内容间的换行
+                    + strlen(content) + 2                       // 邮件内容
+                    + 2;                                        // 邮件结束处的换行
+    char *send_data = (char *)malloc(datalen + 1);
+    memset(send_data, 0, datalen + 1);
+    sprintf(send_data, "To: %s\r\n"
+                       "Subject: %s\r\n"
+                       "\r\n"
+                       "%s\r\n"
+                       "\r\n",
+            reciever,
+            subject,
+            content);
+    upload_ctx.data = send_data;
 
     curl = curl_easy_init();
     if (curl)
@@ -65,7 +85,7 @@ Datum sc_send_mail(PG_FUNCTION_ARGS)
         curl_easy_setopt(curl, CURLOPT_MAIL_FROM, sender);
         recipients = curl_slist_append(recipients, reciever);
         curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
-        curl_easy_setopt(curl, CURLOPT_READFUNCTION, payload_source);
+        curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_data);
         curl_easy_setopt(curl, CURLOPT_READDATA, &upload_ctx);
         curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -95,9 +115,10 @@ Datum sc_send_mail(PG_FUNCTION_ARGS)
     free(content);
     free(smtp);
     free(password);
-
-    if(!sendok){
-        elog(NOTICE,"%s",errormessage);
+    free(send_data);
+    if (!sendok)
+    {
+        elog(NOTICE, "%s", errormessage);
         free(errormessage);
         PG_RETURN_BOOL(FALSE);
     }
