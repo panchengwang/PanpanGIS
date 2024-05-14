@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    app.setWindowIcon(QIcon("://cn/pc/gis/control/icons/panpangis.svg"));
+    // app.setWindowIcon(QIcon(":/cn/pc/gis/control/icons/panpangis.svg"));
     QQmlApplicationEngine engine;
     engine.addImportPath(":/");
     QObject::connect(
