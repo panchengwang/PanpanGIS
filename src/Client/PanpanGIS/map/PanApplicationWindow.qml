@@ -9,6 +9,9 @@ ApplicationWindow {
 
     property string token: ''
     property string username: ''
+    property string masterUrl: ''           // 管理服务url
+    property string nodeUrl: ''             // 节点服务url
+
 
 
     color: PanStyles.color_white
@@ -17,6 +20,24 @@ ApplicationWindow {
         anchors.fill: parent
         fillMode: Image.PreserveAspectCrop
         source: "./images/wallpaper.webp"
+    }
+
+    PanDialog{
+        id: dialog
+        anchors.centerIn: parent
+        Component.onCompleted: {
+            dialog.open()
+        }
+    }
+
+    // PanMessageDialog{
+    //     id: messageDialog
+    //     modal:false
+    //     visible: false
+    // }
+
+    function showMessage(msg,modal){
+        dialog.open()
     }
 
     // PanAccountCreatePanel{
