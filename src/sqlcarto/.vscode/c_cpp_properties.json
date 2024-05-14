@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "D:/software/sdb/postgresql-16.0/src/include",
                 "D:/msys64/mingw64/include",
-                "D:/software/sdb/postgresql-16.0/src/include/port/win32"
+                "D:/software/sdb/postgresql-16.0/src/include/port/win32",
+                
             ],
             "defines": [
                 "_DEBUG",
