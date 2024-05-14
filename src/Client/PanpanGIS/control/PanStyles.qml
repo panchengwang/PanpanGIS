@@ -18,8 +18,16 @@ QtObject {
     property string color_light_grey: "#c2c2c2"
 
     property string color_text: "#3f3f3f"
-    property string color_button_text: "#ffffff"
-    property string color_background: "#1976d2"
+    property string color_button_text_activate: "#ffffff"
+    property string color_button_text: "#000000"
+    property string color_button_activate: "#2A9EF6"
+    property string color_button: "#F1F1F1"
+    property string color_button_border: "#B9B9B9"
+
+    property string color_dialog_caption_background : "#E8E3F1";
+    property string color_dialog_caption_background_activate : "#D5D3D9";
+
+    property string color_default_background: "#FFFFFE"
     property string color_panel_background: "#f0f0f0"
 
     property real default_radius: 4
@@ -27,8 +35,8 @@ QtObject {
     property real default_padding: 4
     property real default_spacing: 8
 
-    property real default_font_size:  Qt.platform.os === "wasm" ? 10 : 13
-    property real default_icon_size:  Qt.platform.os === "wasm" ? 12 : 15
+    property real default_font_size:  Qt.platform.os === "wasm" ? 12 : 15
+    property real default_icon_size:  Qt.platform.os === "wasm" ? 13 : 15
 
     property string textfield_focus_border_color: ""
     // property real textfield_height: Qt.platform.os === "wasm" ? 20 : 68
@@ -38,6 +46,6 @@ QtObject {
     property real button_implicit_width: 24
     property real button_implicit_height: 24
 
-    property real header_implicit_height: 40
+    property real header_implicit_height: 32
     property real header_text_font_size: Qt.platform.os === "wasm" ? 13 : 16
 }
