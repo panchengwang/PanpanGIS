@@ -242,7 +242,7 @@ Rectangle {
             PanAccountCreatePanel{
                 anchors.horizontalCenter: parent.horizontalCenter
                 y: Math.max(50 , (parent.height - height)*0.5-50)
-                width: Math.max(400,parent.width*0.67)
+                width: Math.max(400,parent.width*0.5)
             }
             `,
             appWin,
