@@ -2,12 +2,13 @@
 #include <QQmlApplicationEngine>
 #include <QtCore>
 #include <QDirIterator>
-
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
+    app.setWindowIcon(QIcon("://cn/pc/gis/control/icons/panpangis.svg"));
     QQmlApplicationEngine engine;
     engine.addImportPath(":/");
     QObject::connect(
@@ -19,6 +20,14 @@ int main(int argc, char *argv[])
     engine.loadFromModule("cn.pc.gis.map", "Main");
 
     // QDirIterator it(":",QDirIterator::Subdirectories);
+
+
+
+
+
+
+
+
     // while(it.hasNext()){
     //     qDebug() << it.next();
     // }
