@@ -24,11 +24,13 @@ ApplicationWindow {
 
     PanDialog{
         id: dialog
+        modal:false
         anchors.centerIn: parent
         Component.onCompleted: {
             dialog.open()
         }
     }
+
 
     // PanMessageDialog{
     //     id: messageDialog
