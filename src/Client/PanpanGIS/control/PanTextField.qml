@@ -10,7 +10,7 @@ TextField {
     echoMode: type === "password" ? TextInput.Password:TextInput.Normal
     passwordCharacter: "*"
     placeholderText: qsTr("输入文字")
-    font.pointSize:  PanStyles.default_font_size
+    font.pixelSize:  PanStyles.default_font_size
     font.family: PanFonts.notoSansSimpleChineseRegular.name
 
     validator: Qt.platform.os === "wasm" ? null : (type === "email" ? emailRegExp : null)
@@ -40,7 +40,7 @@ TextField {
                                      control.leftPadding, control.rightPadding,
                                      control.topPadding, control.bottomPadding);
             inputManager.setDefaultText(text)
-            inputManager.setStyle("font-size", "" + control.font.pointSize + "pt")
+            inputManager.setStyle("font-size", "" + control.font.pixelSize + "pt")
             inputManager.setStyle("border-color", PanStyles.color_primary)
             inputManager.setStyle("border-width", "1pt" )
             inputManager.setStyle("border-style", "solid" )
