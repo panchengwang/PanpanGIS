@@ -12,6 +12,7 @@ RowLayout {
     signal cancel()
 
     PanButton{
+        Layout.preferredWidth: parent.width * 0.5
         Layout.fillWidth: true
         icon.name: PanMaterialIcons.md_close_circle
         text: cancelText
@@ -21,6 +22,7 @@ RowLayout {
     }
 
     PanButton{
+        Layout.preferredWidth: parent.width * 0.5
         Layout.fillWidth: true
         icon.name: PanMaterialIcons.md_check_circle
         text: okText
