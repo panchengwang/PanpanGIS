@@ -27,11 +27,15 @@ qt_add_qml_module(PanMap
         PanHeader.qml
         PanDesktop.qml
         PanIdentifyCode.qml
+        PanMessageDialog.qml
+        PanDialog.qml
+        PanBorder.qml
 
     SOURCES
 
     RESOURCES
         images/wallpaper.webp
+
 
 )
 # qt_import_qml_plugins(PanMap
