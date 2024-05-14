@@ -12,22 +12,22 @@ PanApplicationWindow {
     title: qsTr("PanpanGIS")
 
     Component.onCompleted: {
-        if(appWin.token.trim() === ''){
-            const loginPanel = Qt.createQmlObject(`
-                import QtQuick
-                import cn.pc.gis.control
-                import cn.pc.gis.map
-                PanLoginPanel{
-                    width: 500
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    y: Math.max(50 , (parent.height - height)*0.5-50)
-                }
-                `,
-                appWin,
-                "loginPanel"
-            );
+        // if(appWin.token.trim() === ''){
+        //     const loginPanel = Qt.createQmlObject(`
+        //         import QtQuick
+        //         import cn.pc.gis.control
+        //         import cn.pc.gis.map
+        //         PanLoginPanel{
+        //             width: 500
+        //             anchors.horizontalCenter: parent.horizontalCenter
+        //             y: Math.max(50 , (parent.height - height)*0.5-50)
+        //         }
+        //         `,
+        //         appWin,
+        //         "loginPanel"
+        //     );
 
-        }
+        // }
     }
 
 }
