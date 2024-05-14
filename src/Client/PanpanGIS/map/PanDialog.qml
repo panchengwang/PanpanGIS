@@ -79,12 +79,27 @@ Popup {
     }
 
     PanBorder{
-        x: dialog.width - 2
-        y: 2
-        height: dialog.height - 4
-        width: 2
-
-        color: "red"
+        position: "left"
     }
-
+    PanBorder{
+        position: "right"
+    }
+    PanBorder{
+        position: "top"
+    }
+    PanBorder{
+        position: "bottom"
+    }
+    PanBorder{
+        position: "left_top"
+    }
+    PanBorder{
+        position: "right_top"
+    }
+    PanBorder{
+        position: "left_bottom"
+    }
+    PanBorder{
+        position: "right_bottom"
+    }
 }
