@@ -94,7 +94,10 @@ Rectangle {
                 Layout.fillWidth: true
                 okText: "创建用户"
 
-                onOk:{}
+                onOk:{
+                    appWin.showMessage('',true)
+                }
+
                 onCancel:{
                     createAccountPanel.cancel()
                 }
