@@ -238,7 +238,7 @@ QtObject {
     // property string md_washing_machine: "\uf1e9";
     property string md_window_maximize: "\uf1ea";
     property string md_window_minimize: "\uf1eb";
-    // property string md_window_restore: "\uf1ec";
+    property string md_window_restore: "\uf1ec";
     // property string md_wrench: "\uf1ed";
     // property string md_zoom_in: "\uf1ee";
     // property string md_zoom_out: "\uf1ef";
