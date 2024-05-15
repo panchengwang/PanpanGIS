@@ -28,7 +28,7 @@ qt_add_qml_module(PanMap
         PanDesktop.qml
         PanIdentifyCode.qml
         PanMessageDialog.qml
-        PanDialog.qml
+        PanWindow.qml
         PanBorder.qml
 
     SOURCES
