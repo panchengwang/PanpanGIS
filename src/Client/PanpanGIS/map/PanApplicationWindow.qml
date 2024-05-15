@@ -22,14 +22,23 @@ ApplicationWindow {
         source: "./images/wallpaper.webp"
     }
 
-    PanDialog{
-        id: dialog
-        modal:false
-        anchors.centerIn: parent
-        Component.onCompleted: {
-            dialog.open()
+    Rectangle{
+        anchors.fill: parent
+        anchors.margins: 20
+        color: "blue"
+        PanDialog{
+            id: dialog
+
+            modal:false
+            x: 100
+            y: 100
+            Component.onCompleted: {
+                dialog.open()
+            }
         }
     }
+
+
 
 
     // PanMessageDialog{
