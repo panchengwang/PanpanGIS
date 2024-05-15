@@ -24,8 +24,8 @@ QtObject {
     property string color_button: "#F1F1F1"
     property string color_button_border: "#B9B9B9"
 
-    property string color_dialog_caption_background : "#E8E3F1";
-    property string color_dialog_caption_background_activate : "#D5D3D9";
+    property string color_window_caption_background : "#E8E3F1";
+    property string color_window_caption_background_activate : "#D5D3D9";
 
     property string color_default_background: "#FFFFFE"
     property string color_panel_background: "#f0f0f0"
@@ -35,7 +35,7 @@ QtObject {
     property real default_padding: 4
     property real default_spacing: 8
 
-    property real default_font_size:  Qt.platform.os === "wasm" ? 12 : 15
+    property real default_font_size:  Qt.platform.os === "wasm" ? 12 : 14
     property real default_icon_size:  Qt.platform.os === "wasm" ? 13 : 15
 
     property string textfield_focus_border_color: ""
