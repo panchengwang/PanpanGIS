@@ -3,7 +3,7 @@ import QtQuick.Window
 import cn.pc.gis.control
 import cn.pc.gis.map
 
-PanApplicationWindow {
+PanDesktop {
     id: appWin
     width: Screen.width * 0.67
     height: Screen.height * 0.67
