@@ -26,7 +26,7 @@ ApplicationWindow {
     PanWindow{
         id: dialog
 
-        modal:false
+        modal:true
         x: 100
         y: 100
         Component.onCompleted: {
