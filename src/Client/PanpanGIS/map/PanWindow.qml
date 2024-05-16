@@ -21,18 +21,18 @@ Popup {
     implicitHeight: 300
     modal: true
     focus: true
-
+    clip: true
     padding: 0
-    closePolicy: Popup.CloseOnEscape
+    closePolicy: modal ? Popup.NoAutoClose : Popup.CloseOnEscape
 
-    // background: Rectangle{
-    //     // anchors.fill: parent
-    //     anchors.centerIn: parent
-    //     width: parent.width
-    //     height: parent.height
-    //     radius: PanStyles.default_radius
-    //     color: "#FFFFFE"
-    // }
+    background: Rectangle{
+        anchors.fill: parent
+        // anchors.centerIn: parent
+        // width: parent.width
+        // height: parent.height
+        radius: PanStyles.default_radius
+        color: "#FFFFFE"
+    }
 
 
 
@@ -93,6 +93,7 @@ Popup {
                 PanButton{
                     icon.name: PanMaterialIcons.md_window_minimize
                     flat: true
+                    onClicked: window.visible = false
                 }
 
                 PanButton{
@@ -113,6 +114,7 @@ Popup {
                 PanButton{
                     icon.name: PanMaterialIcons.md_close
                     flat: true
+                    onClicked: window.close()
                 }
             }
         }
@@ -151,7 +153,6 @@ Popup {
                     text: "确定"
                     Layout.rightMargin: 5
                 }
-
 
             }
         }
