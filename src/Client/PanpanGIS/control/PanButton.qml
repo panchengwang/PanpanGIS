@@ -75,7 +75,7 @@ Button {
         // height: rounded | flat ? Math.min(control.width,control.height) : control.height
         border.color: PanStyles.color_button_border
         border.width: flat ? 0 : 1
-        opacity: flat ? 0 : 1
+        opacity: flat && !control.hovered ? 0 : 1
 
     }
 }
