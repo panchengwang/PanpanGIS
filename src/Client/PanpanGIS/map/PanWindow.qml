@@ -7,6 +7,11 @@ Popup {
     id: window
 
     property string caption : "Dialog"
+    property bool showButtons: false
+    property Image image: null
+
+
+    signal ok()
 
     property int _originWindowX: 0
     property int _originWindowY: 0
@@ -77,6 +82,9 @@ Popup {
                 anchors.leftMargin: PanStyles.default_margin
                 anchors.rightMargin: PanStyles.default_margin
 
+                Image{
+                    Layout.fillHeight: true
+                }
 
                 Item{
                     clip: true
@@ -93,7 +101,10 @@ Popup {
                 PanButton{
                     icon.name: PanMaterialIcons.md_window_minimize
                     flat: true
-                    onClicked: window.visible = false
+                    onClicked: {
+                        saveWindowStatus()
+                        window.visible = false
+                    }
                 }
 
                 PanButton{
@@ -114,7 +125,10 @@ Popup {
                 PanButton{
                     icon.name: PanMaterialIcons.md_close
                     flat: true
-                    onClicked: window.close()
+                    onClicked: {
+                        // window.close()
+                        window.destroy()
+                    }
                 }
             }
         }
@@ -136,6 +150,7 @@ Popup {
             color: "#E6E2F2"
             radius: 2
             clip: true
+            visible: showButtons
             RowLayout{
                 anchors.fill: parent
 
@@ -145,6 +160,7 @@ Popup {
                 PanButton{
                     implicitWidth: 80
                     text: "取消"
+                    onClicked: window.close()
                 }
 
 
@@ -152,6 +168,10 @@ Popup {
                     implicitWidth: 80
                     text: "确定"
                     Layout.rightMargin: 5
+                    onClicked:{
+                        window.ok()
+                        window.close()
+                    }
                 }
 
             }
@@ -194,11 +214,15 @@ Popup {
     }
 
 
-    function resizeToMaximum(){
+    function saveWindowStatus(){
         _originWindowX = window.x
         _originWindowY = window.y
         _originWindowWidth = window.width
         _originWindowHeight = window.height
+    }
+
+    function resizeToMaximum(){
+        saveWindowStatus()
 
         window.x = 0
         window.y = 0;
@@ -210,6 +234,7 @@ Popup {
     }
 
     function restoreWindow(){
+        window.visible = true
         window.x = _originWindowX;
         window.y = _originWindowY;
         window.width = _originWindowWidth;
