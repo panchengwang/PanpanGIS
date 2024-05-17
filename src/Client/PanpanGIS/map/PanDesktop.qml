@@ -13,7 +13,7 @@ ApplicationWindow {
     property string masterUrl: ''           // 管理服务url
     property string nodeUrl: ''             // 节点服务url
 
-    property var openWindows : []
+    property ListModel openWindows : ListModel{}
 
     Image{
         anchors.fill: parent
