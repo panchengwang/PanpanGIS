@@ -13,6 +13,7 @@ ApplicationWindow {
     property string masterUrl: ''           // 管理服务url
     property string nodeUrl: ''             // 节点服务url
 
+    property var openWindows : []
 
     Image{
         anchors.fill: parent
@@ -20,7 +21,14 @@ ApplicationWindow {
         source: "./images/wallpaper.webp"
     }
 
-
+    PanButton{
+        text: "restore"
+        x: 50
+        y: 50
+        onClicked: {
+            dialog.restoreWindow()
+        }
+    }
 
 
     PanWindow{
