@@ -533,7 +533,7 @@ QtObject {
     // property string md_trending_up: "\uf310";
     // property string md_unfold_less: "\uf311";
     // property string md_unfold_more: "\uf312";
-    // property string md_apps: "\uf313";
+    property string md_apps: "\uf313";
     // property string md_grid_off: "\uf314";
     // property string md_grid: "\uf315";
     // property string md_view_agenda: "\uf316";
@@ -613,7 +613,7 @@ QtObject {
     // property string md_twitter: "\uf360";
     // property string md_vk: "\uf361";
     // property string md_wikipedia: "\uf362";
-    // property string md_windows: "\uf363";
+    property string md_windows: "\uf363";
     // property string md_aspect_ratio_alt: "\uf364";
     // property string md_aspect_ratio: "\uf365";
     // property string md_blur_circular: "\uf366";
