@@ -24,6 +24,7 @@ list(APPEND SINGLETON_QML_FILES
     PanStyles.qml
     PanFonts.qml
     PanMaterialIcons.qml
+    PanAwesomeIcons.qml
 )
 set_source_files_properties(${SINGLETON_QML_FILES}
     PROPERTIES
@@ -48,6 +49,7 @@ qt_add_qml_module(PanControl
         fonts/NotoSansSC-Regular.ttf
         fonts/font-gis.ttf
         fonts/Material-Design-Iconic-Font.ttf
+        fonts/FontAwesome6Free-Regular-400.otf
         icons/panpangis.svg
         # fonts/MaterialIcons-Regular.ttf
 
@@ -56,6 +58,7 @@ qt_add_qml_module(PanControl
         src/MapCanvas.cpp
         src/PanInputManager.h
         src/PanInputManager.cpp
+
 )
 
 set_target_properties(PanControl PROPERTIES
