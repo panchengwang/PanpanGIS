@@ -31,6 +31,7 @@ qt_add_qml_module(PanMap
         PanWindow.qml
         PanBorder.qml
 
+
     SOURCES
 
     RESOURCES
