@@ -18,4 +18,9 @@ QtObject {
     property FontLoader material: FontLoader{
         source: "./fonts/Material-Design-Iconic-Font.ttf"
     }
+
+    property FontLoader awesome: FontLoader{
+        source: "./fonts/FontAwesome6Free-Regular-400.otf"
+    }
+
 }
