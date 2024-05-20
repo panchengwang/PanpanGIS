@@ -24,7 +24,7 @@ Popup {
 
     implicitWidth: 400
     implicitHeight: 300
-    modal: true
+    modal: false
     focus: true
     clip: true
     padding: 0
@@ -35,7 +35,7 @@ Popup {
         // anchors.centerIn: parent
         // width: parent.width
         // height: parent.height
-        radius: PanStyles.default_radius
+        radius: _isWindowMaximum ? 0 : PanStyles.default_radius
         color: "#FFFFFE"
     }
 
@@ -51,7 +51,7 @@ Popup {
             implicitHeight: PanStyles.header_implicit_height
             Layout.fillWidth: true
             color:  PanStyles.color_window_caption_background_activate
-            radius: PanStyles.default_radius
+            radius:  _isWindowMaximum ? 0 : PanStyles.default_radius
             MouseArea{
                 id: mouseArea
                 anchors.fill: parent
@@ -92,15 +92,17 @@ Popup {
                     Layout.fillHeight: true
                     PanLabel{
                         anchors.fill: parent
-                        text: title
+                        text: caption
                     }
                 }
 
 
 
                 PanButton{
-                    icon.name: PanMaterialIcons.md_window_minimize
+                    icon: PanMaterialIcons.md_window_minimize
+                    text: ""
                     flat: true
+
                     onClicked: {
                         saveWindowStatus()
                         window.visible = false
@@ -109,22 +111,28 @@ Popup {
 
                 PanButton{
                     id: winMaxBtn
-                    icon.name: PanMaterialIcons.md_window_maximize
+                    icon: PanMaterialIcons.md_window_maximize
+                    text: ""
                     flat: true
+
                     onClicked: resizeToMaximum()
                 }
 
                 PanButton{
                     id: winRestoreBtn
-                    icon.name: PanMaterialIcons.md_window_restore
+                    icon: PanMaterialIcons.md_window_restore
+                    text: ""
                     flat: true
+
                     visible: false
                     onClicked: restoreWindow()
                 }
 
                 PanButton{
-                    icon.name: PanMaterialIcons.md_close
+                    icon: PanMaterialIcons.md_close
+                    text: ""
                     flat: true
+
                     onClicked: {
                         // window.close()
                         window.destroy()
