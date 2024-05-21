@@ -14,12 +14,8 @@ ApplicationWindow {
     property string nodeUrl: ''             // 节点服务url
 
     property ListModel openWindows : ListModel{}
-    property Container windowContainer: container
-    Image{
-        anchors.fill: parent
-        fillMode: Image.PreserveAspectCrop
-        source: "./images/wallpaper.webp"
-    }
+    // property Container windowContainer: container
+
 
 
 
@@ -29,16 +25,23 @@ ApplicationWindow {
     ColumnLayout{
         anchors.fill: parent
         spacing: 0
-        Container{
+        Rectangle{
             id: container
             Layout.fillWidth: true
             Layout.fillHeight: true
-            opacity: 0
-//             PanWindow{
-//                 visible: true
-// caption: "asdfsdfdsfsdf"
-// showButtons: true
-//             }
+            Image{
+                anchors.fill: parent
+                fillMode: Image.PreserveAspectCrop
+                source: "./images/wallpaper.webp"
+            }
+
+PanWindow{
+    x: 0
+    y: 0
+    width: 800
+    height: 600
+    visible: true
+}
         }
 
         Rectangle{
@@ -56,13 +59,54 @@ ApplicationWindow {
             RowLayout{
                 anchors.centerIn: parent
                 // height: parent.height
+                // PanButton{
+                //     Layout.alignment: Qt.AlignVCenter
+                //     icon: PanAwesomeIcons.fa_city
+                //     iconFontName: PanFonts.awesomeSolid.name
+                //     iconSize: 24
+                //     flat : true
+                // }
+                Image{
+                    Layout.alignment: Qt.AlignVCenter
+                    source: "/cn/pc/gis/control/icons/panpangis.svg"
+                    sourceSize{
+                        width:24
+                        height: 24
+                    }
+
+                    width: 24
+                    height:24
+                    fillMode: Image.PreserveAspectFit
+                }
+
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
-                    text: ""
-                    icon: PanMaterialIcons.md_apps
-                    iconSize: dockBar.height - 4
+                    imageIcon: true
+                    iconSize: 24
+                    icon: "/cn/pc/gis/control/icons/panpangis.svg"
+                    flat: true
+                }
+
+                PanButton{
+                    Layout.alignment: Qt.AlignVCenter
+                    icon: PanAwesomeIcons.fa_windows
+                    iconFontName: PanFonts.awesomeBrands.name
+                    iconSize: 24
                     flat : true
                 }
+                PanButton{
+                    Layout.alignment: Qt.AlignVCenter
+                    icon: PanAwesomeIcons.fa_database
+                    iconSize: 24
+                    iconFontName: PanFonts.awesomeSolid.name
+                    flat : true
+                }
+                // PanButton{
+                //     Layout.alignment: Qt.AlignVCenter
+                //     icon: PanMaterialIcons.md_map
+                //     iconSize: dockBar.height - 8
+                //     flat : true
+                // }
             }
         }
     }
