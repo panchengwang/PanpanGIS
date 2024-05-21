@@ -99,8 +99,8 @@ Popup {
 
 
                 PanButton{
-                    icon: PanMaterialIcons.md_window_minimize
-                    text: ""
+                    icon: PanAwesomeIcons.fa_window_minimize
+                    iconFontName: PanFonts.awesomeRegular.name
                     flat: true
 
                     onClicked: {
@@ -111,8 +111,7 @@ Popup {
 
                 PanButton{
                     id: winMaxBtn
-                    icon: PanMaterialIcons.md_window_maximize
-                    text: ""
+                    icon: PanAwesomeIcons.fa_window_maximize
                     flat: true
 
                     onClicked: resizeToMaximum()
@@ -120,8 +119,7 @@ Popup {
 
                 PanButton{
                     id: winRestoreBtn
-                    icon: PanMaterialIcons.md_window_restore
-                    text: ""
+                    icon: PanAwesomeIcons.fa_window_restore
                     flat: true
 
                     visible: false
@@ -129,8 +127,8 @@ Popup {
                 }
 
                 PanButton{
-                    icon: PanMaterialIcons.md_close
-                    text: ""
+                    icon: PanAwesomeIcons.fa_times
+                    iconFontName: PanFonts.awesomeSolid.name
                     flat: true
 
                     onClicked: {
