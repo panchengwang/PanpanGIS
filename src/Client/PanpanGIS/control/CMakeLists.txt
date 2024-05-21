@@ -48,16 +48,20 @@ qt_add_qml_module(PanControl
         # fonts/NotoSansSC-Light.ttf
         fonts/NotoSansSC-Regular.ttf
         fonts/font-gis.ttf
-        fonts/Material-Design-Iconic-Font.ttf
-        fonts/FontAwesome6Free-Regular-400.otf
+        # fonts/Material-Design-Iconic-Font.ttf
+        # fonts/MaterialIconsOutlined-Regular.otf
+        fonts/fa-regular-400.ttf
+        fonts/fa-solid-900.ttf
+        fonts/fa-brands-400.ttf
         icons/panpangis.svg
-        # fonts/MaterialIcons-Regular.ttf
+        fonts/MaterialIcons-Regular.ttf
 
     SOURCES
         src/MapCanvas.h
         src/MapCanvas.cpp
         src/PanInputManager.h
         src/PanInputManager.cpp
+
 
 )
 
