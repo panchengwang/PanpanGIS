@@ -86,9 +86,11 @@ Rectangle {
 
     property string icon: PanMaterialIcons.md_check
     property int iconSize: PanStyles.default_icon_size
+    property string iconFontName: PanFonts.awesomeRegular.name
     property int textFontSize: PanStyles.default_font_size
-    property string text: "buttonsdfasdfsdfasdfasdf"
+    property string text: ""
     property bool flat: false
+    property bool imageIcon: false
     property string direction: "LeftToRight"    // or UpToBottom
 
     property real leftPadding: PanStyles.default_padding
@@ -96,10 +98,21 @@ Rectangle {
     property real topPadding: PanStyles.default_padding - 2
     property real bottomPadding: PanStyles.default_padding - 2
 
-    property int _implicitHeight: direction === "TopToBottom" ?  button.topPadding + button.bottomPadding + ( btnIcon.visible && btnLabel.visible ? grid.rowSpacing : 0)  +  btnIcon.height + btnLabel.height :
-                                                                button.topPadding + button.bottomPadding + Math.max(btnIcon.height, btnLabel.height)
-    property int _implicitWidth: direction === "LeftToRight" ?   button.leftPadding + button.rightPadding + (btnIcon.visible && btnLabel.visible ? grid.columnSpacing : 0)  +  btnIcon.width + btnLabel.width :
-                                                              button.leftPadding + button.rightPadding + Math.max(btnIcon.width, btnLabel.width)
+
+    property int _implicitHeight: direction === "TopToBottom" ?  button.topPadding + button.bottomPadding +
+                                                                ( (image.visible || btnIcon.visible) && btnLabel.visible ? grid.rowSpacing : 0)
+                                                                + (image.visible ? image.height : 0)
+                                                                + (btnIcon.visible? btnIcon.height:0)
+                                                                + (btnLabel.visible? btnLabel.height : 0)
+                                                              :
+                                                                button.topPadding + button.bottomPadding + Math.max(btnIcon.height, btnLabel.height, image.height)
+    property int _implicitWidth: direction === "LeftToRight" ?   button.leftPadding + button.rightPadding
+                                                               + ((image.visible || btnIcon.visible) && btnLabel.visible ? grid.columnSpacing : 0)
+                                                               + (image.visible ? image.height : 0)
+                                                               + (btnIcon.visible ? btnIcon.width : 0)
+                                                               + (btnLabel.visible ?  btnLabel.width : 0)
+                                                             :
+                                                               button.leftPadding + button.rightPadding + Math.max(btnIcon.width, btnLabel.width, image.width)
     signal clicked()
 
     border.width: flat ? 0 : 1
@@ -107,6 +120,7 @@ Rectangle {
     radius: PanStyles.default_radius
     implicitHeight: text.trim() === "" ? Math.max(_implicitHeight,_implicitWidth) : _implicitHeight
     implicitWidth: text.trim() === "" ? Math.max(_implicitHeight, _implicitWidth) : _implicitWidth
+
     GridLayout{
         id: grid
         // clip: true
@@ -119,14 +133,31 @@ Rectangle {
         rows: direction === "LeftToRight" ? 1 : 999
         columns: direction === "TopToBottom" ?  1 : 999
 
+        Image{
+            id: image
+            source: imageIcon ? icon : ""
+            sourceSize{
+                width: iconSize
+                height: iconSize
+            }
+            fillMode: Image.PreserveAspectFit
+            // width: iconSize
+            // height: iconSize
+            visible: imageIcon && icon.trim()!== ""
+            horizontalAlignment: Text.AlignHCenter
+            Component.onCompleted: {
+                console.log(imageIcon,iconSize,image.width, button.implicitWidth,button._implicitHeight)
+            }
+        }
+
         PanLabel{
             id: btnIcon
             text: button.icon
-            font.family: PanFonts.material.name
+            font.family: iconFontName
             font.pixelSize: iconSize
             Layout.fillWidth: direction === "TopToBottom"
             horizontalAlignment: Text.AlignHCenter
-            visible: icon.trim() !== ""
+            visible: icon.trim() !== "" && !imageIcon
         }
 
         PanLabel{
