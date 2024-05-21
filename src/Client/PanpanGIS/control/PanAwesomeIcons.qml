@@ -241,7 +241,7 @@ QtObject {
     // property string fa_building: "\uf1ad";
     // property string fa_campground: "\uf6bb";
     // property string fa_church: "\uf51d";
-    // property string fa_city: "\uf64f";
+    property string fa_city: "\uf64f";
     // property string fa_clinic_medical: "\uf7f2";
     // property string fa_dungeon: "\uf6d9";
     // property string fa_gopuram: "\uf664";
@@ -456,9 +456,9 @@ QtObject {
     // property string fa_terminal: "\uf120";
     // property string fa_user_secret: "\uf21b";
     // property string fa_window_close: "\uf410";
-    // property string fa_window_maximize: "\uf2d0";
-    // property string fa_window_minimize: "\uf2d1";
-    // property string fa_window_restore: "\uf2d2";
+    property string fa_window_maximize: "\uf2d0";
+    property string fa_window_minimize: "\uf2d1";
+    property string fa_window_restore: "\uf2d2";
     // property string fa_address_book: "\uf2b9";
     // property string fa_address_card: "\uf2bb";
     // property string fa_american_sign_language_interpreting: "\uf2a3";
@@ -1215,7 +1215,7 @@ QtObject {
     // property string fa_sync_alt: "\uf2f1";
     // property string fa_thumbs_down: "\uf165";
     // property string fa_thumbs_up: "\uf164";
-    // property string fa_times: "\uf00d";
+    property string fa_times: "\uf00d";
     // property string fa_times_circle: "\uf057";
     // property string fa_toggle_off: "\uf204";
     // property string fa_toggle_on: "\uf205";
@@ -2752,7 +2752,7 @@ QtObject {
     // property string fa_whatsapp_square: "\uf40c";
     // property string fa_whmcs: "\uf40d";
     // property string fa_wikipedia_w: "\uf266";
-    // property string fa_windows: "\uf17a";
+    property string fa_windows: "\uf17a";
     // property string fa_wix: "\uf5cf";
     // property string fa_wodu: "\ue088";
     // property string fa_wolf_pack_battalion: "\uf514";
