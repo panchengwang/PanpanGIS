@@ -16,11 +16,18 @@ QtObject {
     }
 
     property FontLoader material: FontLoader{
-        source: "./fonts/Material-Design-Iconic-Font.ttf"
+        source: "./fonts/MaterialIcons-Regular.ttf"
     }
 
-    property FontLoader awesome: FontLoader{
-        source: "./fonts/FontAwesome6Free-Regular-400.otf"
+    property FontLoader awesomeSolid: FontLoader{
+        source: "./fonts/fa-solid-900.ttf"
     }
 
+    property FontLoader awesomeRegular: FontLoader{
+        source: "./fonts/fa-regular-400.ttf"
+    }
+
+    property FontLoader awesomeBrands: FontLoader{
+        source: "./fonts/fa-brands-400.ttf"
+    }
 }
