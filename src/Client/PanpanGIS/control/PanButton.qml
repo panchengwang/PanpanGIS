@@ -91,6 +91,7 @@ Rectangle {
     property string text: ""
     property bool flat: false
     property bool imageIcon: false
+    property bool hovered: false
     property string direction: "LeftToRight"    // or UpToBottom
 
     property real leftPadding: PanStyles.default_padding
@@ -153,6 +154,7 @@ Rectangle {
         PanLabel{
             id: btnIcon
             text: button.icon
+            padding: 0
             font.family: iconFontName
             font.pixelSize: iconSize
             Layout.fillWidth: direction === "TopToBottom"
@@ -181,14 +183,36 @@ Rectangle {
 
         onEntered: {
             button.color = PanStyles.color_button_activate
+            button.hovered = true
         }
 
         onExited: {
-            button.color = PanStyles.color_button
+            setBackgroundColor()
+            button.hovered = false
         }
 
 
     }
 
+    Component.onCompleted: {
+        setBackgroundColor()
+    }
+
+    function setBackgroundColor(){
+        if(flat && button.parent){
+            let p = button.parent
+            while(p && !p.color){
+                p = p.parent
+            }
+            if(p){
+                button.color = p.color
+            }else{
+                button.color = PanStyles.color_button
+            }
+        }else{
+
+            button.color = PanStyles.color_button
+        }
+    }
 
 }
