@@ -35,13 +35,29 @@ ApplicationWindow {
                 source: "./images/wallpaper.webp"
             }
 
-PanWindow{
-    x: 0
-    y: 0
-    width: 800
-    height: 600
-    visible: true
-}
+            RowLayout{
+                anchors.centerIn: parent
+                spacing: 100
+                Repeater{
+                    model: 3
+                    Image{
+                        source:"/cn/pc/gis/control/icons/panpangis.svg"
+                        sourceSize{
+                            width: container.width * 0.67 * 0.2
+                            height: width
+                        }
+                        opacity: 0.3
+                    }
+                }
+            }
+
+            // PanWindow{
+            //     x: 0
+            //     y: 0
+            //     width: 800
+            //     height: 600
+            //     visible: true
+            // }
         }
 
         Rectangle{
@@ -66,47 +82,45 @@ PanWindow{
                 //     iconSize: 24
                 //     flat : true
                 // }
-                Image{
-                    Layout.alignment: Qt.AlignVCenter
-                    source: "/cn/pc/gis/control/icons/panpangis.svg"
-                    sourceSize{
-                        width:24
-                        height: 24
-                    }
 
-                    width: 24
-                    height:24
-                    fillMode: Image.PreserveAspectFit
-                }
 
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
+
                     imageIcon: true
                     iconSize: 24
                     icon: "/cn/pc/gis/control/icons/panpangis.svg"
                     flat: true
+                    implicitWidth: 40
+                    implicitHeight: 40
                 }
 
-                PanButton{
-                    Layout.alignment: Qt.AlignVCenter
-                    icon: PanAwesomeIcons.fa_windows
-                    iconFontName: PanFonts.awesomeBrands.name
-                    iconSize: 24
-                    flat : true
-                }
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
                     icon: PanAwesomeIcons.fa_database
                     iconSize: 24
                     iconFontName: PanFonts.awesomeSolid.name
                     flat : true
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 300
+                    ToolTip.text: "空间数据管理"
                 }
-                // PanButton{
-                //     Layout.alignment: Qt.AlignVCenter
-                //     icon: PanMaterialIcons.md_map
-                //     iconSize: dockBar.height - 8
-                //     flat : true
-                // }
+
+                PanButton{
+                    Layout.alignment: Qt.AlignVCenter
+                    icon: PanAwesomeIcons.fa_globe_asia
+                    iconFontName: PanFonts.awesomeSolid.name
+                    iconSize: 24
+                    flat : true
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 300
+                    ToolTip.text: "打开新的地图窗口"
+                }
+
             }
         }
     }
