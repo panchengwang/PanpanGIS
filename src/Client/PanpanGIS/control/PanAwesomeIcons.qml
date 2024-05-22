@@ -2178,7 +2178,7 @@ QtObject {
     // property string fa_glass_martini_alt: "\uf57b";
     // property string fa_globe_africa: "\uf57c";
     // property string fa_globe_americas: "\uf57d";
-    // property string fa_globe_asia: "\uf57e";
+    property string fa_globe_asia: "\uf57e";
     // property string fa_globe_europe: "\uf7a2";
     // property string fa_hot_tub: "\uf593";
     // property string fa_hotel: "\uf594";
