@@ -15,7 +15,7 @@ TextField {
 
     validator: Qt.platform.os === "wasm" ? null : (type === "email" ? emailRegExp : null)
 
-    // padding: PanStyles.default_padding
+    padding: PanStyles.default_padding
 
 
     RegularExpressionValidator {
@@ -28,6 +28,7 @@ TextField {
         border.color: control.focus ? PanStyles.color_primary : PanStyles.color_light_grey
         border.width: 1
         radius: PanStyles.default_radius
+
     }
 
     onFocusChanged: {
