@@ -51,13 +51,17 @@ ApplicationWindow {
                 }
             }
 
-            // PanWindow{
-            //     x: 0
-            //     y: 0
-            //     width: 800
-            //     height: 600
-            //     visible: true
-            // }
+            PanLoginWindow{
+                // x: 0
+                // y: 0
+                // anchors.centerIn: parent
+                x: (parent.width - width)*0.5
+                y: Math.max( (parent.height - height) * 0.5 - 100, 100)
+                // x: parent.width - width - 100
+                // y: 100
+                visible: true
+modal: true
+            }
         }
 
         Rectangle{
@@ -88,7 +92,7 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignVCenter
 
                     imageIcon: true
-                    iconSize: 24
+                    iconSize: 26
                     icon: "/cn/pc/gis/control/icons/panpangis.svg"
                     flat: true
                     implicitWidth: 40
