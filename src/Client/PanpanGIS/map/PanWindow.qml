@@ -7,11 +7,15 @@ Popup {
     id: window
 
     property string caption : "Dialog"
-    property bool showButtons: false
+    property bool standardButtonsVisible: false
+    property bool windowButtonsVisible: true
     property Image image: null
+    default property alias content: grid.children
+
 
 
     signal ok()
+    signal cancel()
 
     property int _originWindowX: 0
     property int _originWindowY: 0
@@ -48,7 +52,7 @@ Popup {
         height: parent.height
         spacing: 0
         Rectangle{
-            implicitHeight: PanStyles.header_implicit_height
+            implicitHeight: PanStyles.window_header_footer_height
             Layout.fillWidth: true
             color:  PanStyles.color_window_caption_background_activate
             radius:  _isWindowMaximum ? 0 : PanStyles.default_radius
@@ -92,6 +96,7 @@ Popup {
                     Layout.fillHeight: true
                     PanLabel{
                         anchors.fill: parent
+                        font.pixelSize: PanStyles.default_font_size + 1
                         text: caption
                     }
                 }
@@ -101,8 +106,11 @@ Popup {
                 PanButton{
                     icon: PanAwesomeIcons.fa_window_minimize
                     iconFontName: PanFonts.awesomeRegular.name
+                    iconSize: PanStyles.default_icon_size - 2
+                    implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
+                    implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
                     flat: true
-
+visible: windowButtonsVisible
                     onClicked: {
                         saveWindowStatus()
                         window.visible = false
@@ -112,16 +120,21 @@ Popup {
                 PanButton{
                     id: winMaxBtn
                     icon: PanAwesomeIcons.fa_window_maximize
+                    iconSize: PanStyles.default_icon_size - 2
+                    implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
+                    implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
                     flat: true
-
+                    visible: windowButtonsVisible
                     onClicked: resizeToMaximum()
                 }
 
                 PanButton{
                     id: winRestoreBtn
                     icon: PanAwesomeIcons.fa_window_restore
+                    iconSize: PanStyles.default_icon_size - 2
+                    implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
+                    implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
                     flat: true
-
                     visible: false
                     onClicked: restoreWindow()
                 }
@@ -130,7 +143,9 @@ Popup {
                     icon: PanAwesomeIcons.fa_times
                     iconFontName: PanFonts.awesomeSolid.name
                     flat: true
-
+                    visible: windowButtonsVisible
+                    implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
+                    implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
                     onClicked: {
                         // window.close()
                         window.destroy()
@@ -139,46 +154,65 @@ Popup {
             }
         }
 
-        Rectangle{
+        Flickable{
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Flickable{
-                anchors.fill: parent
+            contentHeight: contentItem.childrenRect.height
+            clip: true
+            leftMargin: PanStyles.default_margin
+            rightMargin: PanStyles.default_margin
+            topMargin: PanStyles.default_margin
+            bottomMargin: PanStyles.default_margin
 
+            GridLayout {
+                id: grid
+                columns: 1
+                width: parent.width
             }
-
         }
 
 
         Rectangle{
-            implicitHeight: PanStyles.header_implicit_height
+            implicitHeight: PanStyles.window_header_footer_height
             Layout.fillWidth: true
             color: "#E6E2F2"
             radius: 2
             clip: true
-            visible: showButtons
+            visible: standardButtonsVisible
             RowLayout{
                 anchors.fill: parent
 
                 Item{
                     Layout.fillWidth: true
-                }
-                PanButton{
-                    implicitWidth: 80
-                    text: "取消"
-                    onClicked: window.close()
+                    Layout.fillHeight: true
                 }
 
-
-                PanButton{
-                    implicitWidth: 80
-                    text: "确定"
+                PanStandardButtons{
+                    Layout.fillHeight: true
                     Layout.rightMargin: 5
-                    onClicked:{
-                        window.ok()
-                        window.close()
+                    implicitWidth:  200
+                    // implicitWidth: 200
+                    onCancel: {
+                        window.cancel()
                     }
                 }
+
+                // PanButton{
+                //     implicitWidth: 80
+                //     text: "取消"
+                //     onClicked: window.close()
+                // }
+
+
+                // PanButton{
+                //     implicitWidth: 80
+                //     text: "确定"
+                //     Layout.rightMargin: 5
+                //     onClicked:{
+                //         window.ok()
+                //         window.close()
+                //     }
+                // }
 
             }
         }
