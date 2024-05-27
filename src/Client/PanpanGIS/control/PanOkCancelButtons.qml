@@ -3,31 +3,38 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import cn.pc.gis.control
 
-RowLayout {
-
+Rectangle{
     property string okText: "确定"
     property string cancelText: "取消"
-
     signal ok()
     signal cancel()
 
-    PanButton{
-        Layout.preferredWidth: parent.width * 0.5
-        Layout.fillWidth: true
-        icon.name: PanMaterialIcons.md_close_circle
-        text: cancelText
-        onClicked: {
-            cancel()
-        }
-    }
+    color: "red"
 
-    PanButton{
-        Layout.preferredWidth: parent.width * 0.5
-        Layout.fillWidth: true
-        icon.name: PanMaterialIcons.md_check_circle
-        text: okText
-        onClicked: {
-            ok()
+    RowLayout {
+
+        anchors.fill: parent
+
+        PanButton{
+            id: btnCancel
+            icon: PanAwesomeIcons.fa_times_circle
+            Layout.fillWidth: true
+            text: cancelText
+            onClicked: {
+                cancel()
+            }
+        }
+
+        PanButton{
+            id: btnOk
+            Layout.fillWidth: true
+            icon: PanAwesomeIcons.fa_check_circle
+            text: okText
+            onClicked: {
+                ok()
+            }
         }
     }
 }
+
+
