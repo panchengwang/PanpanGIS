@@ -46,6 +46,8 @@ QtObject {
     property real button_implicit_width: 24
     property real button_implicit_height: 24
 
+    property real window_header_footer_height: 34
+
     property real header_implicit_height: 32
     property real header_text_font_size: Qt.platform.os === "wasm" ? 13 : 16
 }
