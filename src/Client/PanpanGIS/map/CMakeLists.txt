@@ -30,14 +30,14 @@ qt_add_qml_module(PanMap
         PanMessageDialog.qml
         PanWindow.qml
         PanBorder.qml
-
+        PanLoginWindow.qml
+        PanRegisterWindow.qml
 
     SOURCES
 
     RESOURCES
         images/wallpaper.webp
-        QML_FILES PanImageButton.qml
-
+        QML_FILES PanStandardButtons.qml
 
 )
 # qt_import_qml_plugins(PanMap
