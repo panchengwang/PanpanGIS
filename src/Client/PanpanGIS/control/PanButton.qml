@@ -84,7 +84,7 @@ import cn.pc.gis.control
 Rectangle {
     id: button
 
-    property string icon: PanMaterialIcons.md_check
+    property string icon: PanAwesomeIcons.fa_check_circle
     property int iconSize: PanStyles.default_icon_size
     property string iconFontName: PanFonts.awesomeRegular.name
     property int textFontSize: PanStyles.default_font_size
@@ -96,8 +96,8 @@ Rectangle {
 
     property real leftPadding: PanStyles.default_padding
     property real rightPadding: PanStyles.default_padding
-    property real topPadding: PanStyles.default_padding - 2
-    property real bottomPadding: PanStyles.default_padding - 2
+    property real topPadding: PanStyles.default_padding
+    property real bottomPadding: PanStyles.default_padding
 
 
     property int _implicitHeight: direction === "TopToBottom" ?  button.topPadding + button.bottomPadding +
@@ -146,9 +146,9 @@ Rectangle {
             // height: iconSize
             visible: imageIcon && icon.trim()!== ""
             horizontalAlignment: Text.AlignHCenter
-            Component.onCompleted: {
-                console.log(imageIcon,iconSize,image.width, button.implicitWidth,button._implicitHeight)
-            }
+            // Component.onCompleted: {
+            //     console.log(imageIcon,iconSize,image.width, button.implicitWidth,button._implicitHeight)
+            // }
         }
 
         PanLabel{
