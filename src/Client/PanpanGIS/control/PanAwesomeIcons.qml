@@ -1092,7 +1092,7 @@ QtObject {
     // property string fa_calendar_times: "\uf273";
     // property string fa_certificate: "\uf0a3";
     // property string fa_check: "\uf00c";
-    // property string fa_check_circle: "\uf058";
+    property string fa_check_circle: "\uf058";
     // property string fa_check_double: "\uf560";
     // property string fa_check_square: "\uf14a";
     // property string fa_circle: "\uf111";
@@ -1216,7 +1216,7 @@ QtObject {
     // property string fa_thumbs_down: "\uf165";
     // property string fa_thumbs_up: "\uf164";
     property string fa_times: "\uf00d";
-    // property string fa_times_circle: "\uf057";
+    property string fa_times_circle: "\uf057";
     // property string fa_toggle_off: "\uf204";
     // property string fa_toggle_on: "\uf205";
     // property string fa_tools: "\uf7d9";
