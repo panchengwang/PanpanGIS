@@ -25,7 +25,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.624025"
-     inkscape:cx="396.54563"
+     inkscape:cx="396.8535"
      inkscape:cy="314.95821"
      inkscape:window-width="3840"
      inkscape:window-height="2054"
@@ -58,7 +58,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <ellipse
-       style="fill:#000000;fill-opacity:0;stroke:#5d3e0e;stroke-width:10.752;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#fffefe;fill-opacity:0;stroke:#050505;stroke-width:10;stroke-dasharray:none;stroke-opacity:1"
        id="path1"
        cx="105.00146"
        cy="105.00018"
@@ -67,15 +67,15 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:79.988px;font-family:'Mongolian Baiti';-inkscape-font-specification:'Mongolian Baiti, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffe700;fill-opacity:1;stroke:#ff2100;stroke-width:1.39569;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="37.719204"
-       y="93.832237"
+       x="34.878185"
+       y="96.018394"
        id="text3"
        transform="scale(1.0322107,0.96879445)"><tspan
          sodipodi:role="line"
          id="tspan3"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:79.988px;font-family:'Mongolian Baiti';-inkscape-font-specification:'Mongolian Baiti, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffe700;fill-opacity:1;stroke:#ff2100;stroke-width:1.39569;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="37.719204"
-         y="93.832237">GIS</tspan></text>
+         x="34.878185"
+         y="96.018394">GIS</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7556px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:0;stroke:#0889eb;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
@@ -88,32 +88,32 @@
          x="111.59901"
          y="61.583103" /></text>
     <path
-       style="fill:#0b0f12;fill-opacity:1;stroke:#000000;stroke-width:3.041;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 34.884888,106.04595 c 144.304892,0.19195 144.467732,0.19046 144.467732,0.19046"
+       style="fill:#0b0f12;fill-opacity:1;stroke:#000000;stroke-width:3.34871;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 16.463307,106.04661 c 176.222063,0.19061 176.420913,0.18914 176.420913,0.18914"
        id="path4" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.6373px;font-family:'Mongolian Baiti';-inkscape-font-specification:'Mongolian Baiti, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#042ff2;fill-opacity:1;stroke:#c68e37;stroke-width:0.445388;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="30.987846"
-       y="182.64476"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:36.85px;font-family:'Mongolian Baiti';-inkscape-font-specification:'Mongolian Baiti, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#042ff2;fill-opacity:1;stroke:#c68e37;stroke-width:0.553779;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="30.044964"
+       y="163.45477"
        id="text5"
-       transform="scale(1.4231616,0.70266089)"><tspan
+       transform="scale(1.2133708,0.82415035)"><tspan
          sodipodi:role="line"
          id="tspan5"
-         style="fill:#042ff2;fill-opacity:1;stroke-width:0.445388"
-         x="30.987846"
-         y="182.64476">PanPan</tspan></text>
+         style="fill:#042ff2;fill-opacity:1;stroke-width:0.553779"
+         x="30.044964"
+         y="163.45477">PanPan</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:39.2472px;font-family:DengXian;-inkscape-font-specification:'DengXian, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffff00;fill-opacity:1;stroke:#ff2100;stroke-width:0.59;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="57.172089"
-       y="176.49835"
+       x="55.659512"
+       y="190.01015"
        id="text6"
        transform="scale(1.0770915,0.92842623)"><tspan
          sodipodi:role="line"
          id="tspan6"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:39.24720065px;font-family:DengXian;-inkscape-font-specification:'DengXian, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffff00;fill-opacity:1;stroke:#ff2100;stroke-width:0.59;stroke-opacity:1;stroke-dasharray:none"
-         x="57.172089"
-         y="176.49835">老王</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:39.2472px;font-family:DengXian;-inkscape-font-specification:'DengXian, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffff00;fill-opacity:1;stroke:#ff2100;stroke-width:0.59;stroke-dasharray:none;stroke-opacity:1"
+         x="55.659512"
+         y="190.01015">老王</tspan></text>
   </g>
 </svg>
