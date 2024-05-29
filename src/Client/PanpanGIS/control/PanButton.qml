@@ -142,13 +142,8 @@ Rectangle {
                 height: iconSize
             }
             fillMode: Image.PreserveAspectFit
-            // width: iconSize
-            // height: iconSize
             visible: imageIcon && icon.trim()!== ""
             horizontalAlignment: Text.AlignHCenter
-            // Component.onCompleted: {
-            //     console.log(imageIcon,iconSize,image.width, button.implicitWidth,button._implicitHeight)
-            // }
         }
 
         PanLabel{
