@@ -9,7 +9,6 @@ Rectangle{
     signal ok()
     signal cancel()
 
-    color: "red"
 
     RowLayout {
 
