@@ -6,6 +6,8 @@ import cn.pc.gis.control
 Control{
     property string okText: "确定"
     property string cancelText: "取消"
+    property bool cancelVisible: true
+    property bool okVisible: true
     signal ok()
     signal cancel()
 
@@ -20,6 +22,7 @@ Control{
             icon: PanAwesomeIcons.fa_times_circle
             Layout.fillWidth: true
             text: cancelText
+            visible: cancelVisible
             onClicked: {
                 cancel()
             }
@@ -30,6 +33,7 @@ Control{
             Layout.fillWidth: true
             icon: PanAwesomeIcons.fa_check_circle
             text: okText
+            visible: okVisible
             onClicked: {
                 ok()
             }
