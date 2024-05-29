@@ -4,12 +4,17 @@ import QtQuick.Layouts
 import cn.pc.gis.control
 
 
-PanWindow{
+PanFormWindow{
+    id: window
     caption: "登录"
     standardButtonsVisible: true
     windowButtonsVisible: false
     width: 400
     height: 330
+
+    signal error()
+    property string errorMessage: ""
+
     PanLabel{
         text: "欢迎来到PanpanGIS世界"
         horizontalAlignment:  Text.AlignHCenter
@@ -53,6 +58,10 @@ PanWindow{
     }
     PanIdentifyCode{
         Layout.fillWidth: true
+        onError: {
+            window.errorMessage = this.errorMessage
+            window.error()
+        }
     }
 
     RowLayout{
