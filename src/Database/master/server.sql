@@ -55,6 +55,16 @@ insert into pan_server_func(request_type, func_name)
 values
     ('USER_GET_IDENTIFY_CODE','pan_user_get_identify_code');
 
+--  请求参数:
+--  {
+--      "type":"USER_GET_IDENTIFY_CODE",
+--      "username": "sqlcartotest@126.com"
+--  }
+--  返回:
+--  {
+--      "success": true,
+--      "message": "验证码已经发送到指定的信箱"
+--  }
 create or replace function pan_user_get_identify_code(params jsonb) returns jsonb as 
 $$
 declare
