@@ -22,10 +22,10 @@ QtObject {
     // property string fa_bell_slash: "\uf1f6";
     // property string fa_exclamation: "\uf12a";
     // property string fa_exclamation_circle: "\uf06a";
-    // property string fa_exclamation_triangle: "\uf071";
+    property string fa_exclamation_triangle: "\uf071";
     // property string fa_radiation: "\uf7b9";
     // property string fa_radiation_alt: "\uf7ba";
-    // property string fa_skull_crossbones: "\uf714";
+    property string fa_skull_crossbones: "\uf714";
     // property string fa_cat: "\uf6be";
     // property string fa_crow: "\uf520";
     // property string fa_dog: "\uf6d3";
@@ -341,7 +341,7 @@ QtObject {
     // property string fa_tag: "\uf02b";
     // property string fa_tags: "\uf02c";
     // property string fa_tasks: "\uf0ae";
-    // property string fa_thumbtack: "\uf08d";
+    property string fa_thumbtack: "\uf08d";
     // property string fa_trademark: "\uf25c";
     // property string fa_wallet: "\uf555";
     // property string fa_binoculars: "\uf1e5";
@@ -381,7 +381,7 @@ QtObject {
     // property string fa_seedling: "\uf4d8";
     // property string fa_comment: "\uf075";
     // property string fa_comment_alt: "\uf27a";
-    // property string fa_comment_dots: "\uf4ad";
+    property string fa_comment_dots: "\uf4ad";
     // property string fa_comment_medical: "\uf7f5";
     // property string fa_comment_slash: "\uf4b3";
     // property string fa_comments: "\uf086";
@@ -1146,7 +1146,7 @@ QtObject {
     // property string fa_home: "\uf015";
     // property string fa_i_cursor: "\uf246";
     // property string fa_info: "\uf129";
-    // property string fa_info_circle: "\uf05a";
+    property string fa_info_circle: "\uf05a";
     // property string fa_language: "\uf1ab";
     // property string fa_magic: "\uf0d0";
     // property string fa_marker: "\uf5a1";
