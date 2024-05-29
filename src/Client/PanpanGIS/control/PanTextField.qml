@@ -69,8 +69,6 @@ TextField {
         }
     }
 
-    Component.onCompleted: {
-        console.log(height)
-    }
+
 }
 
