@@ -33,7 +33,7 @@ Rectangle {
                 text: "创建账户"
                 horizontalAlignment:  Text.AlignHCenter
                 Layout.fillWidth: true
-                font.pointSize: PanStyles.header_text_font_size
+                font.pixelSize:  PanStyles.header_text_font_size
             }
 
             Rectangle{
