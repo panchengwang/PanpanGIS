@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import cn.pc.gis.control
 
-PanWindow {
+PanFormWindow {
     caption: "创建用户"
-    windowButtonsVisible: false
+    windowButtonsVisible: true
     standardButtonsVisible: true
 
     width: 600
