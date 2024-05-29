@@ -14,7 +14,7 @@ ApplicationWindow {
     property string nodeUrl: ''             // 节点服务url
 
     property ListModel openWindows : ListModel{}
-    // property Container windowContainer: container
+    property Rectangle appContainer: container
 
 
 
@@ -51,17 +51,19 @@ ApplicationWindow {
                 }
             }
 
-            PanLoginWindow{
-                // x: 0
-                // y: 0
-                // anchors.centerIn: parent
-                x: (parent.width - width)*0.5
-                y: Math.max( (parent.height - height) * 0.5 - 100, 100)
-                // x: parent.width - width - 100
-                // y: 100
-                visible: true
-modal: true
+            PanLogWindow{
+                id: logWindow
+                z: 1000
+                x: parent.width - width - PanStyles.default_margin
+                y: parent.height-height - PanStyles.default_margin
+                // visible: true
+                movable: false
+                modal: false
+                resizebar: "tl"
+                closePolicy: Popup.NoAutoClose
+                stickButtonVisible: true
             }
+
         }
 
         Rectangle{
@@ -76,8 +78,9 @@ modal: true
             color: PanStyles.color_window_caption_background
             Layout.fillWidth: true
             height: PanStyles.header_implicit_height * 1.5
+
             RowLayout{
-                anchors.centerIn: parent
+                anchors.fill: parent
                 // height: parent.height
                 // PanButton{
                 //     Layout.alignment: Qt.AlignVCenter
@@ -87,7 +90,9 @@ modal: true
                 //     flat : true
                 // }
 
-
+                Item{
+                    Layout.fillWidth: true
+                }
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
 
@@ -125,9 +130,64 @@ modal: true
                     ToolTip.text: "打开新的地图窗口"
                 }
 
+                Item{
+                    Layout.fillWidth:  true
+                }
+
+                PanButton{
+                    Layout.alignment: Qt.AlignVCenter
+                    icon: PanAwesomeIcons.fa_comment_dots
+                    iconFontName: PanFonts.awesomeSolid.name
+                    iconSize: 24
+                    flat : true
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 300
+                    ToolTip.text: "系统消息"
+                    Layout.rightMargin: PanStyles.default_margin
+                    onClicked: {
+                        if(logWindow.opened){
+                            logWindow.close()
+                        }else{
+                            logWindow.open()
+                        }
+                    }
+                }
+
             }
         }
     }
+
+    Component.onCompleted: {
+        createLoginWindow()
+    }
+
+    function createLoginWindow(){
+        const loginWin = Qt.createQmlObject(`
+                                            import QtQuick
+                                            import cn.pc.gis.control
+                                            PanLoginWindow{
+                                            x: (parent.width-width)*0.5
+                                            y: Math.max(100 , (parent.height - height)*0.5-100)
+                                            width: Math.max(400,parent.width*0.25)
+                                            visible: true
+                                            }
+                                            `,
+                                            appContainer,
+                                            "loginWin"
+                                            );
+        // loginWin.modal = true
+        loginWin.cancel.connect(()=>{
+                                    loginWin.destroy()
+                                })
+        loginWin.error.connect(()=>{
+                                   logWindow.appendLog(loginWin.errorMessage,"information")
+                                   logWindow.appendLog(loginWin.errorMessage,"warning")
+                                   logWindow.appendLog(loginWin.errorMessage,"fatal")
+                               })
+    }
+
 
 
 }
