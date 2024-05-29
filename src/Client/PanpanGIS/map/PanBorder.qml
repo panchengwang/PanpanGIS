@@ -6,9 +6,10 @@ Rectangle {
     opacity: 0
 
     property string position: "right"
-    property int borderWidth: 4
+    property int borderWidth: 6
     property int minParentSize: 30
     property QtObject target: null
+    // color: "red"
 
     anchors.horizontalCenter: position === "top" || position === "bottom" ?
                                   parent.horizontalCenter :
@@ -43,8 +44,6 @@ Rectangle {
             smoothed: true
         }
 
-        // onMouseXChanged: resizeParentOfBorder()
-        // onMouseYChanged: resizeParentOfBorder()
         onPositionChanged: resizeParentOfBorder()
     }
 
@@ -54,43 +53,45 @@ Rectangle {
         }
 
         if(mouseArea.drag.active){
-            if(position.indexOf("left")>=0){
-                if(target.x + mouseArea.mouseX <= 0){
-                    return;
-                }
+            let x = target.x
+            let y = target.y
 
-                target.width = target.width - mouseArea.mouseX
-                target.x = target.x + mouseArea.mouseX
+            let minwidth = target._minWidth ? target._minWidth : minParentSize;
+            let minheight = target._minHeight ? target._minHeight : minParentSize;
+            let w = minwidth
+            let h = minheight
+            if(position.indexOf("left")>=0){
+                x = target.x + mouseArea.mouseX
+                w = target.width - mouseArea.mouseX
+                if(x <=0 || w <= minwidth) return
+                target.x = x
+                target.width = w
+
             }
             if(position.indexOf("right")>=0){
-                target.width = target.width + mouseArea.mouseX
+                // 不要删除下面这行代码！
+                target.x = x                         // 很怪异，需要用上这句代码才能使得拖动右边框时，窗口x坐标才不会变动，否则会左右两边同时改变大小。
+                w = target.width + mouseArea.mouseX
+                if(w<=minwidth || x + w >= target.parent.width) return
+                target.width = w
 
             }
             if(position.indexOf("top")>=0){
-                if(target.y + mouseArea.mouseY <= 0){
-                    return;
-                }
-
-                target.height = target.height - mouseArea.mouseY
-                target.y = target.y + mouseArea.mouseY
+                y = target.y + mouseArea.mouseY
+                h = target.height - mouseArea.mouseY
+                if(y<=0 || h <= minheight) return
+                target.y = y
+                target.height = h
             }
             if(position.indexOf("bottom")>=0){
-                target.height = target.height + mouseArea.mouseY
+                // 不要删除下面这行代码！
+                target.y = y
+
+                h = target.height + mouseArea.mouseY
+                if(h<=minheight || y + h >= target.parent.height) return
+                target.height = h
             }
         }
-        target.x = Math.max(0,target.x);
-        target.y = Math.max(0,target.y);
 
-        let minwidth = target._minWidth ? target._minWidth : minParentSize;
-        let minheight = target._minHeight ? target._minHeight : minParentSize;
-
-        target.width = Math.max(minwidth,Math.min(target.width, target.parent.width - target.x));
-        target.height = Math.max(minheight,Math.min(target.height, target.parent.height - target.y));
-
-        // let pos = mapToItem(dialog.parent,0,0)
-        // dialog.x =Math.min(dialog.parent.width-dialog.width,  Math.max(0,pos.x))
-        // dialog.y =Math.min(dialog.parent.height-dialog.height, Math.max(0,pos.y))
-        // dialog.contentItem.x = 0
-        // dialog.contentItem.y = 0
     }
 }
