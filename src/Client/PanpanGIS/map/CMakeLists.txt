@@ -22,22 +22,27 @@ qt_add_qml_module(PanMap
         Main.qml
         PanAccountCreatePanel.qml
         PanApplicationWindow.qml
-        PanLoginPanel.qml
+
         PanPanel.qml
         PanHeader.qml
         PanDesktop.qml
         PanIdentifyCode.qml
-        PanMessageDialog.qml
+
         PanWindow.qml
         PanBorder.qml
         PanLoginWindow.qml
         PanRegisterWindow.qml
+        PanLogWindow.qml
+        PanStandardButtons.qml
+        PanFormWindow.qml
 
     SOURCES
 
     RESOURCES
         images/wallpaper.webp
-        QML_FILES PanStandardButtons.qml
+
+
+
 
 )
 # qt_import_qml_plugins(PanMap
@@ -69,40 +74,40 @@ if(EMSCRIPTEN)
     target_link_libraries(PanMap
         PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
     )
-    # add_custom_command(
-    #     TARGET PanMap
-    #     POST_BUILD
-    #         # COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
-    #         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
-    # )
+# add_custom_command(
+#     TARGET PanMap
+#     POST_BUILD
+#         # COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
+#         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
+# )
 elseif(WIN32)
     target_link_libraries(PanMap
         PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
     )
-    add_custom_command(
-        TARGET PanMap
-        POST_BUILD
-            # COMMAND echo "panmap 可执行文件编译完成"
-            # COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-            # COMMAND cp -rf ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/cn
-            # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
-            # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-    )
+add_custom_command(
+    TARGET PanMap
+    POST_BUILD
+    # COMMAND echo "panmap 可执行文件编译完成"
+    # COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+    # COMMAND cp -rf ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/cn
+    # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
+    # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+)
 elseif(APPLE)
     target_link_libraries(PanMap
         PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml
     )
-    add_custom_command(
-        TARGET PanMap
-        POST_BUILD
-            # COMMAND echo "panmap 可执行文件编译完成"
-            # COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-            # COMMAND cp -rf ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-            # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
-            # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-    )
+add_custom_command(
+    TARGET PanMap
+    POST_BUILD
+    # COMMAND echo "panmap 可执行文件编译完成"
+    # COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+    # COMMAND cp -rf ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+    # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
+    # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+)
 endif()
 
 
