@@ -40,6 +40,12 @@ begin
 
     sqlstr := 'select func_name from pan_server_func where request_type = ' || quote_literal(params->>'type') ;
     execute sqlstr into server_func_name;
+    if server_func_name is null then 
+        return jsonb_build_object(
+            'success',  false,
+            'message', '不支持的请求类型: ' || (params->>'type')
+        );
+    end if;
     sqlstr := 'select ' || server_func_name || '(' || quote_literal(params) || '::jsonb)';
     execute sqlstr into response;
     -- response := jsonb_build_object(
