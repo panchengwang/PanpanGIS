@@ -4,22 +4,10 @@ import cn.pc.gis.control
 import QtQuick.Layouts
 
 ApplicationWindow {
-    id: app
-    property PanDesktop desktop: app
-
-    property string token: ''
-    property string username: ''
-    property string nickname: '请登录'
-    property string masterUrl: ''           // 管理服务url
-    property string nodeUrl: ''             // 节点服务url
+    id: desktop
 
     property ListModel openWindows : ListModel{}
-    property Rectangle appContainer: container
-
-
-
-
-
+    property Rectangle windowContainer: container
 
 
     ColumnLayout{
@@ -62,6 +50,9 @@ ApplicationWindow {
                 resizebar: "tl"
                 closePolicy: Popup.NoAutoClose
                 stickButtonVisible: true
+                Component.onCompleted: {
+                    PanApplication.logWindow = logWindow
+                }
             }
 
         }
@@ -160,13 +151,15 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
+
+        PanApplication.desktop = desktop
+        PanApplication.windowContainer = container
+
         createLoginWindow()
     }
 
     function createLoginWindow(){
         const loginWin = Qt.createQmlObject(`
-                                            import QtQuick
-                                            import cn.pc.gis.control
                                             PanLoginWindow{
                                             x: (parent.width-width)*0.5
                                             y: Math.max(100 , (parent.height - height)*0.5-100)
@@ -174,18 +167,13 @@ ApplicationWindow {
                                             visible: true
                                             }
                                             `,
-                                            appContainer,
+                                            PanApplication.windowContainer,
                                             "loginWin"
                                             );
-        // loginWin.modal = true
         loginWin.cancel.connect(()=>{
                                     loginWin.destroy()
                                 })
-        loginWin.error.connect(()=>{
-                                   logWindow.appendLog(loginWin.errorMessage,"information")
-                                   logWindow.appendLog(loginWin.errorMessage,"warning")
-                                   logWindow.appendLog(loginWin.errorMessage,"fatal")
-                               })
+
     }
 
 
