@@ -45,15 +45,15 @@ Rectangle {
                 }
 
                 PanButton{
-                    icon.name: PanMaterialIcons.md_window_minimize
+                    icon: PanMaterialIcons.md_window_minimize
                 }
 
                 PanButton{
-                    icon.name: PanMaterialIcons.md_window_maximize
+                    icon: PanMaterialIcons.md_window_maximize
                 }
 
                 PanButton{
-                    icon.name: PanMaterialIcons.md_close
+                    icon: PanMaterialIcons.md_close
                     Layout.rightMargin: PanStyles.default_margin
                 }
             }
