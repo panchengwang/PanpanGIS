@@ -17,6 +17,7 @@ QtObject {
     property string color_white: "#ffffff"
     property string color_light_grey: "#c2c2c2"
 
+
     property string color_text: "#3f3f3f"
     property string color_button_text_activate: "#ffffff"
     property string color_button_text: "#3F3F3F"
