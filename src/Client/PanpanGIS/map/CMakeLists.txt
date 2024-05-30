@@ -14,6 +14,14 @@ qt_add_executable(PanMap
     main.cpp
 )
 
+list(APPEND SINGLETON_QML_FILES
+    PanApplication.qml
+)
+set_source_files_properties(${SINGLETON_QML_FILES}
+    PROPERTIES
+    QT_QML_SINGLETON_TYPE true
+)
+
 qt_add_qml_module(PanMap
     URI cn.pc.gis.map
     VERSION 1.0
@@ -21,13 +29,10 @@ qt_add_qml_module(PanMap
     QML_FILES
         Main.qml
         PanAccountCreatePanel.qml
-        PanApplicationWindow.qml
-
         PanPanel.qml
         PanHeader.qml
         PanDesktop.qml
         PanIdentifyCode.qml
-
         PanWindow.qml
         PanBorder.qml
         PanLoginWindow.qml
@@ -35,11 +40,17 @@ qt_add_qml_module(PanMap
         PanLogWindow.qml
         PanStandardButtons.qml
         PanFormWindow.qml
+        PanConnector.qml
+        ${SINGLETON_QML_FILES}
 
     SOURCES
+        PanAjax.h
+        PanAjax.cpp
 
     RESOURCES
         images/wallpaper.webp
+
+
 
 
 
