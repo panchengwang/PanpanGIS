@@ -57,10 +57,15 @@ PanFormWindow{
         text: "验证码"
     }
     PanIdentifyCode{
+        email: username.text.trim()
+        server: PanApplication.masterUrl
         Layout.fillWidth: true
         onError: {
             window.errorMessage = this.errorMessage
             window.error()
+
+            PanApplication.logWindow.appendLog(errorMessage,"warning")
+            PanApplication.logWindow.open()
         }
     }
 
