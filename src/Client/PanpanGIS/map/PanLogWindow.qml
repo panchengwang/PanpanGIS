@@ -27,17 +27,25 @@ PanWindow {
         delegate: Rectangle{
             radius: PanStyles.default_radius
             width: listView.width
-            implicitHeight: PanStyles.button_implicit_height // + 2 * PanStyles.default_margin
+            implicitHeight: row.implicitHeight  + 2 * PanStyles.default_margin
             border.width: 1
             border.color: PanStyles.color_button_border
 
             RowLayout{
+                id: row
+
                 anchors.fill: parent
                 anchors.margins: PanStyles.default_margin
                 spacing: PanStyles.default_spacing
                 PanLabel{
                     Layout.fillHeight: true
-                    Layout.fillWidth: true
+                    verticalAlignment: Text.AlignTop
+                    topPadding: PanStyles.default_padding
+                    color: level === "warning" ? PanStyles.color_warning : (
+                                                     level === "information" ? PanStyles.color_info : (
+                                                                                   level === "fatal" ? PanStyles.color_negative : PanStyles.color_info
+                                                                                   )
+                                                     )
                     text: level === "warning" ? PanAwesomeIcons.fa_exclamation_triangle : (
                                                     level === "information" ? PanAwesomeIcons.fa_info_circle : (
                                                                                   level === "fatal" ? PanAwesomeIcons.fa_skull_crossbones : PanAwesomeIcons.fa_info_circle
@@ -50,6 +58,7 @@ PanWindow {
                     text: log
                     Layout.fillHeight: true
                     Layout.fillWidth: true
+                    wrapMode: Text.Wrap
                 }
             }
         }
