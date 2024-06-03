@@ -245,6 +245,9 @@ Popup {
                     onCancel: {
                         window.cancel()
                     }
+                    onOk: {
+                        window.ok()
+                    }
                 }
 
             }

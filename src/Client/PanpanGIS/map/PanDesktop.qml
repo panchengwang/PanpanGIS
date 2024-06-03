@@ -6,10 +6,6 @@ import QtQuick.Layouts
 ApplicationWindow {
     id: desktop
 
-    property ListModel openWindows : ListModel{}
-    property Rectangle windowContainer: container
-
-
     ColumnLayout{
         anchors.fill: parent
         spacing: 0
@@ -41,17 +37,35 @@ ApplicationWindow {
 
             PanLogWindow{
                 id: logWindow
-                z: 1000
                 x: parent.width - width - PanStyles.default_margin
                 y: parent.height-height - PanStyles.default_margin
                 // visible: true
                 movable: false
                 modal: false
                 resizebar: "tl"
-                closePolicy: Popup.NoAutoClose
+                closePolicy: Popup.CloseOnPressOutside
                 stickButtonVisible: true
                 Component.onCompleted: {
                     PanApplication.logWindow = logWindow
+                }
+            }
+
+            PanBusyIndicator{
+                id: busyIndicator
+                anchors.centerIn: parent
+                Component.onCompleted: {
+                    PanApplication.busyIndicator = this
+                }
+            }
+
+            PanNotify{
+                id: notify
+                caption: "提示信息"
+                x: (parent.width - width)*0.5
+                y: Math.max((parent.height-height)*0.5-50, 100)
+                z: 100
+                Component.onCompleted: {
+                    PanApplication.notify = notify
                 }
             }
 
@@ -70,6 +84,8 @@ ApplicationWindow {
             Layout.fillWidth: true
             height: PanStyles.header_implicit_height * 1.5
 
+
+
             RowLayout{
                 anchors.fill: parent
                 // height: parent.height
@@ -84,6 +100,7 @@ ApplicationWindow {
                 Item{
                     Layout.fillWidth: true
                 }
+
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
 
@@ -122,8 +139,9 @@ ApplicationWindow {
                 }
 
                 Item{
-                    Layout.fillWidth:  true
+                    Layout.fillWidth: true
                 }
+
 
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
