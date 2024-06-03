@@ -7,7 +7,7 @@ select sqlcarto_version();
 select sc_uuid();
 
 
--- select '测试邮件发送模块';
+select '测试邮件发送模块';
 -- select sc_send_mail(
 --     'sqlcartotest@126.com',
 --     'sqlcartotest@126.com',
@@ -16,7 +16,7 @@ select sc_uuid();
 --     'smtps://smtp.126.com:465',
 --     'SCUGOXHGWAEZUEQH'
 -- );
--- 
+
 -- update sc_configuration set key_value = 'sqlcartotest@126.com' where key_name = 'EMAIL_USER';
 -- update sc_configuration set key_value = 'smtps://smtp.126.com:465' where key_name = 'EMAIL_SMTP';
 -- update sc_configuration set key_value = 'SCUGOXHGWAEZUEQH' where key_name = 'EMAIL_PASSWORD';
