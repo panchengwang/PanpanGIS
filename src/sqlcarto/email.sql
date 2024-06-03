@@ -60,12 +60,14 @@ $$
 $$ LANGUAGE 'sql';
 
 
-create or replace function sc_send_email(
-    reciever varchar, 
-    subject varchar, 
-    content text
-) 
-returns boolean AS
-$$
-    select sc_send_mail($1,$2,$3);
-$$ LANGUAGE 'sql';
+-- create or replace function sc_send_email(
+--     reciever varchar, 
+--     subject varchar, 
+--     content text
+-- ) 
+-- returns boolean AS
+-- $$
+--     select sc_send_mail($1,$2,$3);
+-- $$ LANGUAGE 'sql';
+
+
