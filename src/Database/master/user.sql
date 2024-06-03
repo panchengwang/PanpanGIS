@@ -16,7 +16,7 @@ create table pan_user(
     identify_code_expire timestamp default now() + interval '30 minutes',
     token varchar(128) not null  default '',
     token_expire timestamp default now() + interval '5 minutes',
-    status integer      -- 1 有效用户，2 失效用户，3 注册状态
+    status integer  default 3    -- 1 有效用户，2 失效用户，3 注册状态
 );
 
 -- 系统管理员账号

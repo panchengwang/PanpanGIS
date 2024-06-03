@@ -105,9 +105,62 @@ end;
 $$ language 'plpgsql';
 
 
-select pan_server(
-    jsonb_build_object(
-        'type','USER_GET_IDENTIFY_CODE',
-        'username','sqlcartotest@126.com'
-    )
-);
+
+
+
+
+-- ————————————————————————————————————————————————————————
+--  创建（注册）用户：
+--  请求参数:
+--  {
+--      "type":"USER_REGISTER",
+--      "data": {
+--          "username": "",
+--          "nickname": "",
+--          "password": "",
+--          "identify_code": ""
+--      }
+--  }
+--  返回:
+--  {
+--      "success": true,
+--      "message": "用户注册成功"
+--  }
+-- ————————————————————————————————————————————————————————
+
+insert into pan_server_func(request_type, func_name) 
+values
+    ('USER_REGISTER','pan_user_register');
+
+create or replace function pan_user_register(params jsonb) returns jsonb as 
+$$
+declare
+    sqlstr text;
+    response jsonb;
+    code_correct boolean;
+begin
+    -- 检查验证码是否正确
+    code_correct := false;
+    select 
+        count(1) = 1  into code_correct
+    from 
+        pan_user 
+    where 
+        username = (params->'data'->>'username') 
+        and 
+        identify_code = (params->'data'->>'identify_code');
+    if not code_correct then 
+        return jsonb_build_object(
+            'success',false,
+            'message','验证码错误'
+        );
+    end if;
+    
+    response := jsonb_build_object(
+        'success',true,
+        'message','用户注册（创建）成功'
+    );
+    return response;
+
+end;
+$$ language 'plpgsql';

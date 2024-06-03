@@ -4,7 +4,7 @@ create extension "sqlcarto";
 
 set client_encoding to utf8;
 
-create or replace function pan_requirement() returns text as 
+create or replace function pan_requirements() returns text as 
 $$
     select 'panpangis 数据库端需要
             数据库扩展：ossp-uuid, sqlcarto';
