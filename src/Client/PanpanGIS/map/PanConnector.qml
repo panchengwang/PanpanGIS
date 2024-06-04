@@ -11,6 +11,7 @@ PanAjax {
 
 
     onResponse: (data)=>{
+                    console.log(data)
                     let res = JSON.parse(data)
                     message = res.message
                     data = res.data
