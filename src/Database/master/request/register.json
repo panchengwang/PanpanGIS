@@ -1,0 +1,9 @@
+{
+    "type": "USER_REGISTER",
+    "data": {
+        "username": "",
+        "nickname": "",
+        "password": "",
+        "identify_code": ""
+    }
+}
