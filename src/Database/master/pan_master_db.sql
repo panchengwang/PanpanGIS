@@ -10,6 +10,25 @@ $$
             数据库扩展：ossp-uuid, sqlcarto';
 $$ language 'sql';
 
+-- 系统配置参数
+
+create table pan_configuration(
+    keyname varchar unique not null,
+    keyvalue varchar 
+) ;
+
+insert into pan_configuration(keyname,keyvalue) 
+values 
+    ('IDENTIFY_CODE_VALID_TIME', '10 minutes')          -- 验证码有效时长
+    ;
+
+-- 获取配置
+create or replace function pan_get_configuration(
+    keyname varchar
+) returns varchar as 
+$$
+    select keyvalue from pan_configuration where keyname = $1;
+$$ language 'sql';
 -- 用户数据库初始化
 
 -- 邮件发送参数配置
@@ -18,17 +37,19 @@ update sc_configuration set key_value = 'smtps://smtp.126.com:465' where key_nam
 update sc_configuration set key_value = 'SCUGOXHGWAEZUEQH' where key_name = 'EMAIL_PASSWORD';
 
 -- 用户数据库
-drop table if exists pan_user;
+-- drop table if exists pan_user;
 create table pan_user(
     id varchar(32) default sc_uuid() primary key,
     username varchar(64) unique not null,
     nickname varchar(64) NOT NULL default '',
     password varchar(128) not null default '',
+    salt  varchar(32) not null default sc_generate_code(32),
+    register_time timestamp default now(),
     identify_code varchar(8) default '',
-    identify_code_expire timestamp default now() + interval '30 minutes',
+    identify_code_expire_time timestamp default now() ,
     token varchar(128) not null  default '',
-    token_expire timestamp default now() + interval '5 minutes',
-    status integer      -- 1 有效用户，2 失效用户，3 注册状态
+    token_expire_time timestamp default now() ,
+    status integer  default 3    -- 1 有效用户，2 失效用户，3 注册状态
 );
 
 -- 系统管理员账号
@@ -64,8 +85,10 @@ create table pan_server_func(
 --  参数:   
 --      params  此参数根据请求类型的不同包含不同的key-value，下面为示例：
 --          {
---              "type": "请求类型，必须包含",         
---              "username": "用户名，一般情况下应该包含"
+--              "type": "请求类型，必须包含",  
+--              "data": {
+--                  "username": "用户名，一般情况下应该包含"
+--              }
 --          }
 --  返回:
 --      {
@@ -114,7 +137,9 @@ values
 --  请求参数:
 --  {
 --      "type":"USER_GET_IDENTIFY_CODE",
---      "username": "sqlcartotest@126.com"
+--      "data": {
+--          "username": ""
+--      }
 --  }
 --  返回:
 --  {
@@ -129,15 +154,21 @@ declare
     code varchar;
 begin
     code := sc_generate_code(8);
-    if not pan_user_exist(params->>'username') then 
+    if not pan_user_exist(params->'data'->>'username') then 
         -- 如果用户名不存在，则新建一个
-        insert into pan_user(username,identify_code) values( params->>'username',code);
-    else 
-        -- 如果已经存在，则更新它的identify_code
-        update pan_user set identify_code=code where username = (params->>'username');
-    end if ;
+        insert into pan_user(username) values( params->'data'->>'username');
+    end if; 
+    -- 如果已经存在，则更新它的identify_code
+    update 
+        pan_user 
+    set 
+        identify_code=code,
+        identify_code_expire_time = now() + pan_get_configuration('IDENTIFY_CODE_VALID_TIME')::interval
+    where 
+        username = (params->'data'->>'username');
+    
     -- 发送验证码到指定的电子邮件
-    if sc_send_email(params->>'username','验证码',code) then 
+    if sc_send_email(params->'data'->>'username','验证码',code) then 
         response := jsonb_build_object(
             'success', true,
             'message', '验证码已经发送到指定的信箱'
@@ -155,3 +186,130 @@ end;
 $$ language 'plpgsql';
 
 
+
+-- ---------------------------------------------------------
+--  pan_identify_code_is_valid: 验证码是否有效
+--  参数：
+--      username
+--      identify_code
+-- ---------------------------------------------------------
+create or replace function pan_identify_code_is_valid(
+    username varchar, identify_code varchar
+) returns boolean as 
+$$
+    select 
+        count(1) = 1  
+    from 
+        pan_user 
+    where 
+        username = $1 
+        and 
+        identify_code = $2;
+$$ language 'sql';
+
+-- ---------------------------------------------------------
+--  pan_identify_code_is_expired: 验证码是否过期
+--  参数：
+--      username
+--      identify_code
+-- ---------------------------------------------------------
+create or replace function pan_identify_code_is_expired(
+    username varchar, identify_code varchar
+) returns boolean as 
+$$
+    select 
+        now() >= identify_code_expire_time 
+    from 
+        pan_user 
+    where 
+        username = $1 
+        and 
+        identify_code = $2;
+$$ language 'sql';
+
+
+-- ---------------------------------------------------------
+--  创建（注册）用户：
+--  请求参数:
+--  {
+--      "type":"USER_REGISTER",
+--      "data": {
+--          "username": "",
+--          "nickname": "",
+--          "password": "",
+--          "identify_code": ""
+--      }
+--  }
+--  返回:
+--  {
+--      "success": true,
+--      "message": "用户注册成功"
+--  }
+-- ---------------------------------------------------------
+
+insert into pan_server_func(request_type, func_name) 
+values
+    ('USER_REGISTER','pan_user_register');
+
+create or replace function pan_user_register(params jsonb) returns jsonb as 
+$$
+declare
+    sqlstr text;
+    response jsonb;
+    code_correct boolean;
+begin
+    -- 检查验证码是否正确
+    if pan_identify_code_is_expired(params->'data'->>'username', params->'data'->>'identify_code') then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '验证码过期'
+        );
+    end if;
+    if not pan_identify_code_is_valid(params->'data'->>'username', params->'data'->>'identify_code') then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '验证码无效'
+        );
+    end if;    
+    
+    update 
+        pan_user
+    set
+        nickname = params->'data'->>'nickname',
+        password = md5(salt || (params->'data'->>'password')),
+        status = 1,
+        register_time = now()
+    where 
+        username = params->'data'->>'username' ;
+     
+    response := jsonb_build_object(
+        'success',true,
+        'message','用户注册（创建）成功'
+    );
+    return response;
+
+end;
+$$ language 'plpgsql';
+
+
+
+
+-- ---------------------------------------------------------
+--  创建（注册）用户：
+--  请求参数:
+--  {
+--      "type":"USER_LOGIN",
+--      "data": {
+--          "username": "",
+--          "password": ""
+--      }
+--  }
+--  返回:
+--  {
+--      "success": true,
+--      "message": "登录成功"
+--  }
+-- ---------------------------------------------------------
+insert into pan_server_func(request_type, func_name) 
+values
+    ('USER_LOGIN','pan_user_register');
