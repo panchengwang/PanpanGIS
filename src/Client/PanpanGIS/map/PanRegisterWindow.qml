@@ -11,9 +11,10 @@ PanFormWindow {
     property PanConnector connector:     PanConnector{
         onSuccess:{
             registerWin.close()
+            PanApplication.notify.show(message)
         }
         onFailure: {
-            PanApplication.logWindow.open()
+            PanApplication.notify.show(message)
         }
     }
 
