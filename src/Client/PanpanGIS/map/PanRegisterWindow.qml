@@ -77,11 +77,10 @@ PanFormWindow {
         server: PanApplication.masterUrl
         Layout.fillWidth: true
         onError: {
-            PanApplication.logWindow.appendLog(errorMessage,"warning")
-            PanApplication.logWindow.open()
+            PanApplication.notify.show(errorMessage)
         }
         onSuccess:{
-            PanApplication.logWindow.open()
+            PanApplication.notify.show(errorMessage)
         }
     }
 
@@ -91,21 +90,23 @@ PanFormWindow {
 
     function onRegister(){
 
+        if(username.text.trim() === ""){
+            PanApplication.notify.show("邮箱（用户名）不能为空")
+            return
+        }
+
         if(password.text.trim() !== password2.text.trim()){
-            PanApplication.logWindow.appendLog("两次输入的密码不一致","information")
-            PanApplication.logWindow.open()
+            PanApplication.notify.show("两次输入的密码不一致")
             return
         }
 
         if(identifyCode.code.trim()===""){
-            PanApplication.logWindow.appendLog("请输入验证码","information")
-            PanApplication.logWindow.open()
+            PanApplication.notify.show("请输入验证码")
             return
         }
 
         if(identifyCode.code.trim().length !== 8){
-            PanApplication.logWindow.appendLog("请输入有效的验证码","information")
-            PanApplication.logWindow.open()
+            PanApplication.notify.show("请输入有效的验证码")
             return;
         }
 
