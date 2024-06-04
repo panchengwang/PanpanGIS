@@ -69,8 +69,10 @@ PanFormWindow{
     //     }
     // }
 
-    RowLayout{
+
+    GridLayout{
         Layout.fillWidth: true
+        columns: 2
         PanLabel{
 
             text: "如果您还没有注册？"
@@ -79,6 +81,20 @@ PanFormWindow{
             icon: ""
             Layout.fillWidth: true
             text: "请单击这里注册新账号"
+            flat: true
+            onClicked: {
+                createRegisterWindow()
+            }
+        }
+
+        PanLabel{
+
+            text: "忘记密码？"
+        }
+        PanButton{
+            icon: ""
+            Layout.fillWidth: true
+            text: "请单击这里重置密码"
             flat: true
             onClicked: {
                 createRegisterWindow()
