@@ -1,0 +1,6 @@
+{
+    "type": "USER_GET_IDENTIFY_CODE",
+    "data":{
+        "username": ""
+    }
+}
