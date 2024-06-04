@@ -6,16 +6,18 @@ update sc_configuration set key_value = 'smtps://smtp.126.com:465' where key_nam
 update sc_configuration set key_value = 'SCUGOXHGWAEZUEQH' where key_name = 'EMAIL_PASSWORD';
 
 -- 用户数据库
-drop table if exists pan_user;
+-- drop table if exists pan_user;
 create table pan_user(
     id varchar(32) default sc_uuid() primary key,
     username varchar(64) unique not null,
     nickname varchar(64) NOT NULL default '',
     password varchar(128) not null default '',
+    salt  varchar(32) not null default sc_generate_code(32),
+    register_time timestamp default now(),
     identify_code varchar(8) default '',
-    identify_code_expire timestamp default now() + interval '30 minutes',
+    identify_code_expire_time timestamp default now() ,
     token varchar(128) not null  default '',
-    token_expire timestamp default now() + interval '5 minutes',
+    token_expire_time timestamp default now() ,
     status integer  default 3    -- 1 有效用户，2 失效用户，3 注册状态
 );
 
