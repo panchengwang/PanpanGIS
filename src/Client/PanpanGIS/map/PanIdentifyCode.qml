@@ -31,7 +31,9 @@ RowLayout {
 
             connector.post(server,"request",JSON.stringify({
                                                                "type":"USER_GET_IDENTIFY_CODE",
-                                                               "username": email.trim()
+                                                               "data": {
+                                                                   "username": email.trim()
+                                                               }
                                                            }))
         }
     }
