@@ -87,18 +87,7 @@ PanFormWindow{
     }
 
     function createRegisterWindow(){
-        const createScript=`
-        import QtQuick
-        import cn.pc.gis.control
-        import cn.pc.gis.map
-        PanRegisterWindow{
-            x: (parent.width-width)*0.5
-            y: Math.max(100 , (parent.height - height)*0.5-100)
-            width: Math.max(400,parent.width*0.5)
-            visible: true
-        }
-        `
-        console.log(createScript)
+
         const registerWin = Qt.createQmlObject(`
             import QtQuick
             import cn.pc.gis.control
@@ -114,7 +103,7 @@ PanFormWindow{
             parent,
             "registerWin"
         );
-        // loginPanel.visible = false
+
         registerWin.modal = true
         registerWin.cancel.connect(()=>{
                                        registerWin.destroy()
