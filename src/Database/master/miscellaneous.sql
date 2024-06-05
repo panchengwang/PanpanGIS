@@ -10,3 +10,8 @@ $$
             数据库扩展：ossp-uuid, sqlcarto';
 $$ language 'sql';
 
+
+create or replace function pan_generate_token() returns varchar as 
+$$
+    select sc_generate_token(128);
+$$ language 'sql';
