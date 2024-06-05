@@ -52,7 +52,8 @@ ApplicationWindow {
 
             PanBusyIndicator{
                 id: busyIndicator
-                anchors.centerIn: parent
+                x: (parent.width - width)*0.5
+                y: Math.max((parent.height-height)*0.5-50, 100)
                 Component.onCompleted: {
                     PanApplication.busyIndicator = this
                 }
