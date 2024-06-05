@@ -7,7 +7,8 @@ create table pan_configuration(
 
 insert into pan_configuration(keyname,keyvalue) 
 values 
-    ('IDENTIFY_CODE_VALID_TIME', '10 minutes')          -- 验证码有效时长
+    ('IDENTIFY_CODE_VALID_TIME', '10 minutes'),         -- 验证码有效时长
+    ('TOKEN_VALID_TIME', '10 minutes')                  -- token有效时长
     ;
 
 -- 获取配置
