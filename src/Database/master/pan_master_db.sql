@@ -10,7 +10,11 @@ $$
             数据库扩展：ossp-uuid, sqlcarto';
 $$ language 'sql';
 
--- 系统配置参数
+
+create or replace function pan_generate_token() returns varchar as 
+$$
+    select sc_generate_token(128);
+$$ language 'sql';-- 系统配置参数
 
 create table pan_configuration(
     keyname varchar unique not null,
@@ -19,7 +23,8 @@ create table pan_configuration(
 
 insert into pan_configuration(keyname,keyvalue) 
 values 
-    ('IDENTIFY_CODE_VALID_TIME', '10 minutes')          -- 验证码有效时长
+    ('IDENTIFY_CODE_VALID_TIME', '10 minutes'),         -- 验证码有效时长
+    ('TOKEN_VALID_TIME', '10 minutes')                  -- token有效时长
     ;
 
 -- 获取配置
@@ -72,7 +77,7 @@ $$
 $$ language 'sql';-- 服务api函数
 
 -- 请求 <--> 内部函数映射表
-create table pan_server_func(
+create table pan_service_funcation(
     id varchar default sc_uuid() not null,
     request_type varchar not null,
     func_name varchar not null
@@ -81,7 +86,7 @@ create table pan_server_func(
 
 
 
--- pan_server
+-- pan_service
 --  参数:   
 --      params  此参数根据请求类型的不同包含不同的key-value，下面为示例：
 --          {
@@ -96,7 +101,7 @@ create table pan_server_func(
 --          "message": "一些提示信息",
 --          "data":{}  返回数据，根据请求类型有所差异
 --      }
-create or replace function pan_server(params jsonb) returns jsonb as 
+create or replace function pan_service(params jsonb) returns jsonb as 
 $$
 declare
     response jsonb;
@@ -111,7 +116,7 @@ begin
         );
     end if;
 
-    sqlstr := 'select func_name from pan_server_func where request_type = ' || quote_literal(params->>'type') ;
+    sqlstr := 'select func_name from pan_service_funcation where request_type = ' || quote_literal(params->>'type') ;
     execute sqlstr into server_func_name;
     if server_func_name is null then 
         return jsonb_build_object(
@@ -130,7 +135,7 @@ end;
 $$ language 'plpgsql';
 
 
-insert into pan_server_func(request_type, func_name) 
+insert into pan_service_funcation(request_type, func_name) 
 values
     ('USER_GET_IDENTIFY_CODE','pan_user_get_identify_code');
 
@@ -247,7 +252,7 @@ $$ language 'sql';
 --  }
 -- ---------------------------------------------------------
 
-insert into pan_server_func(request_type, func_name) 
+insert into pan_service_funcation(request_type, func_name) 
 values
     ('USER_REGISTER','pan_user_register');
 
@@ -295,7 +300,7 @@ $$ language 'plpgsql';
 
 
 -- ---------------------------------------------------------
---  创建（注册）用户：
+--  用户登录
 --  请求参数:
 --  {
 --      "type":"USER_LOGIN",
@@ -310,6 +315,46 @@ $$ language 'plpgsql';
 --      "message": "登录成功"
 --  }
 -- ---------------------------------------------------------
-insert into pan_server_func(request_type, func_name) 
+insert into pan_service_funcation(request_type, func_name) 
 values
-    ('USER_LOGIN','pan_user_register');
+    ('USER_LOGIN','pan_user_login');
+
+create or replace function pan_user_login(params jsonb) returns jsonb as 
+$$
+declare
+    mytoken varchar;
+    login_success boolean;
+begin
+    mytoken := pan_generate_token();
+    login_success := false;
+    select 
+        count(1) = 1  into login_success
+    from 
+        pan_user 
+    where
+        username = (params->'data'->>'username') 
+        and 
+        password = md5(salt || (params->'data'->>'password')) ;
+    if not login_success then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '登录失败'
+        );
+    end if;
+
+    update pan_user 
+    set 
+        token = mytoken,
+        token_expire_time = now() + pan_get_configuration('TOKEN_VALID_TIME')::interval
+    where 
+        username = (params->'data'->>'username');
+    
+    return jsonb_build_object(
+        'success',true,
+        'message','登录成功',
+        'data', jsonb_build_object(
+            'token',mytoken
+        )
+    );
+end;
+$$ language 'plpgsql';
