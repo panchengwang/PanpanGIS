@@ -41,7 +41,7 @@ TextField {
                                      control.leftPadding, control.rightPadding,
                                      control.topPadding, control.bottomPadding);
             inputManager.setDefaultText(text)
-            inputManager.setStyle("font-size", "" + control.font.pixelSize + "pt")
+            inputManager.setStyle("font-size", "" + control.font.pixelSize + "px")
             inputManager.setStyle("border-color", PanStyles.color_primary)
             inputManager.setStyle("border-width", "1pt" )
             inputManager.setStyle("border-style", "solid" )
