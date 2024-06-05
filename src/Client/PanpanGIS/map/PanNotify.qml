@@ -23,18 +23,20 @@ PanWindow {
         id: flick
         anchors.fill: parent
         anchors.margins: PanStyles.default_margin
-
-        PanLabel{
-            id: msgLabel
+        contentHeight: msgArea.height + 2 * PanStyles.default_margin
+        TextArea{
+            id: msgArea
             text: ""
             width:flick.width
+            font.family: PanFonts.notoSansSimpleChineseRegular.name
+            font.pixelSize: PanStyles.default_font_size
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
         }
     }
 
 
     function show(message){
-        msgLabel.text = message
+        msgArea.text = message
         open()
     }
 
