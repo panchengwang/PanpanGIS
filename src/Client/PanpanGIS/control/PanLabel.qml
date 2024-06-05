@@ -7,4 +7,5 @@ Text {
     font.pixelSize:  PanStyles.default_font_size
     verticalAlignment: Text.AlignVCenter
     color: PanStyles.color_text
+
 }
