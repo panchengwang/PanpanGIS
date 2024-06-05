@@ -35,6 +35,7 @@ void PanAjax::post(const QString &url, const QString &argname, const QString &ar
     query.addQueryItem(argname,argval);
 
     QNetworkReply *reply = manager->post(request, query.toString(QUrl::FullyEncoded).toUtf8() );
+    reply->ignoreSslErrors();
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this, SLOT(onErrorOccurred(QNetworkReply::NetworkError)));
     connect(reply, SIGNAL(sslErrors(const QList<QSslError>&)), this, SLOT(onSslErrors(const QList<QSslError>&)));
