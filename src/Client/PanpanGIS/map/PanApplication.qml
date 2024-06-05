@@ -16,7 +16,7 @@ QtObject {
     property string token: ''                                                                   // 登陆后产生的token
     property string username: ''                                                                // 用户名
     property string nickname: '请登录'                                                           // 用户昵称
-    property string masterUrl: 'http://127.0.0.1/MasterService/service.php'                     // 管理服务url
+    property string masterUrl: 'https://127.0.0.1/MasterService/service.php'                     // 管理服务url
     property string nodeUrl: ''                                                                 // 节点服务url
 
 
