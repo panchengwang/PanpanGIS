@@ -13,7 +13,18 @@ PanFormWindow{
     height: 330
 
     signal error()
-    property string errorMessage: ""
+
+    property PanConnector connector:     PanConnector{
+        showBusyIndicator: true
+        onSuccess:(data)=>{
+                      window.close();
+                      PanApplication.token = data.token
+                  }
+        onFailure: {
+            PanApplication.notify.show(message)
+        }
+
+    }
 
     PanLabel{
         text: "欢迎来到PanpanGIS世界"
@@ -39,35 +50,23 @@ PanFormWindow{
         type: "email"
         Layout.fillWidth: true
         placeholderText: "请输入电子信箱地址"
+        text: "593723812@qq.com"
     }
     PanLabel{
 
         text: "密码"
         horizontalAlignment:  Text.AlignLeft
         Layout.fillWidth: true
+
     }
     PanTextField{
         id: password
         type: "password"
         Layout.fillWidth: true
         placeholderText: "请输入密码"
+        text: "pcwang"
     }
 
-    // PanLabel{
-    //     text: "验证码"
-    // }
-    // PanIdentifyCode{
-    //     email: username.text.trim()
-    //     server: PanApplication.masterUrl
-    //     Layout.fillWidth: true
-    //     onError: {
-    //         window.errorMessage = this.errorMessage
-    //         window.error()
-
-    //         PanApplication.logWindow.appendLog(errorMessage,"warning")
-    //         PanApplication.logWindow.open()
-    //     }
-    // }
 
 
     GridLayout{
@@ -97,7 +96,8 @@ PanFormWindow{
             text: "请单击这里重置密码"
             flat: true
             onClicked: {
-                createRegisterWindow()
+                var win = createRegisterWindow()
+                win.caption = "密码重置"
             }
         }
     }
@@ -105,29 +105,43 @@ PanFormWindow{
     function createRegisterWindow(){
 
         const registerWin = Qt.createQmlObject(`
-            import QtQuick
-            import cn.pc.gis.control
-            import cn.pc.gis.map
-            PanRegisterWindow{
-                x: (parent.width-width)*0.5
-                y: Math.max(100 , (parent.height - height)*0.5-100)
-                z: ${z+1}
-                width: Math.max(400,parent.width*0.5)
-                visible: true
-            }
-            `,
-            parent,
-            "registerWin"
-        );
+                                               import QtQuick
+                                               import cn.pc.gis.control
+                                               import cn.pc.gis.map
+                                               PanRegisterWindow{
+                                               x: (parent.width-width)*0.5
+                                               y: Math.max(100 , (parent.height - height)*0.5-100)
+                                               width: Math.max(400,parent.width*0.5)
+                                               visible: true
+                                               }
+                                               `,
+                                               parent,
+                                               "registerWin"
+                                               );
 
         registerWin.modal = true
         registerWin.cancel.connect(()=>{
                                        registerWin.destroy()
 
                                    })
-        // createAccountPanel.cancel.connect(()=>{
-        //                                       createAccountPanel.destroy()
-        //                                       loginPanel.visible = true
-        //                                   })
+        return registerWin;
+    }
+
+    onOk: {
+        if(username.text.trim() === "" || password.text.trim() === ""){
+            PanApplication.notify.show("用户名和密码均不能为空");
+            return;
+        }
+
+        connector.post(PanApplication.masterUrl,"request",
+                       JSON.stringify(
+                           {
+                               "type": "USER_LOGIN",
+                               "data": {
+                                   "username": username.text.trim(),
+                                   "password": password.text.trim()
+                               }
+                           })
+                       );
     }
 }
