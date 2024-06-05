@@ -1,0 +1,7 @@
+{
+    "type": "USER_LOGIN",
+    "data":{
+        "username": "593723812@qq.com",
+        "password": "pcwang"
+    }
+}
