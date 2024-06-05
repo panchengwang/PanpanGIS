@@ -6,8 +6,9 @@ import cn.pc.gis.control
 Popup {
     id: indicator
     implicitWidth: 100
-    implicitHeight: 100
+    implicitHeight: layout.width
 
+    // property alias message: labelMessage.text
 
     background: Rectangle{
         anchors.fill: parent
@@ -19,13 +20,18 @@ Popup {
     }
 
     ColumnLayout{
-        anchors.fill: parent
+        id: layout
+        x:0
+        y:0
+        anchors.centerIn: parent
+        width: Math.max(labelMessage.width, 100)
         BusyIndicator{
             running: indicator.opened
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
         PanLabel{
+            id: labelMessage
             text: "请等待..."
             Layout.alignment: Qt.AlignHCenter
         }
