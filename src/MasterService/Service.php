@@ -2,6 +2,8 @@
 
 include_once './DBConf.php';
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 
 if (!isset($_REQUEST["request"])) {
     echo json_encode(array(
@@ -11,7 +13,7 @@ if (!isset($_REQUEST["request"])) {
 
     exit(0);
 }
-
+sleep(2);
 $request = $_REQUEST["request"];
 //
 //if (!$request || !$request->type) {
@@ -35,7 +37,7 @@ if (!$connection) {
 }
 
 
-$result = pg_query_params($connection,"select pan_server($1::jsonb)",array(
+$result = pg_query_params($connection,"select pan_service($1::jsonb)",array(
     $request
 ));
 $row = pg_fetch_row($result);
