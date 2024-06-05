@@ -40,18 +40,19 @@ RowLayout {
 
     PanConnector{
         id: connector
+        showBusyIndicator: true
         onSuccess:{
             PanApplication.notify.show(message)
         }
         onFailure: {
             PanApplication.notify.show(message)
         }
-        onRunningChanged:{
-            if(running){
-                PanApplication.busyIndicator.open()
-            }else{
-                PanApplication.busyIndicator.close()
-            }
-        }
+        // onRunningChanged:{
+        //     if(running){
+        //         PanApplication.busyIndicator.open()
+        //     }else{
+        //         PanApplication.busyIndicator.close()
+        //     }
+        // }
     }
 }
