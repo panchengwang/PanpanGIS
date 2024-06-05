@@ -3,21 +3,18 @@ import QtQuick
 PanAjax {
     id: ajax
 
-    signal success()
+    signal success(data: var)
     signal failure()
 
     property string message: ""
     property var data:JSON.parse("{}")
-
+    property bool showBusyIndicator: false
 
     onResponse: (data)=>{
-                    console.log(data)
                     let res = JSON.parse(data)
                     message = res.message
-                    data = res.data
                     if(res.success){
-                        ajax.success()
-
+                        ajax.success(res.data)
                     }else{
                         ajax.failure()
                     }
@@ -29,6 +26,13 @@ PanAjax {
 
              }
 
-
+    onRunningChanged: {
+        if(!showBusyIndicator)   return
+        if(running){
+            PanApplication.busyIndicator.open()
+        }else{
+            PanApplication.busyIndicator.close()
+        }
+    }
 
 }
