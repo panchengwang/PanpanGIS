@@ -37,3 +37,15 @@ begin
     return maxid;
 end;
 $$ language 'plpgsql';
+
+
+-- 根据用户名获取所在的数据库连接字符串
+create or replace function pan_get_gis_server_connection(username varchar) returns varchar as 
+$$
+    select 
+        'host=' || db_host || ' port=' || db_port || ' dbname=' || db_name || ' user=' || db_user || ' password=' || db_password 
+    from 
+        pan_server
+    where 
+        id = (select server_id from pan_user where username = $1 limit 1 );
+$$ language 'sql';
