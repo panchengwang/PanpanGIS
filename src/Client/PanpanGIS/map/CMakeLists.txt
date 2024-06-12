@@ -36,7 +36,7 @@ qt_add_qml_module(PanMap
         PanWindow.qml
         PanBorder.qml
         PanLoginWindow.qml
-        PanRegisterWindow.qml
+        PanUserWindow.qml
         PanLogWindow.qml
         PanStandardButtons.qml
         PanFormWindow.qml

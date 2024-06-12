@@ -3,14 +3,16 @@ import QtQuick.Layouts
 import cn.pc.gis.control
 
 PanFormWindow {
-    id: registerWin
+    id: userWin
     caption: "创建用户"
     windowButtonsVisible: true
     standardButtonsVisible: true
 
+    property string operation: "register"
+
     property PanConnector connector:     PanConnector{
         onSuccess:{
-            registerWin.close()
+            userWin.close()
             PanApplication.notify.show(message)
         }
         onFailure: {
@@ -31,6 +33,7 @@ PanFormWindow {
         id: username
         type: "email"
         Layout.fillWidth: true
+        text: "593723812@qq.com"
         placeholderText: "请使用一个有效的电子信箱地址作为用户名"
     }
 
@@ -86,30 +89,43 @@ PanFormWindow {
     }
 
 
-    onOk: onRegister()
+    onOk: {
+        switch (operation){
+        case "register":
+            register();
+            break;
+        case "reset":
+            reset();
+            break;
+        }
+    }
 
-
-    function onRegister(){
-
+    function checkUserInfo(){
         if(username.text.trim() === ""){
             PanApplication.notify.show("邮箱（用户名）不能为空")
-            return
+            return false
+        }
+
+        if(password.text.length < 6 ){
+            PanApplication.notify.show("密码应该为包含字母、数字和特殊符号、长度大于或等于6的字符串")
+            return false
         }
 
         if(password.text.trim() !== password2.text.trim()){
             PanApplication.notify.show("两次输入的密码不一致")
-            return
-        }
-
-        if(identifyCode.code.trim()===""){
-            PanApplication.notify.show("请输入验证码")
-            return
+            return false
         }
 
         if(identifyCode.code.trim().length !== 8){
             PanApplication.notify.show("请输入有效的验证码")
-            return;
+            return false
         }
+        return true;
+    }
+
+    function register(){
+
+        if(!checkUserInfo())    return;
 
         var req={
             type:"USER_REGISTER",
@@ -121,8 +137,26 @@ PanFormWindow {
             }
         }
 
-
+        connector.success.connect(registerSuccess)
         connector.post(PanApplication.masterUrl,"request",JSON.stringify(req))
     }
 
+    function registerSuccess (data){
+        userWin.destroy()
+    }
+
+    function reset(){
+        if(!checkUserInfo())    return;
+        var req={
+            type:"USER_RESET_PASSWORD",
+            data:{
+                username: username.text.trim(),
+                password: password.text.trim(),
+                identify_code: identifyCode.code.trim()
+            }
+        }
+
+        connector.success.connect(()=>{userWin.destroy()})
+        connector.post(PanApplication.masterUrl,"request",JSON.stringify(req))
+    }
 }

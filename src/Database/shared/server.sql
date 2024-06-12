@@ -1,11 +1,17 @@
-set client_encoding to utf8;
+-- 服务节点元数据
+create table pan_server(
+    id integer not null,
+    db_host varchar default '127.0.0.1',
+    db_port integer default 5432,
+    db_name varchar(32) default 'pan_gis_db',
+    db_user varchar(32) default 'pcwang',
+    db_password varchar(32) default '',
+    web_url varchar(1024) default '' unique not null,       -- 
+    max_user_count integer default 100 not null,            -- 可容纳最大用户数
+    user_count integer default 0 not null                   -- 当前已有用户数
+);
 
--- 当前编辑sql脚本
--- 当sql脚本能正确运行后，请拷贝到相应的其他sql文件里
--- 如：
---      用户相关的sql拷贝到 user.sql
---      服务相关的sql拷贝到 server.sql
-
+-- 向系统中添加一个新的服务节点
 create or replace function pan_add_server(
     dbhost varchar,
     dbport integer,
@@ -31,12 +37,3 @@ begin
     return maxid;
 end;
 $$ language 'plpgsql';
-
-select pan_add_server(
-    '127.0.0.1',
-    5432,
-    'pan_node_db',
-    'pcwang',
-    '',
-    'https://127.0.0.1/'
-);

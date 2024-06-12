@@ -19,6 +19,8 @@ PanFormWindow{
         onSuccess:(data)=>{
                       window.close();
                       PanApplication.token = data.token
+                      PanApplication.nodeUrl = data.url
+                      console.log(JSON.stringify(data))
                   }
         onFailure: {
             PanApplication.notify.show(message)
@@ -96,10 +98,34 @@ PanFormWindow{
             text: "请单击这里重置密码"
             flat: true
             onClicked: {
-                var win = createRegisterWindow()
-                win.caption = "密码重置"
+                var win = createResetWindow()
+                win.caption = "密码找回"
             }
         }
+    }
+
+    function createResetWindow(){
+
+        const resetWin = Qt.createQmlObject(`
+                                               import QtQuick
+                                               import cn.pc.gis.control
+                                               import cn.pc.gis.map
+                                               PanUserWindow{
+                                                   x: (parent.width-width)*0.5
+                                                   y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                   width: Math.max(400,parent.width*0.5)
+                                                   visible: true
+                                               }
+                                               `,
+                                               parent,
+                                               "resetWin"
+                                               );
+        resetWin.operation = "reset"
+        resetWin.modal = true
+        resetWin.cancel.connect(()=>{
+                                       registerWin.destroy()
+                                   })
+        return resetWin;
     }
 
     function createRegisterWindow(){
@@ -108,11 +134,12 @@ PanFormWindow{
                                                import QtQuick
                                                import cn.pc.gis.control
                                                import cn.pc.gis.map
-                                               PanRegisterWindow{
-                                               x: (parent.width-width)*0.5
-                                               y: Math.max(100 , (parent.height - height)*0.5-100)
-                                               width: Math.max(400,parent.width*0.5)
-                                               visible: true
+                                               PanUserWindow{
+                                                   caption: "用户注册"
+                                                   x: (parent.width-width)*0.5
+                                                   y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                   width: Math.max(400,parent.width*0.5)
+                                                   visible: true
                                                }
                                                `,
                                                parent,
@@ -122,12 +149,11 @@ PanFormWindow{
         registerWin.modal = true
         registerWin.cancel.connect(()=>{
                                        registerWin.destroy()
-
                                    })
         return registerWin;
     }
 
-    onOk: {
+     onOk: {
         if(username.text.trim() === "" || password.text.trim() === ""){
             PanApplication.notify.show("用户名和密码均不能为空");
             return;

@@ -25,7 +25,7 @@ Popup {
     property bool movable: true
     default property alias content: container.contentItem
 
-    signal ok()
+    signal ok(data: var)
     signal cancel()
 
     property int _originWindowX: 0
@@ -246,7 +246,7 @@ Popup {
                         window.cancel()
                     }
                     onOk: {
-                        window.ok()
+                        window.ok({})
                     }
                 }
 

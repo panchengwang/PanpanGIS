@@ -1,4 +1,5 @@
 import QtQuick
+import cn.pc.gis.map
 
 PanAjax {
     id: ajax
@@ -7,10 +8,11 @@ PanAjax {
     signal failure()
 
     property string message: ""
-    property var data:JSON.parse("{}")
+    // property var data:JSON.parse("{}")
     property bool showBusyIndicator: false
 
     onResponse: (data)=>{
+                    console.log(data)
                     let res = JSON.parse(data)
                     message = res.message
                     if(res.success){

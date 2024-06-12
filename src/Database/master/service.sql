@@ -1,65 +1,9 @@
--- 服务api函数
+-- master 特有服务
+--  1   获取验证码
+--  2   用户注册
+--  3   用户登录
 
--- 请求 <--> 内部函数映射表
-create table pan_service_funcation(
-    id varchar default sc_uuid() not null,
-    request_type varchar not null,
-    func_name varchar not null
-);
-
-
-
-
--- pan_service
---  参数:   
---      params  此参数根据请求类型的不同包含不同的key-value，下面为示例：
---          {
---              "type": "请求类型，必须包含",  
---              "data": {
---                  "username": "用户名，一般情况下应该包含"
---              }
---          }
---  返回:
---      {
---          "success": true/false,
---          "message": "一些提示信息",
---          "data":{}  返回数据，根据请求类型有所差异
---      }
-create or replace function pan_service(params jsonb) returns jsonb as 
-$$
-declare
-    response jsonb;
-    server_func_name varchar;
-    sqlstr text;
-begin
-    -- 是否包含有type
-    if params->'type' is null then 
-        return jsonb_build_object(
-            'success', false,
-            'message', '必须设置请求类型type'
-        );
-    end if;
-
-    sqlstr := 'select func_name from pan_service_funcation where request_type = ' || quote_literal(params->>'type') ;
-    execute sqlstr into server_func_name;
-    if server_func_name is null then 
-        return jsonb_build_object(
-            'success',  false,
-            'message', '不支持的请求类型: ' || (params->>'type')
-        );
-    end if;
-    sqlstr := 'select ' || server_func_name || '(' || quote_literal(params) || '::jsonb)';
-    execute sqlstr into response;
-    -- response := jsonb_build_object(
-    --     'success', true,
-    --     'message', 'ok'
-    -- );
-    return response;
-end;
-$$ language 'plpgsql';
-
-
-insert into pan_service_funcation(request_type, func_name) 
+insert into pan_service_function(request_type, func_name) 
 values
     ('USER_GET_IDENTIFY_CODE','pan_user_get_identify_code');
 
@@ -158,25 +102,27 @@ $$ language 'sql';
 
 
 -- ---------------------------------------------------------
---  创建（注册）用户：
---  请求参数:
---  {
---      "type":"USER_REGISTER",
---      "data": {
---          "username": "",
---          "nickname": "",
---          "password": "",
---          "identify_code": ""
---      }
---  }
+--  函数:   pan_user_register
+--  功能:   创建（注册）用户：
+--  参数:
+--      params  用户创建注册参数，jsonb对象
+--          {
+--              "type":"USER_REGISTER",
+--              "data": {
+--                  "username": "",
+--                  "nickname": "",
+--                  "password": "",
+--                  "identify_code": ""
+--              }
+--          }
 --  返回:
---  {
---      "success": true,
---      "message": "用户注册成功"
---  }
+--      {
+--          "success": true,
+--          "message": "用户注册成功"
+--      }
 -- ---------------------------------------------------------
 
-insert into pan_service_funcation(request_type, func_name) 
+insert into pan_service_function(request_type, func_name) 
 values
     ('USER_REGISTER','pan_user_register');
 
@@ -185,8 +131,25 @@ $$
 declare
     sqlstr text;
     response jsonb;
-    code_correct boolean;
+    server_available boolean;
+    gis_server_conn_str varchar;
+    gis_server_id integer;
+    myrec record;
+    user_salt varchar;
+    user_id varchar;
+    ret text;
+    user_status integer;
 begin
+    -- 检查用户是否已经注册成功
+    user_status := 1;
+    SELECT status into user_status from pan_user where username = (params->'data'->>'username');
+    if  pan_user_exist(params->'data'->>'username') and user_status > 1 then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '用户已经存在'
+        );
+    end if;
+
     -- 检查验证码是否正确
     if pan_identify_code_is_expired(params->'data'->>'username', params->'data'->>'identify_code') then 
         return jsonb_build_object(
@@ -201,26 +164,55 @@ begin
         );
     end if;    
     
+    --  获取资源最富余的服务数据库节点
+    select 
+        id ,
+        'host=' || db_host || ' port=' || db_port || ' dbname=' || db_name || ' user=' || db_user || ' password=' || db_password 
+        into gis_server_id, gis_server_conn_str
+    from 
+        pan_server
+    where 
+        user_count <= max_user_count
+    order by user_count limit 1;
+
+    if gis_server_id is null then 
+        return jsonb_build_object(
+            'success',false,
+            'message','服务器资源有限，请联系管理员'
+        );
+    end if;
+
+    --  向节点数据库中插入用户信息
+    select id,salt into user_id,user_salt from pan_user where username = params->'data'->>'username';
     update 
         pan_user
     set
         nickname = params->'data'->>'nickname',
         password = md5(salt || (params->'data'->>'password')),
-        status = 1,
+        status = 2,
         register_time = now()
     where 
-        username = params->'data'->>'username' ;
-     
+        id = user_id ;
+
+    sqlstr := 'insert into pan_user(id,username,nickname,password,register_time,status, server_id) values (
+            ' || quote_literal(user_id) || ',
+            ' || quote_literal(params->'data'->>'username') || ',
+            ' || quote_literal(params->'data'->> 'nickname') || ',
+            ' || quote_literal(md5( user_salt || (params->'data'->>'password'))) || ',
+            ' || quote_literal(now()) || '::timestamp,
+            2, 
+            ' || gis_server_id || '
+        )';
+
+    perform pan_dblink_execute_sql(gis_server_conn_str,sqlstr);
+
     response := jsonb_build_object(
         'success',true,
         'message','用户注册（创建）成功'
     );
     return response;
-
 end;
 $$ language 'plpgsql';
-
-
 
 
 -- ---------------------------------------------------------
@@ -239,46 +231,7 @@ $$ language 'plpgsql';
 --      "message": "登录成功"
 --  }
 -- ---------------------------------------------------------
-insert into pan_service_funcation(request_type, func_name) 
+insert into pan_service_function(request_type, func_name) 
 values
     ('USER_LOGIN','pan_user_login');
 
-create or replace function pan_user_login(params jsonb) returns jsonb as 
-$$
-declare
-    mytoken varchar;
-    login_success boolean;
-begin
-    mytoken := pan_generate_token();
-    login_success := false;
-    select 
-        count(1) = 1  into login_success
-    from 
-        pan_user 
-    where
-        username = (params->'data'->>'username') 
-        and 
-        password = md5(salt || (params->'data'->>'password')) ;
-    if not login_success then 
-        return jsonb_build_object(
-            'success', false,
-            'message', '登录失败'
-        );
-    end if;
-
-    update pan_user 
-    set 
-        token = mytoken,
-        token_expire_time = now() + pan_get_configuration('TOKEN_VALID_TIME')::interval
-    where 
-        username = (params->'data'->>'username');
-    
-    return jsonb_build_object(
-        'success',true,
-        'message','登录成功',
-        'data', jsonb_build_object(
-            'token',mytoken
-        )
-    );
-end;
-$$ language 'plpgsql';

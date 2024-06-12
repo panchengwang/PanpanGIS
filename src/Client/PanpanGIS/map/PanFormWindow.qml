@@ -7,6 +7,7 @@ PanWindow {
 
     default property  alias form:  grid.children
 
+
     content: Flickable{
         anchors.fill: parent
         contentHeight: contentItem.childrenRect.height
@@ -22,4 +23,6 @@ PanWindow {
             width: parent.width
         }
     }
+
+
 }

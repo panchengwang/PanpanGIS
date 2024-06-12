@@ -1,6 +1,12 @@
 <?php
 
-include_once './DBConf.php';
+//include_once './DBConf.php';
+
+define("HOST", "127.0.0.1");
+define("PORT", 5432);
+define("DBNAME", "pan_master_db");
+define("USER", "pcwang");
+define("PASSWORD", "");
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
@@ -13,17 +19,8 @@ if (!isset($_REQUEST["request"])) {
 
     exit(0);
 }
-sleep(2);
+
 $request = $_REQUEST["request"];
-//
-//if (!$request || !$request->type) {
-//    echo json_encode(array(
-//        "success" => false,
-//        "message" => "Invalid request parameter"
-//    ));
-//
-//    exit(0);
-//}
 
 
 $connstr = "host=" . HOST . " port=" . PORT . " dbname=" . DBNAME . " user=" . USER . " password=" . PASSWORD;

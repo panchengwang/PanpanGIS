@@ -118,7 +118,6 @@ Datum sc_send_mail(PG_FUNCTION_ARGS)
     free(send_data);
     if (!sendok)
     {
-        elog(NOTICE, "%s", errormessage);
         free(errormessage);
         PG_RETURN_BOOL(FALSE);
     }
