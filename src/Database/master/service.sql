@@ -181,6 +181,7 @@ begin
             'message','服务器资源有限，请联系管理员'
         );
     end if;
+    
 
     --  向节点数据库中插入用户信息
     select id,salt into user_id,user_salt from pan_user where username = params->'data'->>'username';
@@ -190,7 +191,8 @@ begin
         nickname = params->'data'->>'nickname',
         password = md5(salt || (params->'data'->>'password')),
         status = 2,
-        register_time = now()
+        register_time = now(),
+        server_id = gis_server_id
     where 
         id = user_id ;
 
@@ -228,10 +230,103 @@ $$ language 'plpgsql';
 --  返回:
 --  {
 --      "success": true,
---      "message": "登录成功"
+--      "message": "登录成功",
+--      "data": {
+--          "token": "",                                用户登陆后取得的token
+--          "url": ""                                   该用户服务的url
+--      }
 --  }
 -- ---------------------------------------------------------
 insert into pan_service_function(request_type, func_name) 
 values
     ('USER_LOGIN','pan_user_login');
+
+create or replace function pan_user_login(params jsonb) returns jsonb as 
+$$
+declare
+    mytoken varchar;
+    login_success boolean;
+    url varchar;
+    sqlstr text;
+begin
+    -- if not pan_user_exist(params->'data'->>'username') then 
+    --     return jsonb_build_object(
+    --         'success', false,
+    --         'message', '登录失败'
+    --     );
+    -- end if;
+
+    mytoken := pan_generate_token();
+    login_success := false;
+    select 
+        count(1) = 1  into login_success
+    from 
+        pan_user 
+    where
+        username = (params->'data'->>'username') 
+        and 
+        password = md5(salt || (params->'data'->>'password')) ;
+    if not login_success then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '登录失败'
+        );
+    end if;
+
+    -- update pan_user 
+    -- set 
+    --     token = mytoken,
+    --     token_expire_time = now() + pan_get_configuration('TOKEN_VALID_TIME')::interval
+    -- where 
+    --     username = (params->'data'->>'username');
+    
+    select web_url into url from pan_server where 
+        id = (select server_id from pan_user where username = (params->'data'->>'username') limit 1);
+
+    sqlstr := '
+        update pan_user 
+        set 
+            token = ' || quote_literal(mytoken) || ',
+            token_expire_time = ' || quote_literal(now()) ||  '::timestamp + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
+        where 
+            username = ' || quote_literal(params->'data'->>'username') || '
+    ';
+    execute sqlstr;
+    perform pan_dblink_execute_sql(pan_get_gis_server_connection(params->'data'->>'username'),sqlstr);
+
+    return jsonb_build_object(
+        'success',true,
+        'message','登录成功',
+        'data', jsonb_build_object(
+            'token',mytoken,
+            'url', url
+        )
+    );
+end;
+$$ language 'plpgsql';
+
+
+
+
+
+-- ---------------------------------------------------------
+--  用户密码重置
+--  请求参数:
+--  {
+--      "type":"USER_RESET_PASSWORD",
+--      "data": {
+--          "username": "",
+--          "password": "",
+--          "identify_code": ""
+--      }
+--  }
+--  返回:
+--  {
+--      "success": true,
+--      "message": "密码重置成功"
+--  }
+-- ---------------------------------------------------------
+insert into pan_service_function(request_type, func_name) 
+values
+    ('USER_RESET_PASSWORD','pan_user_reset_password');
 
