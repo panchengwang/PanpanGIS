@@ -55,7 +55,7 @@ qt_add_qml_module(PanControl
         fonts/fa-brands-400.ttf
         fonts/MaterialIcons-Regular.ttf
         icons/panpangis.svg
-        # icons/panpangis.png
+        icons/pcwang_gis2.svg
 
     SOURCES
         src/MapCanvas.h

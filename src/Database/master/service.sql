@@ -5,11 +5,11 @@
 
 insert into pan_service_function(request_type, func_name) 
 values
-    ('USER_GET_IDENTIFY_CODE','pan_user_get_identify_code');
+    ('USER_GET_VERIFY_CODE','pan_user_get_verify_code');
 
 --  请求参数:
 --  {
---      "type":"USER_GET_IDENTIFY_CODE",
+--      "type":"USER_GET_VERIFY_CODE",
 --      "data": {
 --          "username": ""
 --      }
@@ -19,7 +19,7 @@ values
 --      "success": true,
 --      "message": "验证码已经发送到指定的信箱"
 --  }
-create or replace function pan_user_get_identify_code(params jsonb) returns jsonb as 
+create or replace function pan_user_get_verify_code(params jsonb) returns jsonb as 
 $$
 declare
     sqlstr text;
@@ -31,12 +31,12 @@ begin
         -- 如果用户名不存在，则新建一个
         insert into pan_user(username) values( params->'data'->>'username');
     end if; 
-    -- 如果已经存在，则更新它的identify_code
+    -- 如果已经存在，则更新它的verify_code
     update 
         pan_user 
     set 
-        identify_code=code,
-        identify_code_expire_time = now() + pan_get_configuration('IDENTIFY_CODE_VALID_TIME')::interval
+        verify_code=code,
+        verify_code_expire_time = now() + pan_get_configuration('verify_CODE_VALID_TIME')::interval
     where 
         username = (params->'data'->>'username');
     
@@ -61,13 +61,13 @@ $$ language 'plpgsql';
 
 
 -- ---------------------------------------------------------
---  pan_identify_code_is_valid: 验证码是否有效
+--  pan_verify_code_is_valid: 验证码是否有效
 --  参数：
 --      username
---      identify_code
+--      verify_code
 -- ---------------------------------------------------------
-create or replace function pan_identify_code_is_valid(
-    username varchar, identify_code varchar
+create or replace function pan_verify_code_is_valid(
+    username varchar, verify_code varchar
 ) returns boolean as 
 $$
     select 
@@ -77,28 +77,81 @@ $$
     where 
         username = $1 
         and 
-        identify_code = $2;
+        verify_code = $2;
 $$ language 'sql';
 
 -- ---------------------------------------------------------
---  pan_identify_code_is_expired: 验证码是否过期
+--  pan_verify_code_is_expired: 验证码是否过期
 --  参数：
 --      username
---      identify_code
+--      verify_code
 -- ---------------------------------------------------------
-create or replace function pan_identify_code_is_expired(
-    username varchar, identify_code varchar
+create or replace function pan_verify_code_is_expired(
+    username varchar, verify_code varchar
 ) returns boolean as 
 $$
     select 
-        now() >= identify_code_expire_time 
+        now() >= verify_code_expire_time 
     from 
         pan_user 
     where 
         username = $1 
         and 
-        identify_code = $2;
+        verify_code = $2;
 $$ language 'sql';
+
+
+
+
+
+
+
+
+
+-- ---------------------------------------------------------
+--  函数:   pan_check_verify_code
+--  功能:   判断验证码是否有效或过期
+--  参数:
+--      username  用户名
+--      verify_code   验证码
+--  返回:
+--      {
+--          "success": true/fase,
+--          "message": "验证码有效/过期/无效"
+--      }
+-- ---------------------------------------------------------
+create or replace function pan_check_verify_code(
+    username varchar, verify_code varchar
+) returns jsonb as 
+$$
+declare
+begin
+    -- 检查验证码是否正确
+    if pan_verify_code_is_expired(username, verify_code) then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '验证码过期'
+        );
+    end if;
+    if not pan_verify_code_is_valid(username, verify_code) then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '验证码无效'
+        );
+    end if;   
+    return jsonb_build_object(
+        'success', true,
+        'message', '验证码有效'
+    );
+end;
+$$ language 'plpgsql';
+
+
+
+
+
+
+
 
 
 -- ---------------------------------------------------------
@@ -112,7 +165,7 @@ $$ language 'sql';
 --                  "username": "",
 --                  "nickname": "",
 --                  "password": "",
---                  "identify_code": ""
+--                  "verify_code": ""
 --              }
 --          }
 --  返回:
@@ -151,18 +204,10 @@ begin
     end if;
 
     -- 检查验证码是否正确
-    if pan_identify_code_is_expired(params->'data'->>'username', params->'data'->>'identify_code') then 
-        return jsonb_build_object(
-            'success', false,
-            'message', '验证码过期'
-        );
+    response := pan_check_verify_code(params->'data'->>'username',params->'data'->>'verify_code');
+    if not (response->'success')::boolean then 
+        return response;
     end if;
-    if not pan_identify_code_is_valid(params->'data'->>'username', params->'data'->>'identify_code') then 
-        return jsonb_build_object(
-            'success', false,
-            'message', '验证码无效'
-        );
-    end if;    
     
     --  获取资源最富余的服务数据库节点
     select 
@@ -196,10 +241,11 @@ begin
     where 
         id = user_id ;
 
-    sqlstr := 'insert into pan_user(id,username,nickname,password,register_time,status, server_id) values (
+    sqlstr := 'insert into pan_user(id,username,nickname,salt,password,register_time,status, server_id) values (
             ' || quote_literal(user_id) || ',
             ' || quote_literal(params->'data'->>'username') || ',
             ' || quote_literal(params->'data'->> 'nickname') || ',
+            ' || quote_literal(user_salt) || ',
             ' || quote_literal(md5( user_salt || (params->'data'->>'password'))) || ',
             ' || quote_literal(now()) || '::timestamp,
             2, 
@@ -317,7 +363,7 @@ $$ language 'plpgsql';
 --      "data": {
 --          "username": "",
 --          "password": "",
---          "identify_code": ""
+--          "verify_code": ""
 --      }
 --  }
 --  返回:
@@ -330,3 +376,28 @@ insert into pan_service_function(request_type, func_name)
 values
     ('USER_RESET_PASSWORD','pan_user_reset_password');
 
+create or replace function pan_user_reset_password(params jsonb) returns jsonb as 
+$$
+declare
+    sqlstr text;
+    response jsonb;
+begin
+    response := pan_check_verify_code(params->'data'->>'username', params->'data'->>'verify_code');
+    if not (response->'success')::boolean then 
+        return respone;
+    end if;
+
+    sqlstr := '
+        update pan_user 
+        set password = md5(salt || ' || quote_literal(params->'data'->>'password') || ')
+        where username = ' || quote_literal(params->'data'->>'username') || '
+    ';
+    execute sqlstr;
+    perform pan_dblink_execute_sql(pan_get_gis_server_connection(params->'data'->>'username'), sqlstr);
+    return jsonb_build_object(
+        'success', true,
+        'message', '密码重置成功'
+    );
+
+end;
+$$ language 'plpgsql';

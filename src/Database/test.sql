@@ -6,3 +6,5 @@ select pan_add_server(
     '',
     'https://127.0.0.1/service/PanGISService.php'
 );
+
+

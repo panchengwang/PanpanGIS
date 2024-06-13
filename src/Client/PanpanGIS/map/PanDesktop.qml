@@ -25,7 +25,7 @@ ApplicationWindow {
                 Repeater{
                     model: 3
                     Image{
-                        source:"/cn/pc/gis/control/icons/panpangis.svg"
+                        source:"/cn/pc/gis/control/icons/pcwang_gis2.svg"
                         sourceSize{
                             width: container.width * 0.67 * 0.2
                             height: width
@@ -107,7 +107,7 @@ ApplicationWindow {
 
                     imageIcon: true
                     iconSize: 26
-                    icon: "/cn/pc/gis/control/icons/panpangis.svg"
+                    icon: "/cn/pc/gis/control/icons/pcwang_gis2.svg"
                     flat: true
                     implicitWidth: 40
                     implicitHeight: 40

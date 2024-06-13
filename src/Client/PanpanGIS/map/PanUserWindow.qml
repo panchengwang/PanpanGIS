@@ -39,6 +39,7 @@ PanFormWindow {
 
     PanLabel{
         text: "昵称"
+        visible: operation !== "reset"
     }
 
     PanTextField{
@@ -46,6 +47,7 @@ PanFormWindow {
         type: "text"
         Layout.fillWidth: true
         placeholderText: "输入你喜欢的昵称"
+        visible: operation !== "reset"
     }
 
     PanLabel{
@@ -75,8 +77,8 @@ PanFormWindow {
     PanLabel{
         text: "验证码"
     }
-    PanIdentifyCode{
-        id: identifyCode
+    PanVerifyCode{
+        id: verifyCode
         email: username.text.trim()
         server: PanApplication.masterUrl
         Layout.fillWidth: true
@@ -116,7 +118,7 @@ PanFormWindow {
             return false
         }
 
-        if(identifyCode.code.trim().length !== 8){
+        if(verifyCode.code.trim().length !== 8){
             PanApplication.notify.show("请输入有效的验证码")
             return false
         }
@@ -133,7 +135,7 @@ PanFormWindow {
                 username: username.text.trim(),
                 nickname: nickname.text.trim() === "" ? username.text.trim() : nickname.text.trim(),
                 password: password.text.trim(),
-                identify_code: identifyCode.code.trim()
+                verify_code: verifyCode.code.trim()
             }
         }
 
@@ -152,7 +154,7 @@ PanFormWindow {
             data:{
                 username: username.text.trim(),
                 password: password.text.trim(),
-                identify_code: identifyCode.code.trim()
+                verify_code: verifyCode.code.trim()
             }
         }
 

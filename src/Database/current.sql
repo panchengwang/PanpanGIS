@@ -11,13 +11,9 @@ set client_encoding to utf8;
 
 
 
-create or replace function pan_user_reset_password(params jsonb) returns jsonb as 
-$$
-declare
-    sqlstr text;
-begin
 
-end;
-$$ language 'plpgsql';
+
+
+
 
 

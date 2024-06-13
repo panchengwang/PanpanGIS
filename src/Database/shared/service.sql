@@ -1,11 +1,5 @@
 -- 服务api函数
 
--- 请求 <--> 内部函数映射表
-create table pan_service_function(
-    id varchar default sc_uuid() not null,
-    request_type varchar not null,
-    func_name varchar not null
-);
 
 
 

@@ -26,6 +26,7 @@ create table pan_catalog(
     parent_id varchar(32) default '',
     name varchar(256),
     dataset_id  varchar(32),                                    -- 数据集id
+    author_id varchar(32) not null,
     create_time timestamp default now() not null               -- 
 );
 

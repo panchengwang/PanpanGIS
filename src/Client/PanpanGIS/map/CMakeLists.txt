@@ -32,7 +32,7 @@ qt_add_qml_module(PanMap
         PanPanel.qml
         PanHeader.qml
         PanDesktop.qml
-        PanIdentifyCode.qml
+        PanVerifyCode.qml
         PanWindow.qml
         PanBorder.qml
         PanLoginWindow.qml

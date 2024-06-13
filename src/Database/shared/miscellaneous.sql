@@ -1,9 +1,5 @@
 -- 系统需要的一些杂项函数
-create extension "uuid-ossp";
-create extension "sqlcarto";
-create extension "dblink";
 
-set client_encoding to utf8;
 
 create or replace function pan_requirements() returns text as 
 $$

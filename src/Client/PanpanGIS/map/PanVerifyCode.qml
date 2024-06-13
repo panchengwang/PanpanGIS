@@ -30,7 +30,7 @@ RowLayout {
 
 
             connector.post(server,"request",JSON.stringify({
-                                                               "type":"USER_GET_IDENTIFY_CODE",
+                                                               "type":"USER_GET_VERIFY_CODE",
                                                                "data": {
                                                                    "username": email.trim()
                                                                }

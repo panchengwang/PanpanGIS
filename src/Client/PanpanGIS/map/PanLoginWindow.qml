@@ -123,7 +123,7 @@ PanFormWindow{
         resetWin.operation = "reset"
         resetWin.modal = true
         resetWin.cancel.connect(()=>{
-                                       registerWin.destroy()
+                                       resetWin.destroy()
                                    })
         return resetWin;
     }
