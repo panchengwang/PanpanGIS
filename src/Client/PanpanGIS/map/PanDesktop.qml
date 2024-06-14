@@ -64,7 +64,6 @@ ApplicationWindow {
                 caption: "提示信息"
                 x: (parent.width - width)*0.5
                 y: Math.max((parent.height-height)*0.5-50, 100)
-                z: 100
                 Component.onCompleted: {
                     PanApplication.notify = notify
                 }
@@ -124,6 +123,9 @@ ApplicationWindow {
                     ToolTip.visible: hovered
                     ToolTip.delay: 300
                     ToolTip.text: "空间数据管理"
+                    onClicked: {
+                        createCatalogWindow();
+                    }
                 }
 
                 PanButton{
@@ -136,7 +138,11 @@ ApplicationWindow {
                     implicitHeight: 40
                     ToolTip.visible: hovered
                     ToolTip.delay: 300
-                    ToolTip.text: "打开新的地图窗口"
+                    ToolTip.text: "地图编辑"
+
+                    onClicked: {
+                        createMapEditorWindow();
+                    }
                 }
 
                 Item{
@@ -183,18 +189,55 @@ ApplicationWindow {
                                             x: (parent.width-width)*0.5
                                             y: Math.max(100 , (parent.height - height)*0.5-100)
                                             width: Math.max(400,parent.width*0.25)
-                                            visible: true
+                                            modal: true
                                             }
                                             `,
                                             PanApplication.windowContainer,
                                             "loginWin"
                                             );
+
+        loginWin.open();
         loginWin.cancel.connect(()=>{
                                     loginWin.destroy()
                                 })
 
     }
 
+    function createCatalogWindow(){
+        if(PanApplication.catalogWindow === null){
+            const catalogWindow = Qt.createQmlObject(`
+                                                PanCatalogWindow{
+                                                x: (parent.width-width)*0.5
+                                                y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                width: Math.max(400,parent.width*0.8)
+                                                height: Math.max(400,parent.height*0.8)
+                                                }
+                                                `,
+                                                PanApplication.windowContainer,
+                                                "catalogWindow"
+                                                );
+            catalogWindow.open()
+            PanApplication.catalogWindow = catalogWindow;
+        }
+    }
 
+
+    function createMapEditorWindow(){
+        if(PanApplication.mapEditorWindow === null){
+            const mapEditorWindow = Qt.createQmlObject(`
+                                                PanMapEditorWindow{
+                                                x: (parent.width-width)*0.5
+                                                y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                width: Math.max(400,parent.width*0.8)
+                                                height: Math.max(400,parent.height*0.8)
+                                                }
+                                                `,
+                                                PanApplication.windowContainer,
+                                                "mapEditorWindow"
+                                                );
+            mapEditorWindow.open()
+            PanApplication.mapEditorWindow = mapEditorWindow;
+        }
+    }
 
 }

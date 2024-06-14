@@ -54,9 +54,13 @@ Popup {
         color:  "#FFFFFE"
         border.width: 1
         border.color: PanStyles.color_button_border
+
+
     }
 
-
+    MouseArea{
+        anchors.fill: parent
+    }
 
     ColumnLayout{
         anchors.fill: parent
@@ -100,6 +104,13 @@ Popup {
                     window.y =Math.min(window.parent.height-window.height, Math.max(0,pos.y))
                     window.contentItem.x = 0
                     window.contentItem.y = 0
+                }
+
+                onClicked: {
+                    if(!modal && window.z!==PanApplication.zIndexOfTopWin){
+                        PanApplication.zIndexOfTopWin ++;
+                        window.z = PanApplication.zIndexOfTopWin
+                    }
                 }
             }
             RowLayout{
@@ -182,7 +193,8 @@ Popup {
                         implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
                         implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
                         onClicked: {
-                            window.close()
+                            window.visible = false;
+                            window.cancel()
                         }
                     }
                 }
@@ -201,6 +213,7 @@ Popup {
                     window.close()
                 }
             }
+
         }
 
         // Flickable{
@@ -302,6 +315,11 @@ Popup {
         internal._updateTimer()
     }
 
+    Component.onCompleted: {
+        moveToTopLevel()
+        enableFocus(window)
+    }
+
     QtObject{
         id: internal
         function _updateTimer(){
@@ -319,7 +337,42 @@ Popup {
         }
     }
 
+    function enableFocus(obj){
+        console.log("enableFocus",obj)
+        if (obj.onClicked) {
+            // Object.defineProperty(obj, '__clickedFunction', { value: createSpyFunction(obj) })
+            obj.onClicked.connect(()=>{
+                                      console.log("clicked")
+                                  window.moveToTopLevel()
+                                  })
+        }
+        if (obj.onFocused) {
+            // Object.defineProperty(obj, '__clickedFunction', { value: createSpyFunction(obj) })
+            obj.onFocused.connect(()=>{
+                                      console.log("focused")
+                                  window.moveToTopLevel()
+                                  })
+        }
 
+        if (obj.children) {
+            console.log(obj.children)
+            var i = 0
+            for (; i < obj.children.length; i++) {
+                enableFocus(obj.children[i])
+            }
+        }
+        if(obj.contentChildren){
+            var i = 0
+            for (; i < obj.contentChildren.length; i++) {
+                enableFocus(obj.contentChildren[i])
+            }
+        }
+    }
+
+    function moveToTopLevel(){
+        PanApplication.zIndexOfTopWin ++;
+        z = PanApplication.zIndexOfTopWin;
+    }
 
     function saveWindowStatus(){
         _originWindowX = window.x

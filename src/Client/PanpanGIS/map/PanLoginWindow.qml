@@ -20,7 +20,7 @@ PanFormWindow{
                       window.close();
                       PanApplication.token = data.token
                       PanApplication.nodeUrl = data.url
-                      console.log(JSON.stringify(data))
+                      window.destroy()
                   }
         onFailure: {
             PanApplication.notify.show(message)

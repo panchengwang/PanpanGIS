@@ -37,5 +37,9 @@ Popup {
         }
     }
 
+    onOpened: {
+        PanApplication.zIndexOfTopWin ++;
+        z = PanApplication.zIndexOfTopWin;
+    }
 
 }

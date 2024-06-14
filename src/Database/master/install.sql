@@ -171,6 +171,12 @@ $$ language 'sql';
 create or replace function pan_user_exist(username varchar) returns boolean as 
 $$
     select count(1)=1 from pan_user where username = $1;
+$$ language 'sql';
+
+-- 获取用户id
+create or replace function pan_user_get_id(username varchar) returns varchar as 
+$$
+    select id from pan_user where username = $1;
 $$ language 'sql';-- 服务api函数
 
 

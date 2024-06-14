@@ -13,6 +13,11 @@ QtObject {
     property PanBusyIndicator busyIndicator: null
     property PanNotify notify: null
 
+    property PanCatalogWindow catalogWindow: null                                               // 空间数据管理
+    property PanMapEditorWindow mapEditorWindow: null                                           // 地图编辑窗口
+
+    property int zIndexOfTopWin: 100                                                            // 最上层window的z index
+
     property string token: ''                                                                   // 登陆后产生的token
     property string username: ''                                                                // 用户名
     property string nickname: '请登录'                                                           // 用户昵称

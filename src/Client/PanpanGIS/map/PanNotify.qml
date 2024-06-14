@@ -10,7 +10,7 @@ PanWindow {
 
     maximizeButtonVisible: false
     minimizeButtonVisible: false
-
+    modal: true
     background: Rectangle{
         anchors.fill: parent
         radius: PanStyles.default_radius
@@ -38,6 +38,8 @@ PanWindow {
     function show(message){
         msgArea.text = message
         open()
+        PanApplication.zIndexOfTopWin ++;
+        z = PanApplication.zIndexOfTopWin
     }
 
 
