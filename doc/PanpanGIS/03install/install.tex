@@ -1,1 +1,19 @@
-\chapter{安装}
+\chapter{Apache安装}
+
+\section{Apache跨域设置}
+
+如果web服务器的跨域参数设置不正确，在客户端为webassembly、服务端为https时，会出现
+“a breakdown in protocol was detected (parsing error, invalid or unexpected responses, etc.)”
+的错误。
+
+修改apache.conf,添加如下设置：
+\begin{minted}[obeytabs=true,tabsize=2,escapeinside=||,
+	autogobble,frame=lines]{xml}
+<Directory />
+	AllowOverride none
+	Require all denied
+	|\bfseries{Header set Access-Control-Allow-Origin *}|
+	|\bfseries{Header set Cross-Origin-Embedder-Policy 'require-corp'}|
+	|\bfseries{Header set Cross-Origin-Opener-Policy 'same-origin'}|
+</Directory>
+\end{minted}

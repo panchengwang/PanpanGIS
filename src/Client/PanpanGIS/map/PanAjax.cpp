@@ -1,9 +1,6 @@
 #include "PanAjax.h"
 #include <QtCore>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-
+#include <QtNetwork>
 
 
 
@@ -35,6 +32,12 @@ void PanAjax::post(const QString &url, const QString &argname, const QString &ar
     query.addQueryItem(argname,argval);
 
     QNetworkReply *reply = manager->post(request, query.toString(QUrl::FullyEncoded).toUtf8() );
+    // QList<QSslError> errorsThatCanBeIgnored;
+
+    // errorsThatCanBeIgnored << QSslError(QSslError::HostNameMismatch);
+    // errorsThatCanBeIgnored << QSslError(QSslError::SelfSignedCertificate);
+
+    // // ignoreSslErrors(errorsThatCanBeIgnored);
     reply->ignoreSslErrors();
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this, SLOT(onErrorOccurred(QNetworkReply::NetworkError)));
@@ -117,7 +120,9 @@ void PanAjax::onErrorOccurred(QNetworkReply::NetworkError code)
     emit error(getErrorMessage(code));
 }
 
-void PanAjax::onSslErrors(const QList<QSslError> &)
+void PanAjax::onSslErrors(const QList<QSslError> & errs)
 {
-
+    for(int i=0; i<errs.size(); i++){
+        qDebug() << errs.at(i).errorString();
+    }
 }

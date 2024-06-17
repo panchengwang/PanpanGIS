@@ -106,7 +106,7 @@ Popup {
                     window.contentItem.y = 0
                 }
 
-                onClicked: {
+                onPressed:  {
                     if(!modal && window.z!==PanApplication.zIndexOfTopWin){
                         PanApplication.zIndexOfTopWin ++;
                         window.z = PanApplication.zIndexOfTopWin
@@ -316,7 +316,6 @@ Popup {
     }
 
     Component.onCompleted: {
-        moveToTopLevel()
         enableFocus(window)
     }
 
@@ -338,32 +337,21 @@ Popup {
     }
 
     function enableFocus(obj){
-        console.log("enableFocus",obj)
-        if (obj.onClicked) {
-            // Object.defineProperty(obj, '__clickedFunction', { value: createSpyFunction(obj) })
-            obj.onClicked.connect(()=>{
-                                      console.log("clicked")
-                                  window.moveToTopLevel()
-                                  })
-        }
-        if (obj.onFocused) {
-            // Object.defineProperty(obj, '__clickedFunction', { value: createSpyFunction(obj) })
-            obj.onFocused.connect(()=>{
-                                      console.log("focused")
+
+        if (obj.onPressed) {
+            obj.onPressed.connect(()=>{
                                   window.moveToTopLevel()
                                   })
         }
 
         if (obj.children) {
-            console.log(obj.children)
-            var i = 0
-            for (; i < obj.children.length; i++) {
+            for (let i = 0; i < obj.children.length; i++) {
                 enableFocus(obj.children[i])
             }
         }
         if(obj.contentChildren){
-            var i = 0
-            for (; i < obj.contentChildren.length; i++) {
+
+            for (let i=0; i < obj.contentChildren.length; i++) {
                 enableFocus(obj.contentChildren[i])
             }
         }
@@ -372,6 +360,7 @@ Popup {
     function moveToTopLevel(){
         PanApplication.zIndexOfTopWin ++;
         z = PanApplication.zIndexOfTopWin;
+        window.open()
     }
 
     function saveWindowStatus(){

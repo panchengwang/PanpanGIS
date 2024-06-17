@@ -10,10 +10,15 @@ PanWindow {
     standardButtonsVisible: false
 
 
-    ColumnLayout{
+    SplitView{
+        id: split
         anchors.fill: parent
-        PanTextField{
-            Layout.fillWidth: true
+        Rectangle{
+            SplitView.preferredWidth: Math.max(200,split.width * 0.3)
+        }
+
+        Rectangle{
+
         }
     }
 }

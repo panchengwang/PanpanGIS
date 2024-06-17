@@ -145,6 +145,24 @@ ApplicationWindow {
                     }
                 }
 
+                PanButton{
+                    Layout.alignment: Qt.AlignVCenter
+                    icon: PanAwesomeIcons.fa_desktop
+                    iconFontName: PanFonts.awesomeSolid.name
+                    iconSize: 24
+                    flat : true
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 300
+                    ToolTip.text: "显示桌面"
+
+                    onClicked: {
+                        if(PanApplication.catalogWindow)    PanApplication.catalogWindow.visible = false
+                        if(PanApplication.mapEditorWindow)  PanApplication.mapEditorWindow.visible = false
+                    }
+                }
+
                 Item{
                     Layout.fillWidth: true
                 }
@@ -204,40 +222,42 @@ ApplicationWindow {
     }
 
     function createCatalogWindow(){
+
         if(PanApplication.catalogWindow === null){
             const catalogWindow = Qt.createQmlObject(`
-                                                PanCatalogWindow{
-                                                x: (parent.width-width)*0.5
-                                                y: Math.max(100 , (parent.height - height)*0.5-100)
-                                                width: Math.max(400,parent.width*0.8)
-                                                height: Math.max(400,parent.height*0.8)
-                                                }
-                                                `,
-                                                PanApplication.windowContainer,
-                                                "catalogWindow"
-                                                );
-            catalogWindow.open()
+                                                     PanCatalogWindow{
+                                                     x: (parent.width-width)*0.5
+                                                     y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                     width: Math.max(400,parent.width*0.8)
+                                                     height: Math.max(400,parent.height*0.8)
+                                                     }
+                                                     `,
+                                                     PanApplication.windowContainer,
+                                                     "catalogWindow"
+                                                     );
             PanApplication.catalogWindow = catalogWindow;
         }
+        PanApplication.catalogWindow.moveToTopLevel()
     }
 
 
     function createMapEditorWindow(){
         if(PanApplication.mapEditorWindow === null){
             const mapEditorWindow = Qt.createQmlObject(`
-                                                PanMapEditorWindow{
-                                                x: (parent.width-width)*0.5
-                                                y: Math.max(100 , (parent.height - height)*0.5-100)
-                                                width: Math.max(400,parent.width*0.8)
-                                                height: Math.max(400,parent.height*0.8)
-                                                }
-                                                `,
-                                                PanApplication.windowContainer,
-                                                "mapEditorWindow"
-                                                );
-            mapEditorWindow.open()
+                                                       PanMapEditorWindow{
+                                                       x: (parent.width-width)*0.5
+                                                       y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                       width: Math.max(400,parent.width*0.8)
+                                                       height: Math.max(400,parent.height*0.8)
+                                                       }
+                                                       `,
+                                                       PanApplication.windowContainer,
+                                                       "mapEditorWindow"
+                                                       );
+
             PanApplication.mapEditorWindow = mapEditorWindow;
         }
+        PanApplication.mapEditorWindow.moveToTopLevel()
     }
 
 }

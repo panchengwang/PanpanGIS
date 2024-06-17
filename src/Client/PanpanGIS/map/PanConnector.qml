@@ -12,7 +12,6 @@ PanAjax {
     property bool showBusyIndicator: false
 
     onResponse: (data)=>{
-                    console.log(data)
                     let res = JSON.parse(data)
                     message = res.message
                     if(res.success){

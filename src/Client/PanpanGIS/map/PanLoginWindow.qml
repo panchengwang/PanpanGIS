@@ -122,6 +122,7 @@ PanFormWindow{
                                                );
         resetWin.operation = "reset"
         resetWin.modal = true
+        resetWin.moveToTopLevel()
         resetWin.cancel.connect(()=>{
                                        resetWin.destroy()
                                    })
@@ -147,6 +148,7 @@ PanFormWindow{
                                                );
 
         registerWin.modal = true
+        registerWin.moveToTopLevel()
         registerWin.cancel.connect(()=>{
                                        registerWin.destroy()
                                    })

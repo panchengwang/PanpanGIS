@@ -500,7 +500,7 @@ QtObject {
     // property string fa_wifi: "\uf1eb";
     // property string fa_compact_disc: "\uf51f";
     property string fa_database: "\uf1c0";
-    // property string fa_desktop: "\uf108";
+    property string fa_desktop: "\uf108";
     // property string fa_download: "\uf019";
     // property string fa_ethernet: "\uf796";
     // property string fa_hdd: "\uf0a0";

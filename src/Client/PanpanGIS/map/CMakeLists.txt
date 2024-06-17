@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/.. ${CMAKE_CURRENT_BINARY_DIR}" CACHE STRING "")
 # set(QML2_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/.." CACHE STRING "")
 message(STATUS ${QML_IMPORT_PATH})
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Qml Gui QuickControls2)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Qml Gui QuickControls2 Network)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -46,6 +46,7 @@ qt_add_qml_module(PanMap
         PanNotify.qml
         PanCatalogWindow.qml
         PanMapEditorWindow.qml
+
         ${SINGLETON_QML_FILES}
 
     SOURCES
@@ -82,31 +83,32 @@ message(STATUS ${CMAKE_CURRENT_SOURCE_DIR})
 
 if(EMSCRIPTEN)
     target_link_libraries(PanMap
-        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
+        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml Qt6::Network PanControlplugin
     )
-# add_custom_command(
-#     TARGET PanMap
-#     POST_BUILD
-#         # COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
-#         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
-# )
+    add_custom_command(
+        TARGET PanMap
+        POST_BUILD
+            # COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/pcwang_gis2.svg ${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg
+    )
 elseif(WIN32)
     target_link_libraries(PanMap
-        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml PanControlplugin
+        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml Qt6::Network PanControlplugin
     )
-add_custom_command(
-    TARGET PanMap
-    POST_BUILD
-    # COMMAND echo "panmap 可执行文件编译完成"
-    # COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-    # COMMAND cp -rf ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/cn
-    # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
-    # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+    add_custom_command(
+        TARGET PanMap
+        POST_BUILD
+        # COMMAND echo "panmap 可执行文件编译完成"
+        # COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+        # COMMAND cp -rf ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/cn
+        # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/../cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/PlugIns/cn
+        # COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_BINARY_DIR}/cn ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/cn
 )
 elseif(APPLE)
     target_link_libraries(PanMap
-        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml
+        PRIVATE Qt6::Quick Qt6::Gui Qt6::QuickControls2 Qt6::Qml Qt6::Network
     )
 add_custom_command(
     TARGET PanMap
