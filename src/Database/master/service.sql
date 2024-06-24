@@ -179,6 +179,7 @@ insert into pan_service_function(request_type, func_name)
 values
     ('USER_REGISTER','pan_user_register');
 
+
 create or replace function pan_user_register(params jsonb) returns jsonb as 
 $$
 declare
@@ -250,7 +251,17 @@ begin
             ' || quote_literal(now()) || '::timestamp,
             2, 
             ' || gis_server_id || '
-        )';
+        );
+        create table pan_catalog_' || user_id || '(
+            id varchar(32) default sc_uuid() primary key,               
+            dataset_type integer default 0,                             
+            parent_id varchar(32) default  ' || quote_literal('0') || ',                          
+            name varchar(256),                                          
+            author_id varchar(32) not null,
+            create_time timestamp default now() not null,                
+            last_modify_time timestamp default now() not null 
+        );
+    ';
 
     perform pan_dblink_execute_sql(gis_server_conn_str,sqlstr);
 
@@ -261,6 +272,7 @@ begin
     return response;
 end;
 $$ language 'plpgsql';
+
 
 
 -- ---------------------------------------------------------

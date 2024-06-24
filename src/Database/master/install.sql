@@ -484,7 +484,17 @@ begin
             ' || quote_literal(now()) || '::timestamp,
             2, 
             ' || gis_server_id || '
-        )';
+        );
+        create table pan_catalog(
+            id varchar(32) default sc_uuid() primary key,               
+            dataset_type integer default 0,                             
+            parent_id varchar(32) default  ' || quote_literal('0') || ',                          
+            name varchar(256),                                          
+            author_id varchar(32) not null,
+            create_time timestamp default now() not null,                
+            last_modify_time timestamp default now() not null 
+        );
+    ';
 
     perform pan_dblink_execute_sql(gis_server_conn_str,sqlstr);
 

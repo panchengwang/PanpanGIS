@@ -20,12 +20,14 @@ values
 
 
 -- 数据集元数据表
-create table pan_catalog(
-    id varchar(32) default sc_uuid() primary key,               -- id
-    dataset_type integer default 0,                             -- 数据类型
-    parent_id varchar(32) default '0',                          -- 当parent_id为字符串0的时候，为数据集的根分组
-    name varchar(256),                                          -- 数据集名称
-    author_id varchar(32) not null,
-    create_time timestamp default now() not null                -- 
-);
+-- 每个用户会对应一个名为pan_catalog_<user_id>的元数据表
+-- create table pan_catalog(
+--     id varchar(32) default sc_uuid() primary key,               -- id
+--     dataset_type integer default 0,                             -- 数据类型
+--     parent_id varchar(32) default '0',                          -- 当parent_id为字符串0的时候，为数据集的根分组
+--     name varchar(256),                                          -- 数据集名称
+--     author_id varchar(32) not null,
+--     create_time timestamp default now() not null,                --
+--     last_modify_time timestamp default now() not null 
+-- );
 

@@ -15,6 +15,6 @@ cat ${CUR_DIR}/../shared/server.sql >> ${CUR_DIR}/${INSTALL_SQL_NAME}
 cat ${CUR_DIR}/../shared/user.sql >>  ${CUR_DIR}/${INSTALL_SQL_NAME}
 cat ${CUR_DIR}/../shared/service.sql >> ${CUR_DIR}/${INSTALL_SQL_NAME}
 cat ${CUR_DIR}/catalog.sql >> ${CUR_DIR}/${INSTALL_SQL_NAME}
-
+cat ${CUR_DIR}/service.sql >> ${CUR_DIR}/${INSTALL_SQL_NAME}
 
 

@@ -7,8 +7,26 @@ set client_encoding to utf8;
 --      服务相关的sql拷贝到 server.sql
 
 
-
-
+create or replace function pan_catalog_get_dataset_tree(params jsonb) returns jsonb as 
+$$
+declare
+    sqlstr text;
+    response jsonb;
+    code varchar;
+begin
+    response := '{
+        "success": true,
+        "message": "ok",
+        "data": {
+            "catalog":{
+                id: ""
+            }
+        }
+    }'::jsonb;
+    
+    return response;
+end;
+$$ language 'plpgsql';
 
 
 

@@ -260,6 +260,7 @@ create table pan_catalog(
     parent_id varchar(32) default '0',                          -- 当parent_id为字符串0的时候，为数据集的根分组
     name varchar(256),                                          -- 数据集名称
     author_id varchar(32) not null,
-    create_time timestamp default now() not null                -- 
+    create_time timestamp default now() not null,                --
+    last_modify_time timestamp default now() not null 
 );
 
