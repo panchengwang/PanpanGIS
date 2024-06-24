@@ -342,6 +342,10 @@ Popup {
             obj.onPressed.connect(()=>{
                                   window.moveToTopLevel()
                                   })
+        }else if(obj.onFocusChanged){
+            obj.onFocusChanged.connect(()=>{
+                                           window.moveToTopLevel()
+                                       })
         }
 
         if (obj.children) {
@@ -350,7 +354,6 @@ Popup {
             }
         }
         if(obj.contentChildren){
-
             for (let i=0; i < obj.contentChildren.length; i++) {
                 enableFocus(obj.contentChildren[i])
             }

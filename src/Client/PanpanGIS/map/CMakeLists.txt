@@ -46,12 +46,16 @@ qt_add_qml_module(PanMap
         PanNotify.qml
         PanCatalogWindow.qml
         PanMapEditorWindow.qml
-
+        PanCatalogTree.qml
         ${SINGLETON_QML_FILES}
 
     SOURCES
         PanAjax.h
         PanAjax.cpp
+        PanJsonModel.h
+        PanJsonModel.cpp
+        PanCatalogNode.h
+        PanCatalogNode.cpp
 
     RESOURCES
         images/wallpaper.webp

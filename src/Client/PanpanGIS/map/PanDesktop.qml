@@ -226,8 +226,8 @@ ApplicationWindow {
         if(PanApplication.catalogWindow === null){
             const catalogWindow = Qt.createQmlObject(`
                                                      PanCatalogWindow{
-                                                     x: (parent.width-width)*0.5
-                                                     y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                     x: Math.random() * (parent.width-width)
+                                                     y: Math.random() * (parent.height-height)  //Math.max(100 , (parent.height - height)*0.5-100)
                                                      width: Math.max(400,parent.width*0.8)
                                                      height: Math.max(400,parent.height*0.8)
                                                      }
@@ -245,8 +245,8 @@ ApplicationWindow {
         if(PanApplication.mapEditorWindow === null){
             const mapEditorWindow = Qt.createQmlObject(`
                                                        PanMapEditorWindow{
-                                                       x: (parent.width-width)*0.5
-                                                       y: Math.max(100 , (parent.height - height)*0.5-100)
+                                                       x: Math.random() * (parent.width-width)
+                                                       y: Math.random() * (parent.height-height)  //Math.max(100 , (parent.height - height)*0.5-100)
                                                        width: Math.max(400,parent.width*0.8)
                                                        height: Math.max(400,parent.height*0.8)
                                                        }
