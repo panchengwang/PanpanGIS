@@ -32,6 +32,8 @@ public:
     int rowCount(const QModelIndex &parent = {}) const override;
     int columnCount(const QModelIndex &parent = {}) const override;
 
+    QHash<int, QByteArray> roleNames() const override;
+
     Q_INVOKABLE void setData(const QJsonObject& obj);
 
     QString displayRole() const;

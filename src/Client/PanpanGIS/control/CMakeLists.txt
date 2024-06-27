@@ -62,6 +62,7 @@ qt_add_qml_module(PanControl
         src/MapCanvas.cpp
         src/PanInputManager.h
         src/PanInputManager.cpp
+        QML_FILES PanGisIcons.qml
 
 
 )

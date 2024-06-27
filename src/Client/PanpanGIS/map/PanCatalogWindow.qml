@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import cn.pc.gis.control
+import cn.pc.gis.map
 
 PanWindow {
     id: window
@@ -32,25 +33,42 @@ PanWindow {
                 text: "刷新"
                 onClicked: {
                     catalogModel.data = JSON.parse(`{
-                                                       "id": "1",
-                                                       "dataset_type": 0,
+                                                       "id": 1,
+                                                       "dataset_type": "folder",
                                                        "name": "abc",
                                                        "parent_id": "0",
                                                        "children":[{
                                                            "id": 2,
                                                            "dataset_type": 1,
                                                            "name": "layer${Math.random()}",
-                                                           "parent_id": "1"
+                                                           "parent_id": 1
                                                         },{
                                                            "id": 3,
-                                                           "dataset_type": 0,
+                                                           "dataset_type": "folder",
                                                            "name": "layer3",
-                                                           "parent_id": "1",
+                                                           "parent_id": 1,
                                                            "children":[{
                                                                "id": 4,
-                                                               "dataset_type": 1,
+                                                               "dataset_type": "folder",
                                                                "name": "layer${Math.random()}",
-                                                               "parent_id": 3
+                                                               "parent_id": 3,
+                                                               "children":[{
+                                                                   "id": 5,
+                                                                   "dataset_type": 1,
+                                                                   "name": "layer${Math.random()}",
+                                                                   "parent_id": 4
+                                                                },{
+                                                                   "id": 6,
+                                                                   "dataset_type": "folder",
+                                                                   "name": "layer3",
+                                                                   "parent_id": 4,
+                                                                   "children":[{
+                                                                       "id": 4,
+                                                                       "dataset_type": 1,
+                                                                       "name": "layer${Math.random()}",
+                                                                       "parent_id": 3
+                                                                   }]
+                                                               }]
                                                            }]
                                                        }]
                                                    }`)
@@ -69,7 +87,7 @@ PanWindow {
                 y: 50
                 text: "切换display key"
                 onClicked: {
-                    catalogModel.displayRole = "id"
+                    catalogModel.displayRole = "[name]<[id]>"
                 }
             }
         }

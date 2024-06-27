@@ -49,6 +49,11 @@ QVariant PanCatalogNode::data(const QString& key) const
     return _data[key];
 }
 
+QVariantMap PanCatalogNode::data() const
+{
+    return _data;
+}
+
 
 
 PanCatalogNode *PanCatalogNode::parent()

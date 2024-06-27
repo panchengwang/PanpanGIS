@@ -1,4 +1,7 @@
 #include "PanJsonModel.h"
+#include <QtCore>
+
+#define  DATAROLE  (Qt::UserRole + 1)
 
 PanJsonModel::PanJsonModel(QObject *parent)
     : QAbstractItemModel{parent}
@@ -58,6 +61,13 @@ int PanJsonModel::rowCount(const QModelIndex &parent ) const{
 
 int PanJsonModel::columnCount(const QModelIndex &parent ) const{
     return 1;
+}
+
+QHash<int, QByteArray> PanJsonModel::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+    roles[DATAROLE] = "data";
+    return roles;
 }
 
 void PanJsonModel::setData(const QJsonObject &obj)
@@ -123,8 +133,19 @@ QVariant PanJsonModel::data(const QModelIndex &index, int role ) const{
     if(!node){
         return QVariant();
     }
-    if (role == Qt::DisplayRole){
-        return node->data(_displayRole);
+    QString str ;
+    if (role == Qt::DisplayRole ){
+        str = _displayRole;
+        QRegularExpression re("\\[([a-zA-z0-9]*)\\]");
+        QRegularExpressionMatchIterator it = re.globalMatch(str);
+        while(it.hasNext()){
+            QRegularExpressionMatch match = it.next();
+            QString key = match.captured(1);
+            str.replace("["+ key + "]", node->data(key).toString());
+        }
+        return str;
+    }else if( role == DATAROLE){
+        return node->data();
     }
 
 

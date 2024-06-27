@@ -6,28 +6,14 @@
 
 void test(){
 
-    QJsonDocument doc = QJsonDocument::fromJson("{"
-                                                "   \"a\": 1,"
-                                                "   \"children\": {"
-                                                "       \"c1\": 5 "
-                                                "   }"
-                                                "}");
-    qDebug() << doc.object().toVariantMap();
-
-    QMap<QString, QVariant> data;
-    data["z"] = 0;
-    data["a"] = 1;
-    data["b"] = 2;
-    data["c"] = 3;
-
-    QMap<QString, QVariant> children;
-    children["z"] = 0;
-    children["a"] = 1;
-    children["b"] = 2;
-    children["c"] = 3;
-    children["children"] = children;
-
-    ;
+    QString str = "[abc]08/12/1985[dddd]";
+    QRegularExpression re("\\[([a-zA-z0-9]*)\\]");
+    QRegularExpressionMatchIterator it = re.globalMatch(str);
+    while(it.hasNext()){
+        QRegularExpressionMatch match = it.next();
+        str.replace("["+match.captured(1)+"]", QString("pcwang%1").arg(rand()));
+    }
+    qDebug() << str;
 }
 
 

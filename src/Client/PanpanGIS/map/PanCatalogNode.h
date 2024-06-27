@@ -17,6 +17,7 @@ public:
     int childCount() const;
     int columnCount() const;
     QVariant data(const QString& key) const;
+    QVariantMap data() const;
     int row() const;
     PanCatalogNode *parent();
 
