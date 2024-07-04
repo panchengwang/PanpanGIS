@@ -35,38 +35,38 @@ PanWindow {
                     catalogModel.data = JSON.parse(`{
                                                        "id": 1,
                                                        "dataset_type": "folder",
-                                                       "name": "abc",
+                                                       "name": "layer 1",
                                                        "parent_id": "0",
                                                        "children":[{
                                                            "id": 2,
-                                                           "dataset_type": 1,
-                                                           "name": "layer${Math.random()}",
+                                                           "dataset_type": "point",
+                                                           "name": "layer 2",
                                                            "parent_id": 1
                                                         },{
                                                            "id": 3,
                                                            "dataset_type": "folder",
-                                                           "name": "layer3",
+                                                           "name": "layer 3",
                                                            "parent_id": 1,
                                                            "children":[{
                                                                "id": 4,
                                                                "dataset_type": "folder",
-                                                               "name": "layer${Math.random()}",
+                                                               "name": "layer 4",
                                                                "parent_id": 3,
                                                                "children":[{
                                                                    "id": 5,
-                                                                   "dataset_type": 1,
-                                                                   "name": "layer${Math.random()}",
+                                                                   "dataset_type": "linestring",
+                                                                   "name": "layer 5",
                                                                    "parent_id": 4
                                                                 },{
                                                                    "id": 6,
                                                                    "dataset_type": "folder",
-                                                                   "name": "layer3",
+                                                                   "name": "layer6",
                                                                    "parent_id": 4,
                                                                    "children":[{
-                                                                       "id": 4,
-                                                                       "dataset_type": 1,
-                                                                       "name": "layer${Math.random()}",
-                                                                       "parent_id": 3
+                                                                       "id": 7,
+                                                                       "dataset_type": "polygon",
+                                                                       "name": "layer 7",
+                                                                       "parent_id": 6
                                                                    }]
                                                                }]
                                                            }]

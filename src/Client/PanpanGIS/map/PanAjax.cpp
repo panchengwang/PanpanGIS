@@ -41,8 +41,9 @@ void PanAjax::post(const QString &url, const QString &argname, const QString &ar
     reply->ignoreSslErrors();
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this, SLOT(onErrorOccurred(QNetworkReply::NetworkError)));
+#ifndef Q_OS_WASM
     connect(reply, SIGNAL(sslErrors(const QList<QSslError>&)), this, SLOT(onSslErrors(const QList<QSslError>&)));
-
+#endif
 }
 
 void PanAjax::get(const QString &url)
@@ -120,9 +121,12 @@ void PanAjax::onErrorOccurred(QNetworkReply::NetworkError code)
     emit error(getErrorMessage(code));
 }
 
+#ifndef Q_OS_WASM
 void PanAjax::onSslErrors(const QList<QSslError> & errs)
 {
     for(int i=0; i<errs.size(); i++){
-        qDebug() << errs.at(i).errorString();
+
     }
 }
+#endif
+

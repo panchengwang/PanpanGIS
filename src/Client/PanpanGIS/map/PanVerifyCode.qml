@@ -17,6 +17,7 @@ RowLayout {
     }
 
     PanButton{
+        icon: ""
         text: "获取验证码"
         onClicked: {
             if(email.trim() === "") {

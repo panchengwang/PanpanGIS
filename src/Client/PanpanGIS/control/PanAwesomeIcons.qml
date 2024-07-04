@@ -1091,7 +1091,7 @@ QtObject {
     // property string fa_calendar_plus: "\uf271";
     // property string fa_calendar_times: "\uf273";
     // property string fa_certificate: "\uf0a3";
-    // property string fa_check: "\uf00c";
+    property string fa_check: "\uf00c";
     property string fa_check_circle: "\uf058";
     // property string fa_check_double: "\uf560";
     // property string fa_check_square: "\uf14a";

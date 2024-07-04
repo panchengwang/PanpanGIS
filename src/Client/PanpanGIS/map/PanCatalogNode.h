@@ -11,7 +11,7 @@ public:
 
     virtual ~PanCatalogNode();
 
-    void appendChild(PanCatalogNode *child);
+    void appendChild(PanCatalogNode *child, int row=-1);
 
     PanCatalogNode *child(int row);
     int childCount() const;
@@ -22,7 +22,7 @@ public:
     PanCatalogNode *parent();
 
 private:
-    std::vector<PanCatalogNode*> _children;
+    QVector<PanCatalogNode*> _children;
     QVariantMap _data;
     PanCatalogNode *_parent;
 };

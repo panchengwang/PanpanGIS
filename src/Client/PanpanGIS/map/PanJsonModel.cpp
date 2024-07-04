@@ -152,6 +152,35 @@ QVariant PanJsonModel::data(const QModelIndex &index, int role ) const{
     return QVariant();
 }
 
+
+QJsonObject PanJsonModel::attributes(const QModelIndex &index)
+{
+    if(!index.isValid()){
+        return QJsonDocument::fromJson("{}").object();
+    }
+    PanCatalogNode* node = (PanCatalogNode*) index.internalPointer();
+    if(!node){
+        return QJsonDocument::fromJson("{}").object();
+    }
+
+    return QJsonObject::fromVariantMap(node->data());
+
+}
+
+void PanJsonModel::insertChild(const QModelIndex &parent, const QJsonObject &attributes, int row)
+{
+    beginInsertRows(parent,row,row);
+    PanCatalogNode* node = (PanCatalogNode*) parent.internalPointer();
+    if(!node){
+        return;
+    }
+
+    PanCatalogNode *child = new PanCatalogNode(attributes.toVariantMap(),node);
+    node->appendChild(child,row);
+
+    endInsertRows();
+}
+
 Qt::ItemFlags PanJsonModel::flags(const QModelIndex &index) const
 {
     return index.isValid()

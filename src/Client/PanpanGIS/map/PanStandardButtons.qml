@@ -19,7 +19,7 @@ Control{
 
         PanButton{
             id: btnCancel
-            icon: PanAwesomeIcons.fa_times_circle
+            icon: PanAwesomeIcons.fa_times
             Layout.fillWidth: true
             text: cancelText
             visible: cancelVisible
@@ -31,7 +31,7 @@ Control{
         PanButton{
             id: btnOk
             Layout.fillWidth: true
-            icon: PanAwesomeIcons.fa_check_circle
+            icon: PanAwesomeIcons.fa_check
             text: okText
             visible: okVisible
             onClicked: {

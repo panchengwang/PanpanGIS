@@ -39,6 +39,9 @@ public:
     QString displayRole() const;
     void setDisplayRole(const QString& key);
 
+    Q_INVOKABLE QJsonObject attributes(const QModelIndex& index);
+    Q_INVOKABLE void insertChild(const QModelIndex& parent, const QJsonObject& attributes, int row = 0 );
+
 signals:
     void dataChanged();
     void displayRoleChanged();
@@ -51,5 +54,6 @@ private:
     QString _displayRole="name";
 
 };
+
 
 #endif // PANJSONMODEL_H

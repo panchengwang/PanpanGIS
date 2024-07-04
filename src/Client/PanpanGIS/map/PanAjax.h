@@ -27,8 +27,9 @@ protected slots:
     void onReply(QNetworkReply* reply);
     void onReadyRead();
     void onErrorOccurred(QNetworkReply::NetworkError);
+#ifndef Q_OS_WASM
     void onSslErrors(const QList<QSslError>&);
-
+#endif
 
 signals:
     void response(const QString& data);

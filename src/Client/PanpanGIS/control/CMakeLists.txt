@@ -25,6 +25,7 @@ list(APPEND SINGLETON_QML_FILES
     PanFonts.qml
     PanMaterialIcons.qml
     PanAwesomeIcons.qml
+    PanGisIcons.qml
 )
 set_source_files_properties(${SINGLETON_QML_FILES}
     PROPERTIES
@@ -62,7 +63,7 @@ qt_add_qml_module(PanControl
         src/MapCanvas.cpp
         src/PanInputManager.h
         src/PanInputManager.cpp
-        QML_FILES PanGisIcons.qml
+
 
 
 )

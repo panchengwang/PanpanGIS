@@ -103,11 +103,11 @@ ApplicationWindow {
 
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
-
-                    imageIcon: true
+                    backgroundVisible: false
+                    isImageIcon: true
                     iconSize: 26
                     icon: "/cn/pc/gis/control/icons/pcwang_gis2.svg"
-                    flat: true
+                    // flat: true
                     implicitWidth: 40
                     implicitHeight: 40
                 }
@@ -117,7 +117,8 @@ ApplicationWindow {
                     icon: PanAwesomeIcons.fa_database
                     iconSize: 24
                     iconFontName: PanFonts.awesomeSolid.name
-                    flat : true
+                    iconColor: PanStyles.color_primary
+                    backgroundVisible: false
                     implicitWidth: 40
                     implicitHeight: 40
                     ToolTip.visible: hovered
@@ -132,8 +133,9 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignVCenter
                     icon: PanAwesomeIcons.fa_globe_asia
                     iconFontName: PanFonts.awesomeSolid.name
+                    iconColor: PanStyles.color_primary
                     iconSize: 24
-                    flat : true
+                    backgroundVisible: false
                     implicitWidth: 40
                     implicitHeight: 40
                     ToolTip.visible: hovered
@@ -149,13 +151,14 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignVCenter
                     icon: PanAwesomeIcons.fa_desktop
                     iconFontName: PanFonts.awesomeSolid.name
+                    iconColor: PanStyles.color_primary
                     iconSize: 24
-                    flat : true
+                    backgroundVisible: false
                     implicitWidth: 40
                     implicitHeight: 40
                     ToolTip.visible: hovered
                     ToolTip.delay: 300
-                    ToolTip.text: "显示桌面"
+                    ToolTip.text: "隐藏桌面"
 
                     onClicked: {
                         if(PanApplication.catalogWindow)    PanApplication.catalogWindow.visible = false
@@ -172,8 +175,9 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignVCenter
                     icon: PanAwesomeIcons.fa_comment_dots
                     iconFontName: PanFonts.awesomeSolid.name
+                    iconColor: "red" // PanStyles.color_primary
                     iconSize: 24
-                    flat : true
+                    backgroundVisible: false
                     implicitWidth: 40
                     implicitHeight: 40
                     ToolTip.visible: hovered
@@ -185,6 +189,7 @@ ApplicationWindow {
                             logWindow.close()
                         }else{
                             logWindow.open()
+                            logWindow.moveToTopLevel()
                         }
                     }
                 }
@@ -195,7 +200,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
 
-        PanApplication.desktop = desktop
+        // PanApplication.desktop = desktop
         PanApplication.windowContainer = container
 
         createLoginWindow()

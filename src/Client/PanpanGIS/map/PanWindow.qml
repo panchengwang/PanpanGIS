@@ -139,7 +139,7 @@ Popup {
                     iconSize: PanStyles.default_icon_size - 2
                     implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
                     implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
-                    flat: true
+                    backgroundVisible: false
                     visible: stickButtonVisible
                     onClicked: {
                         sticked = !sticked
@@ -155,7 +155,7 @@ Popup {
                         iconSize: PanStyles.default_icon_size - 2
                         implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
                         implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
-                        flat: true
+                        backgroundVisible: false
                         visible: minimizeButtonVisible
                         onClicked: {
                             saveWindowStatus()
@@ -169,7 +169,7 @@ Popup {
                         iconSize: PanStyles.default_icon_size - 2
                         implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
                         implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
-                        flat: true
+                        backgroundVisible: false
                         visible: maximizeButtonVisible
                         onClicked: resizeToMaximum()
                     }
@@ -180,7 +180,7 @@ Popup {
                         iconSize: PanStyles.default_icon_size - 2
                         implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
                         implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
-                        flat: true
+                        backgroundVisible: false
                         visible: false
                         onClicked: restoreWindow()
                     }
@@ -188,7 +188,7 @@ Popup {
                     PanButton{
                         icon: PanAwesomeIcons.fa_times
                         iconFontName: PanFonts.awesomeSolid.name
-                        flat: true
+                        backgroundVisible: false
                         visible: closeButtonVisible
                         implicitWidth: PanStyles.window_header_footer_height - PanStyles.default_margin
                         implicitHeight:PanStyles.window_header_footer_height - PanStyles.default_margin
@@ -252,7 +252,6 @@ Popup {
                 PanStandardButtons{
                     Layout.fillHeight: true
                     Layout.rightMargin: 5
-                    implicitWidth:  200
                     cancelVisible: cancelButtonVisible
                     okVisible: okButtonVisible
                     onCancel: {
@@ -287,7 +286,7 @@ Popup {
         position: "bottom"
         target: window
         visible: resizebar.indexOf("b") >=0
-                color: "red"
+        color: "red"
     }
     PanBorder{
         position: "left_top"
@@ -340,7 +339,7 @@ Popup {
 
         if (obj.onPressed) {
             obj.onPressed.connect(()=>{
-                                  window.moveToTopLevel()
+                                      window.moveToTopLevel()
                                   })
         }else if(obj.onFocusChanged){
             obj.onFocusChanged.connect(()=>{

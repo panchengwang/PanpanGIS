@@ -17,9 +17,14 @@ PanCatalogNode::~PanCatalogNode()
 
 
 
-void PanCatalogNode::appendChild(PanCatalogNode* child)
+void PanCatalogNode::appendChild(PanCatalogNode* child, int row)
 {
-    _children.push_back(child);
+    if(row<0 || row > _children.size()-1){
+        _children.push_back(child);
+    }else{
+
+        _children.insert(row,child);
+    }
 }
 
 

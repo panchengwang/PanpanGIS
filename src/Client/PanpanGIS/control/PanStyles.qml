@@ -15,7 +15,7 @@ QtObject {
     property string color_warning: "#f2c037"
     property string color_grey: "#888888"
     property string color_white: "#ffffff"
-    property string color_light_grey: "#c2c2c2"
+    property string color_light_grey: "#dfdfdf"
 
 
     property string color_text: "#3f3f3f"

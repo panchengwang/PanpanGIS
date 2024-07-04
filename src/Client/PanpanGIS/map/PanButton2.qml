@@ -25,7 +25,6 @@ Control {
     property string _backgroundColor: ""
     property string _iconColor: ""
     property string _textColor: ""
-    property int radius: PanStyles.default_radius
     property int alignment: ( Qt.AlignHCenter | Qt.AlignVCenter )
 
     signal clicked()
@@ -50,7 +49,7 @@ Control {
     background: Rectangle {
         anchors.fill: parent
         border.color: control.outlined ? PanStyles.color_grey : control.backgroundColor
-        radius: control.radius
+        radius: PanStyles.default_radius
         color: control.backgroundColor
         opacity: control.hovered ? 0.8 : (! control.backgroundVisible ? 0 : 1)
     }

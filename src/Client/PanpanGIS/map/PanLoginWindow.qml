@@ -8,6 +8,7 @@ PanFormWindow{
     id: window
     caption: "登录"
     standardButtonsVisible: true
+    cancelButtonVisible: false
     windowButtonsVisible: false
     width: 400
     height: 330
@@ -69,8 +70,6 @@ PanFormWindow{
         text: "pcwang"
     }
 
-
-
     GridLayout{
         Layout.fillWidth: true
         columns: 2
@@ -79,24 +78,24 @@ PanFormWindow{
             text: "如果您还没有注册？"
         }
         PanButton{
-            icon: ""
+
             Layout.fillWidth: true
             text: "请单击这里注册新账号"
-            flat: true
+            // flat: true
             onClicked: {
                 createRegisterWindow()
             }
         }
 
-        PanLabel{
 
+        PanLabel{
             text: "忘记密码？"
         }
         PanButton{
             icon: ""
             Layout.fillWidth: true
             text: "请单击这里重置密码"
-            flat: true
+            // flat: true
             onClicked: {
                 var win = createResetWindow()
                 win.caption = "密码找回"
@@ -107,25 +106,25 @@ PanFormWindow{
     function createResetWindow(){
 
         const resetWin = Qt.createQmlObject(`
-                                               import QtQuick
-                                               import cn.pc.gis.control
-                                               import cn.pc.gis.map
-                                               PanUserWindow{
-                                                   x: (parent.width-width)*0.5
-                                                   y: Math.max(100 , (parent.height - height)*0.5-100)
-                                                   width: Math.max(400,parent.width*0.5)
-                                                   visible: true
-                                               }
-                                               `,
-                                               parent,
-                                               "resetWin"
-                                               );
+                                            import QtQuick
+                                            import cn.pc.gis.control
+                                            import cn.pc.gis.map
+                                            PanUserWindow{
+                                            x: (parent.width-width)*0.5
+                                            y: Math.max(100 , (parent.height - height)*0.5-100)
+                                            width: Math.max(400,parent.width*0.5)
+                                            visible: true
+                                            }
+                                            `,
+                                            parent,
+                                            "resetWin"
+                                            );
         resetWin.operation = "reset"
         resetWin.modal = true
         resetWin.moveToTopLevel()
         resetWin.cancel.connect(()=>{
-                                       resetWin.destroy()
-                                   })
+                                    resetWin.destroy()
+                                })
         return resetWin;
     }
 
@@ -136,11 +135,11 @@ PanFormWindow{
                                                import cn.pc.gis.control
                                                import cn.pc.gis.map
                                                PanUserWindow{
-                                                   caption: "用户注册"
-                                                   x: (parent.width-width)*0.5
-                                                   y: Math.max(100 , (parent.height - height)*0.5-100)
-                                                   width: Math.max(400,parent.width*0.5)
-                                                   visible: true
+                                               caption: "用户注册"
+                                               x: (parent.width-width)*0.5
+                                               y: Math.max(100 , (parent.height - height)*0.5-100)
+                                               width: Math.max(400,parent.width*0.5)
+                                               visible: true
                                                }
                                                `,
                                                parent,
@@ -155,7 +154,7 @@ PanFormWindow{
         return registerWin;
     }
 
-     onOk: {
+    onOk: {
         if(username.text.trim() === "" || password.text.trim() === ""){
             PanApplication.notify.show("用户名和密码均不能为空");
             return;
