@@ -6,18 +6,21 @@ import cn.pc.gis.control
 TreeView {
     id: treeView
     clip: true
+
+    property var currentIndex: null
+
     columnWidthProvider: function(column) {
         return Math.max(explicitColumnWidth(column), implicitColumnWidth(column), treeView.width)
     }
 
-    MouseArea{
-        anchors.fill: parent
-        acceptedButtons:  Qt.RightButton
-        onClicked: (mouse)=>{
-                       menu.popup()
-                   }
+    // MouseArea{
+    //     anchors.fill: parent
+    //     acceptedButtons:  Qt.RightButton
+    //     onClicked: (mouse)=>{
+    //                    menu.popup()
+    //                }
 
-    }
+    // }
 
     delegate:   Control {
         id: control
@@ -43,8 +46,23 @@ TreeView {
                 anchors.fill: parent
                 acceptedButtons:  Qt.RightButton
                 onClicked: (mouse)=>{
-                               menu.row = row;
-                               menu.col = column;
+                               let index = treeView.index(row,column);
+                               let attributes = treeView.model.attributes(index)
+                               let menu = null;
+                               switch(attributes.dataset_type){
+                                   case "folder":
+                                   menu = menuFolder;
+                                   break;
+                                   case "point":
+                                   menu = menuPointLayer;
+                                   break;
+                               }
+
+                               if(!menu){
+                                   return;
+                               }
+
+                               menu.index =  index;
                                menu.popup()
 
                            }
@@ -124,7 +142,7 @@ TreeView {
             anchors.verticalCenter: parent.verticalCenter
             width: parent.width - padding - x
             clip: true
-            text: model.data.name + "  " + model.data.parent_id
+            text: model.display // model.data.name + "  " + model.data.parent_id
             color:  PanStyles.color_dark
         }
 
@@ -133,25 +151,14 @@ TreeView {
     }
 
 
-
-
-
-    Menu {
-        id: menu
-
-        property int row: -1
-        property int col: -1
-
-        padding: PanStyles.default_padding
-        clip: true
-
+    PanCatalogTreeMenu{
+        id: menuFolder
         Action {
             text: qsTr("新建文件夹");
             onTriggered: {
-                let index = treeView.index(menu.row, menu.col);
-                let attributes = treeView.model.attributes(index);
+                let attributes = treeView.model.attributes(menuFolder.index);
                 treeView.model.insertChild(
-                            index,
+                            menuFolder.index,
                             {
                                 "dataset_type": "point",
                                 "name": "new layer",
@@ -161,45 +168,79 @@ TreeView {
                             0)
             }
         }
-        Action {
-            text: qsTr("获取节点属性");
-            onTriggered: {
-                let index = treeView.index(menu.row, menu.col);
-                let attributes = treeView.model.attributes(index);
-                console.log(JSON.stringify(treeView.model.attributes(index)));
-            }
-        }
-        Action { text: qsTr("Status Bar");  }
+    }
 
-        delegate: MenuItem{
-            id: menuItem
-            implicitHeight: PanStyles.button_implicit_height + topPadding + bottomPadding
-            contentItem: Text {
-                leftPadding: menuItem.indicator.width
-                rightPadding: menuItem.arrow.width
-                text: menuItem.text
-                font.family: PanFonts.notoSansSimpleChineseRegular.name
-                font.pixelSize: PanStyles.default_font_size
-                opacity: enabled ? 1.0 : 0.3
-                color: menuItem.highlighted ? PanStyles.color_white : PanStyles.color_dark
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
+    PanCatalogTreeMenu{
+        id: menuPointLayer
+        Action {
+            text: qsTr("属性");
+            onTriggered: {
+                let attributes = treeView.model.attributes(menuPointLayer.index);
+                console.log(JSON.stringify(attributes))
             }
-            background: Rectangle {
-                anchors.fill: parent
-                opacity: enabled ? 1 : 0.3
-                color: menuItem.highlighted ? PanStyles.color_primary : "#EFEFEF"
-            }
-        }
-        background: Rectangle {
-            implicitWidth: 200
-            implicitHeight: PanStyles.button_implicit_height
-            color: "#ffffffff"
-            border.color: PanStyles.color_grey
-            radius: PanStyles.default_radius
         }
     }
+
+    // Menu {
+    //     id: menuFolder
+
+    //     property var index: null
+
+    //     padding: PanStyles.default_padding
+    //     clip: true
+
+    //     Action {
+    //         text: qsTr("新建文件夹");
+    //         enabled:{
+    //             let index = treeView.index(menu.row, menu.col);
+    //             let attributes = treeView.model.attributes(index);
+    //             return attributes.dataset_type === "folder";
+    //         }
+    //         onTriggered: {
+    //             let index = treeView.index(menu.row, menu.col);
+    //             let attributes = treeView.model.attributes(index);
+    //             treeView.model.insertChild(
+    //                         index,
+    //                         {
+    //                             "dataset_type": "point",
+    //                             "name": "new layer",
+    //                             "parent_id": attributes.id,
+    //                             "id": 8
+    //                         },
+    //                         0)
+    //         }
+    //     }
+
+
+    //     delegate: MenuItem{
+    //         id: menuItem
+    //         implicitHeight: PanStyles.button_implicit_height + topPadding
+    //         contentItem: Text {
+    //             leftPadding: menuItem.indicator.width
+    //             rightPadding: menuItem.arrow.width
+    //             text: menuItem.text
+    //             font.family: PanFonts.notoSansSimpleChineseRegular.name
+    //             font.pixelSize: PanStyles.default_font_size
+    //             opacity: enabled ? 1.0 : 0.3
+    //             color: menuItem.highlighted ? PanStyles.color_white : PanStyles.color_dark
+    //             horizontalAlignment: Text.AlignLeft
+    //             verticalAlignment: Text.AlignVCenter
+    //             elide: Text.ElideRight
+    //         }
+    //         background: Rectangle {
+    //             anchors.fill: parent
+    //             opacity: enabled ? 1 : 0.3
+    //             color: menuItem.highlighted ? PanStyles.color_primary : "#EFEFEF"
+    //         }
+    //     }
+    //     background: Rectangle {
+    //         implicitWidth: 200
+    //         implicitHeight: PanStyles.button_implicit_height
+    //         color: "#ffffffff"
+    //         border.color: PanStyles.color_grey
+    //         radius: PanStyles.default_radius
+    //     }
+    // }
 
 
 

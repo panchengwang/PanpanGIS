@@ -34,6 +34,31 @@ begin
         );
     end if;
 
+    -- 检查token是否过期
+    if (params->>'type') <> 'USER_LOGIN'  
+        and  (params->>'type') <> 'USER_REGISTER'
+        and  (params->>'type') <> 'USER_RESET_PASSWORD'
+        and  (params->>'type') <> 'USER_GET_VERIFY_CODE' then 
+        if pan_token_is_expired(params->'data'->>'token') then 
+            return jsonb_build_object(
+                'success', false,
+                'message', 'token已过期，请重新登录'
+            );
+        else
+            -- 否则更新最新的操作时间 
+            sqlstr := '
+                update pan_user 
+                set
+                    token_expire_time = now() + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
+                where 
+                    token = ' || quote_literal(params->'data'->>'token') || ' 
+            ';
+            execute sqlstr;
+        end if; 
+    end if;
+
+    
+
     sqlstr := 'select func_name from pan_service_function where request_type = ' || quote_literal(params->>'type') ;
     execute sqlstr into server_func_name;
     if server_func_name is null then 

@@ -27,3 +27,17 @@ create or replace function pan_user_get_id(username varchar) returns varchar as
 $$
     select id from pan_user where username = $1;
 $$ language 'sql';
+
+-- 由token，获取用户id
+create or replace function pan_user_get_id_by_token(token varchar) returns varchar as 
+$$
+    select id from pan_user where token = $1;
+$$ language 'sql';
+
+-- token是否过期
+create or replace function pan_token_is_expired(token varchar) returns boolean as 
+$$
+    select token_expire_time <= now() from pan_user where token = $1;
+$$ language 'sql';
+
+

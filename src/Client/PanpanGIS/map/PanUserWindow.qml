@@ -1,24 +1,26 @@
 import QtQuick
 import QtQuick.Layouts
 import cn.pc.gis.control
+import "PanConnector.js" as PanConnector
+
 
 PanFormWindow {
-    id: userWin
+    id: window
     caption: "创建用户"
     windowButtonsVisible: true
     standardButtonsVisible: true
 
     property string operation: "register"
 
-    property PanConnector connector:     PanConnector{
-        onSuccess:{
-            userWin.close()
-            PanApplication.notify.show(message)
-        }
-        onFailure: {
-            PanApplication.notify.show(message)
-        }
-    }
+    // property PanConnector connector:     PanConnector{
+    //     onSuccess:{
+    //         window.close()
+    //         PanApplication.notify.show(message)
+    //     }
+    //     onFailure: {
+    //         PanApplication.notify.show(message)
+    //     }
+    // }
 
     width: 600
     height: 480
@@ -139,12 +141,16 @@ PanFormWindow {
             }
         }
 
-        connector.success.connect(registerSuccess)
-        connector.post(PanApplication.masterUrl,"request",JSON.stringify(req))
+        PanConnector.post(PanApplication.masterUrl,req, window,true,(data,message)=>{
+                              window.destroy()
+                              PanApplication.notify.show(message)
+                          })
+        // connector.success.connect(registerSuccess)
+        // connector.post(PanApplication.masterUrl,"request",JSON.stringify(req))
     }
 
     function registerSuccess (data){
-        userWin.destroy()
+        window.destroy()
     }
 
     function reset(){
@@ -157,8 +163,11 @@ PanFormWindow {
                 verify_code: verifyCode.code.trim()
             }
         }
-
-        connector.success.connect(()=>{userWin.destroy()})
-        connector.post(PanApplication.masterUrl,"request",JSON.stringify(req))
+        PanConnector.post(PanApplication.masterUrl,req, window,true,(data,message)=>{
+                              window.destroy()
+                              PanApplication.notify.show(message)
+                          })
+        // connector.success.connect(()=>{userWin.destroy()})
+        // connector.post(PanApplication.masterUrl,"",JSON.stringify(req))
     }
 }

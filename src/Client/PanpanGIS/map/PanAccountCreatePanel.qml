@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import cn.pc.gis.control
+import cn.pc.gis.map
 // import QtQuick.Effects
 
 Rectangle {

@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import cn.pc.gis.control
 import cn.pc.gis.map
+import "PanConnector.js" as PanConnector
 
 PanWindow {
     id: window
@@ -23,55 +24,31 @@ PanWindow {
         Rectangle{
             PanJsonModel{
                 id: catalogModel
-                data: JSON.parse(`{
 
-                                 }`)
+                Component.onCompleted: {
+                    refresh()
+                }
+                function refresh(){
+                    PanConnector.post(PanApplication.nodeUrl,
+                                     {
+                                         "type": "CATALOG_GET_DATASET_TREE",
+                                         "data": {
+                                             "token": PanApplication.token
+                                         }
+                                     },window,true,
+                                     (data)=>{
+                                          console.log(JSON.stringify(data))
+                                        catalogModel.data = data.catalog;
+
+                                     },(data)=>{});
+                }
             }
             PanButton{
                 x: 50
                 y: 50
                 text: "刷新"
                 onClicked: {
-                    catalogModel.data = JSON.parse(`{
-                                                       "id": 1,
-                                                       "dataset_type": "folder",
-                                                       "name": "layer 1",
-                                                       "parent_id": "0",
-                                                       "children":[{
-                                                           "id": 2,
-                                                           "dataset_type": "point",
-                                                           "name": "layer 2",
-                                                           "parent_id": 1
-                                                        },{
-                                                           "id": 3,
-                                                           "dataset_type": "folder",
-                                                           "name": "layer 3",
-                                                           "parent_id": 1,
-                                                           "children":[{
-                                                               "id": 4,
-                                                               "dataset_type": "folder",
-                                                               "name": "layer 4",
-                                                               "parent_id": 3,
-                                                               "children":[{
-                                                                   "id": 5,
-                                                                   "dataset_type": "linestring",
-                                                                   "name": "layer 5",
-                                                                   "parent_id": 4
-                                                                },{
-                                                                   "id": 6,
-                                                                   "dataset_type": "folder",
-                                                                   "name": "layer6",
-                                                                   "parent_id": 4,
-                                                                   "children":[{
-                                                                       "id": 7,
-                                                                       "dataset_type": "polygon",
-                                                                       "name": "layer 7",
-                                                                       "parent_id": 6
-                                                                   }]
-                                                               }]
-                                                           }]
-                                                       }]
-                                                   }`)
+                    catalogModel.refresh()
                 }
             }
             PanButton{

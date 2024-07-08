@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
 import cn.pc.gis.control
+import "PanConnector.js" as PanConnector
 
 RowLayout {
+    id: control
     property string email: ""
     property string server: ""
     property string errorMessage: ""
@@ -29,31 +31,36 @@ RowLayout {
                 return;
             }
 
-
-            connector.post(server,"request",JSON.stringify({
-                                                               "type":"USER_GET_VERIFY_CODE",
-                                                               "data": {
-                                                                   "username": email.trim()
-                                                               }
-                                                           }))
+            PanConnector.post(server,{
+                                  "type":"USER_GET_VERIFY_CODE",
+                                  "data": {
+                                      "username": email.trim()
+                                  }
+                              }, control,true)
+            // connector.post(server,"request",JSON.stringify({
+            //                                                    "type":"USER_GET_VERIFY_CODE",
+            //                                                    "data": {
+            //                                                        "username": email.trim()
+            //                                                    }
+            //                                                }))
         }
     }
 
-    PanConnector{
-        id: connector
-        showBusyIndicator: true
-        onSuccess:{
-            PanApplication.notify.show(message)
-        }
-        onFailure: {
-            PanApplication.notify.show(message)
-        }
-        // onRunningChanged:{
-        //     if(running){
-        //         PanApplication.busyIndicator.open()
-        //     }else{
-        //         PanApplication.busyIndicator.close()
-        //     }
-        // }
-    }
+    // PanConnector{
+    //     id: connector
+    //     showBusyIndicator: true
+    //     onSuccess:{
+    //         PanApplication.notify.show(message)
+    //     }
+    //     onFailure: {
+    //         PanApplication.notify.show(message)
+    //     }
+    //     // onRunningChanged:{
+    //     //     if(running){
+    //     //         PanApplication.busyIndicator.open()
+    //     //     }else{
+    //     //         PanApplication.busyIndicator.close()
+    //     //     }
+    //     // }
+    // }
 }

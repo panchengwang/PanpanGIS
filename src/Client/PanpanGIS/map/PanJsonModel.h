@@ -51,7 +51,7 @@ private:
 
     PanCatalogNode* _root;
 
-    QString _displayRole="name";
+    QString _displayRole="[name]";
 
 };
 

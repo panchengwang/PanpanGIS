@@ -7,3 +7,5 @@ create or replace function pan_get_configuration(
 $$
     select keyvalue from pan_configuration where keyname = $1;
 $$ language 'sql';
+
+

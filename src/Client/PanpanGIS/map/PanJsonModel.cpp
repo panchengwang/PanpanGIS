@@ -1,7 +1,9 @@
 #include "PanJsonModel.h"
 #include <QtCore>
 
+
 #define  DATAROLE  (Qt::UserRole + 1)
+
 
 PanJsonModel::PanJsonModel(QObject *parent)
     : QAbstractItemModel{parent}
@@ -66,6 +68,7 @@ int PanJsonModel::columnCount(const QModelIndex &parent ) const{
 QHash<int, QByteArray> PanJsonModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
+    roles[Qt::DisplayRole] = "display";
     roles[DATAROLE] = "data";
     return roles;
 }

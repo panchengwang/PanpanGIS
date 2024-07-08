@@ -111,6 +111,8 @@ $$
 $$ language 'sql';
 
 
+
+
 -- 向系统中添加一个新的服务节点
 create or replace function pan_add_server(
     dbhost varchar,
@@ -177,7 +179,22 @@ $$ language 'sql';
 create or replace function pan_user_get_id(username varchar) returns varchar as 
 $$
     select id from pan_user where username = $1;
-$$ language 'sql';-- 服务api函数
+$$ language 'sql';
+
+-- 由token，获取用户id
+create or replace function pan_user_get_id_by_token(token varchar) returns varchar as 
+$$
+    select id from pan_user where token = $1;
+$$ language 'sql';
+
+-- token是否过期
+create or replace function pan_token_is_expired(token varchar) returns boolean as 
+$$
+    select token_expire_time <= now() from pan_user where token = $1;
+$$ language 'sql';
+
+
+-- 服务api函数
 
 
 
@@ -212,6 +229,31 @@ begin
             'message', '必须设置请求类型type'
         );
     end if;
+
+    -- 检查token是否过期
+    if (params->>'type') <> 'USER_LOGIN'  
+        and  (params->>'type') <> 'USER_REGISTER'
+        and  (params->>'type') <> 'USER_RESET_PASSWORD'
+        and  (params->>'type') <> 'USER_GET_VERIFY_CODE' then 
+        if pan_token_is_expired(params->'data'->>'token') then 
+            return jsonb_build_object(
+                'success', false,
+                'message', 'token已过期，请重新登录'
+            );
+        else
+            -- 否则更新最新的操作时间 
+            sqlstr := '
+                update pan_user 
+                set
+                    token_expire_time = now() + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
+                where 
+                    token = ' || quote_literal(params->'data'->>'token') || ' 
+            ';
+            execute sqlstr;
+        end if; 
+    end if;
+
+    
 
     sqlstr := 'select func_name from pan_service_function where request_type = ' || quote_literal(params->>'type') ;
     execute sqlstr into server_func_name;
@@ -254,13 +296,158 @@ values
 
 
 -- 数据集元数据表
-create table pan_catalog(
-    id varchar(32) default sc_uuid() primary key,               -- id
-    dataset_type integer default 0,                             -- 数据类型
-    parent_id varchar(32) default '0',                          -- 当parent_id为字符串0的时候，为数据集的根分组
-    name varchar(256),                                          -- 数据集名称
-    author_id varchar(32) not null,
-    create_time timestamp default now() not null,                --
-    last_modify_time timestamp default now() not null 
-);
+-- 每个用户会对应一个名为pan_catalog_<user_id>的元数据表
+-- create table pan_catalog(
+--     id varchar(32) default sc_uuid() primary key,               -- id
+--     dataset_type integer default 0,                             -- 数据类型
+--     parent_id varchar(32) default '0',                          -- 当parent_id为字符串0的时候，为数据集的根分组
+--     name varchar(256),                                          -- 数据集名称
+--     author_id varchar(32) not null,
+--     create_time timestamp default now() not null,                --
+--     last_modify_time timestamp default now() not null 
+-- );
 
+
+
+--------------------------------------------------------------------------------
+--  获取用户空间数据管理 目录树
+--------------------------------------------------------------------------------
+
+insert into pan_service_function(request_type, func_name) 
+values
+    ('CATALOG_GET_DATASET_TREE','pan_catalog_get_dataset_tree');
+
+
+--  函数:   pan_catalog_get_dataset_tree 
+--  功能:   辅助函数, 内部使用
+--          从指定的catalog表中获取节点id及其子节点树信息
+--  参数: 
+--      catalog_table_name      catalog表名，每个用户都有单独的catalog表
+--      id                      节点id
+--  返回:
+--      {
+--          "id": "0",
+--          "name": "文件夹/数据表/数据集 名称",
+--          "dataset_type": "folder/point/...",
+--          "parent_id": "父节点id",
+--          "children":[{
+--              子节点信息
+--          }]    
+--      }
+
+create or replace function pan_catalog_get_dataset_tree(catalog_table_name varchar, id varchar) returns jsonb as 
+$$
+declare
+    response jsonb;
+    children jsonb;
+    sqlstr text;
+begin
+    sqlstr := '
+        select
+            jsonb_agg( 
+                pan_catalog_get_dataset_tree(' || quote_literal(catalog_table_name) || ',id) 
+            )
+        from 
+            ' || quote_ident(catalog_table_name) || '
+        where 
+            parent_id = ' || quote_literal( id ) || '
+    ';
+    execute sqlstr into children;
+    if children is null then 
+        children := jsonb_build_array();
+    end if;
+
+    sqlstr := '
+        select to_jsonb(A) from (
+            select 
+                B.id,C.type_name as dataset_type, B.parent_id, B.name 
+            from
+                ' || quote_ident(catalog_table_name) || ' B,
+                pan_dataset_type C
+            where
+                B.id = ' || quote_literal(id) || '
+                and 
+                B.dataset_type = C.id
+            order by 
+                B.name desc
+        ) A
+    ';  
+    execute sqlstr into response;
+    response := response || jsonb_build_object(
+        'children', children
+    );
+    return response;
+end;
+$$ language 'plpgsql';
+
+
+--  函数:   pan_catalog_get_dataset_tree 
+--  功能:   辅助函数, 由token获取对应的catalog表
+--  参数: 
+--      token       用户登录获取的token
+--  返回:
+--      catalog表名
+create or replace function pan_catalog_get_table_name_by_token(token varchar) returns varchar as 
+$$
+    select 'pan_catalog_' || pan_user_get_id_by_token(token);
+$$ language 'sql';
+
+
+
+--  函数: pan_catalog_get_dataset_tree
+--  请求参数: 
+--      param
+--          {
+--              "type":"CATALOG_GET_DATASET_TREE",
+--              "data": {
+--                  "token": "",
+--                  "parent_id": '0'                    
+--              }
+--          }
+--  返回:
+--  {
+--      "success": true,
+--      "message": "ok"
+--      "data": {
+--          catalog:{
+--    
+--          }    
+--      }
+--  }
+create or replace function pan_catalog_get_dataset_tree(params jsonb) returns jsonb as 
+$$
+declare
+    sqlstr text;
+    response jsonb;
+    
+    user_id varchar;
+    parent_id varchar;
+begin
+    user_id := pan_user_get_id_by_token(params->'data'->>'token');
+    if params->'data'->'parent_id' is null then 
+        parent_id := '0';
+    else 
+        parent_id := (params->'data'->>'parent_id');
+    end if;
+
+    response := pan_catalog_get_dataset_tree('pan_catalog_' || user_id, parent_id);
+    
+    return jsonb_build_object(
+        'success', true,
+        'message', 'ok',
+        'data', jsonb_build_object(
+            'catalog', response
+        )
+    );
+end;
+$$ language 'plpgsql';
+
+
+
+--------------------------------------------------------------------------------
+--  新建文件夹
+--------------------------------------------------------------------------------
+
+insert into pan_service_function(request_type, func_name) 
+values
+    ('CATALOG_CREATE_FOLDER','pan_catalog_create_folder');

@@ -257,10 +257,19 @@ begin
             dataset_type integer default 0,                             
             parent_id varchar(32) default  ' || quote_literal('0') || ',                          
             name varchar(256),                                          
-            author_id varchar(32) not null,
             create_time timestamp default now() not null,                
-            last_modify_time timestamp default now() not null 
+            last_modify_time timestamp default now() not null ,
+            unique(parent_id,name)
         );
+
+        insert into pan_catalog_' || user_id || '(id, dataset_type,parent_id,name) 
+        values
+            (
+                ' || quote_literal('0') || ',
+                0,
+                ' || quote_literal('-1') || ',
+                ' || quote_literal('root') || '
+            );
     ';
 
     perform pan_dblink_execute_sql(gis_server_conn_str,sqlstr);
@@ -345,7 +354,7 @@ begin
         update pan_user 
         set 
             token = ' || quote_literal(mytoken) || ',
-            token_expire_time = ' || quote_literal(now()) ||  '::timestamp + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
+            token_expire_time = now() + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
         where 
             username = ' || quote_literal(params->'data'->>'username') || '
     ';

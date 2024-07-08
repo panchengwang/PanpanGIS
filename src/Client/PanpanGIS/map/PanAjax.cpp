@@ -9,11 +9,12 @@
 PanAjax::PanAjax(QObject *parent) : QObject(parent)
 {
     _running = false;
+     qDebug() << "ajax create";
 }
 
 PanAjax::~PanAjax()
 {
-
+    qDebug() << "ajax destroy";
 }
 
 void PanAjax::post(const QString &url, const QString &argname, const QString &argval)

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import cn.pc.gis.control
-
+import "PanConnector.js" as PanConnector
 
 PanFormWindow{
     id: window
@@ -15,19 +15,19 @@ PanFormWindow{
 
     signal error()
 
-    property PanConnector connector:     PanConnector{
-        showBusyIndicator: true
-        onSuccess:(data)=>{
-                      window.close();
-                      PanApplication.token = data.token
-                      PanApplication.nodeUrl = data.url
-                      window.destroy()
-                  }
-        onFailure: {
-            PanApplication.notify.show(message)
-        }
+    // property PanConnector connector:     PanConnector{
+    //     showBusyIndicator: true
+    //     onSuccess:(data)=>{
+    //                   window.close();
+    //                   PanApplication.token = data.token
+    //                   PanApplication.nodeUrl = data.url
+    //                   window.destroy()
+    //               }
+    //     onFailure: {
+    //         PanApplication.notify.show(message)
+    //     }
 
-    }
+    // }
 
     PanLabel{
         text: "欢迎来到PanpanGIS世界"
@@ -159,16 +159,29 @@ PanFormWindow{
             PanApplication.notify.show("用户名和密码均不能为空");
             return;
         }
-
-        connector.post(PanApplication.masterUrl,"request",
-                       JSON.stringify(
-                           {
-                               "type": "USER_LOGIN",
-                               "data": {
-                                   "username": username.text.trim(),
-                                   "password": password.text.trim()
-                               }
-                           })
-                       );
+        PanConnector.post(PanApplication.masterUrl,
+                          {
+                              "type": "USER_LOGIN",
+                              "data": {
+                                  "username": username.text.trim(),
+                                  "password": password.text.trim()
+                              }
+                          },window,true,
+                          (data)=>{
+                              window.close();
+                              PanApplication.token = data.token
+                              PanApplication.nodeUrl = data.url
+                              window.destroy()
+                          });
+        // connector.post(PanApplication.masterUrl,"request",
+        //                JSON.stringify(
+        //                    {
+        //                        "type": "USER_LOGIN",
+        //                        "data": {
+        //                            "username": username.text.trim(),
+        //                            "password": password.text.trim()
+        //                        }
+        //                    })
+        //                );
     }
 }

@@ -111,6 +111,8 @@ $$
 $$ language 'sql';
 
 
+
+
 -- 向系统中添加一个新的服务节点
 create or replace function pan_add_server(
     dbhost varchar,
@@ -177,7 +179,22 @@ $$ language 'sql';
 create or replace function pan_user_get_id(username varchar) returns varchar as 
 $$
     select id from pan_user where username = $1;
-$$ language 'sql';-- 服务api函数
+$$ language 'sql';
+
+-- 由token，获取用户id
+create or replace function pan_user_get_id_by_token(token varchar) returns varchar as 
+$$
+    select id from pan_user where token = $1;
+$$ language 'sql';
+
+-- token是否过期
+create or replace function pan_token_is_expired(token varchar) returns boolean as 
+$$
+    select token_expire_time <= now() from pan_user where token = $1;
+$$ language 'sql';
+
+
+-- 服务api函数
 
 
 
@@ -212,6 +229,31 @@ begin
             'message', '必须设置请求类型type'
         );
     end if;
+
+    -- 检查token是否过期
+    if (params->>'type') <> 'USER_LOGIN'  
+        and  (params->>'type') <> 'USER_REGISTER'
+        and  (params->>'type') <> 'USER_RESET_PASSWORD'
+        and  (params->>'type') <> 'USER_GET_VERIFY_CODE' then 
+        if pan_token_is_expired(params->'data'->>'token') then 
+            return jsonb_build_object(
+                'success', false,
+                'message', 'token已过期，请重新登录'
+            );
+        else
+            -- 否则更新最新的操作时间 
+            sqlstr := '
+                update pan_user 
+                set
+                    token_expire_time = now() + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
+                where 
+                    token = ' || quote_literal(params->'data'->>'token') || ' 
+            ';
+            execute sqlstr;
+        end if; 
+    end if;
+
+    
 
     sqlstr := 'select func_name from pan_service_function where request_type = ' || quote_literal(params->>'type') ;
     execute sqlstr into server_func_name;
@@ -413,6 +455,7 @@ insert into pan_service_function(request_type, func_name)
 values
     ('USER_REGISTER','pan_user_register');
 
+
 create or replace function pan_user_register(params jsonb) returns jsonb as 
 $$
 declare
@@ -485,15 +528,24 @@ begin
             2, 
             ' || gis_server_id || '
         );
-        create table pan_catalog(
+        create table pan_catalog_' || user_id || '(
             id varchar(32) default sc_uuid() primary key,               
             dataset_type integer default 0,                             
             parent_id varchar(32) default  ' || quote_literal('0') || ',                          
             name varchar(256),                                          
-            author_id varchar(32) not null,
             create_time timestamp default now() not null,                
-            last_modify_time timestamp default now() not null 
+            last_modify_time timestamp default now() not null ,
+            unique(parent_id,name)
         );
+
+        insert into pan_catalog_' || user_id || '(id, dataset_type,parent_id,name) 
+        values
+            (
+                ' || quote_literal('0') || ',
+                0,
+                ' || quote_literal('-1') || ',
+                ' || quote_literal('root') || '
+            );
     ';
 
     perform pan_dblink_execute_sql(gis_server_conn_str,sqlstr);
@@ -505,6 +557,7 @@ begin
     return response;
 end;
 $$ language 'plpgsql';
+
 
 
 -- ---------------------------------------------------------
@@ -577,7 +630,7 @@ begin
         update pan_user 
         set 
             token = ' || quote_literal(mytoken) || ',
-            token_expire_time = ' || quote_literal(now()) ||  '::timestamp + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
+            token_expire_time = now() + pan_get_configuration(' || quote_literal('TOKEN_VALID_TIME') || ')::interval
         where 
             username = ' || quote_literal(params->'data'->>'username') || '
     ';

@@ -40,13 +40,16 @@ qt_add_qml_module(PanMap
         PanLogWindow.qml
         PanStandardButtons.qml
         PanFormWindow.qml
-        PanConnector.qml
+        # PanConnector.qml
         PanProgress.qml
         PanBusyIndicator.qml
         PanNotify.qml
         PanCatalogWindow.qml
         PanMapEditorWindow.qml
         PanCatalogTree.qml
+        PanMenu.qml
+        PanCatalogTreeMenu.qml
+        PanConnector.js
         ${SINGLETON_QML_FILES}
 
     SOURCES
@@ -59,7 +62,7 @@ qt_add_qml_module(PanMap
 
     RESOURCES
         images/wallpaper.webp
-        QML_FILES PanButton2.qml
+
 )
 # qt_import_qml_plugins(PanMap
 #     INCLUDE
