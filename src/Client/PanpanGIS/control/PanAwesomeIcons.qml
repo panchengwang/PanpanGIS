@@ -306,7 +306,7 @@ QtObject {
     property string fa_folder: "\uf07b";
     // property string fa_folder_minus: "\uf65d";
     property string fa_folder_open: "\uf07c";
-    // property string fa_folder_plus: "\uf65e";
+    property string fa_folder_plus: "\uf65e";
     // property string fa_glasses: "\uf530";
     // property string fa_globe: "\uf0ac";
     // property string fa_highlighter: "\uf591";

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import cn.pc.gis.control
+import cn.pc.gis.map
 
 TreeView {
     id: treeView
@@ -9,18 +10,18 @@ TreeView {
 
     property var currentIndex: null
 
+    model: PanJsonModel{
+        id: catalogModel
+
+        Component.onCompleted: {
+            treeView.refresh()
+        }
+
+    }
+
     columnWidthProvider: function(column) {
         return Math.max(explicitColumnWidth(column), implicitColumnWidth(column), treeView.width)
     }
-
-    // MouseArea{
-    //     anchors.fill: parent
-    //     acceptedButtons:  Qt.RightButton
-    //     onClicked: (mouse)=>{
-    //                    menu.popup()
-    //                }
-
-    // }
 
     delegate:   Control {
         id: control
@@ -145,9 +146,6 @@ TreeView {
             text: model.display // model.data.name + "  " + model.data.parent_id
             color:  PanStyles.color_dark
         }
-
-
-
     }
 
 
@@ -181,67 +179,54 @@ TreeView {
         }
     }
 
-    // Menu {
-    //     id: menuFolder
 
-    //     property var index: null
+    function refresh(){
+        PanConnector.post(PanApplication.nodeUrl,
+                          {
+                              "type": "CATALOG_GET_DATASET_TREE",
+                              "data": {
+                                  "token": PanApplication.token
+                              }
+                          },window,true,
+                          (data)=>{
+                               treeView.model.data = data.catalog;
 
-    //     padding: PanStyles.default_padding
-    //     clip: true
-
-    //     Action {
-    //         text: qsTr("新建文件夹");
-    //         enabled:{
-    //             let index = treeView.index(menu.row, menu.col);
-    //             let attributes = treeView.model.attributes(index);
-    //             return attributes.dataset_type === "folder";
-    //         }
-    //         onTriggered: {
-    //             let index = treeView.index(menu.row, menu.col);
-    //             let attributes = treeView.model.attributes(index);
-    //             treeView.model.insertChild(
-    //                         index,
-    //                         {
-    //                             "dataset_type": "point",
-    //                             "name": "new layer",
-    //                             "parent_id": attributes.id,
-    //                             "id": 8
-    //                         },
-    //                         0)
-    //         }
-    //     }
+                          },(data)=>{});
+    }
 
 
-    //     delegate: MenuItem{
-    //         id: menuItem
-    //         implicitHeight: PanStyles.button_implicit_height + topPadding
-    //         contentItem: Text {
-    //             leftPadding: menuItem.indicator.width
-    //             rightPadding: menuItem.arrow.width
-    //             text: menuItem.text
-    //             font.family: PanFonts.notoSansSimpleChineseRegular.name
-    //             font.pixelSize: PanStyles.default_font_size
-    //             opacity: enabled ? 1.0 : 0.3
-    //             color: menuItem.highlighted ? PanStyles.color_white : PanStyles.color_dark
-    //             horizontalAlignment: Text.AlignLeft
-    //             verticalAlignment: Text.AlignVCenter
-    //             elide: Text.ElideRight
-    //         }
-    //         background: Rectangle {
-    //             anchors.fill: parent
-    //             opacity: enabled ? 1 : 0.3
-    //             color: menuItem.highlighted ? PanStyles.color_primary : "#EFEFEF"
-    //         }
-    //     }
-    //     background: Rectangle {
-    //         implicitWidth: 200
-    //         implicitHeight: PanStyles.button_implicit_height
-    //         color: "#ffffffff"
-    //         border.color: PanStyles.color_grey
-    //         radius: PanStyles.default_radius
-    //     }
-    // }
-
-
+    function createFolder(parent_id){
+        let inputwin = Qt.createQmlObject(`
+                                          PanInputWindow{
+                                              modal: true
+                                          }
+                                          `,
+                                          PanApplication.windowContainer,"inputwin")
+        inputwin.show()
+        inputwin.toCenter()
+        inputwin.accepted.connect((data)=>{
+                                      inputwin.destroy()
+                                      PanConnector.post(PanApplication.nodeUrl,
+                                                        {
+                                                            type: "CATALOG_CREATE_FOLDER",
+                                                            data:{
+                                                                token: PanApplication.token,
+                                                                folder: data,
+                                                                parent_id: parent_id
+                                                            }
+                                                        },
+                                                        window,
+                                                        true,
+                                                        (res)=>{
+                                                            if(parent_id === "0"){
+                                                                console.log(treeView.model.attributes(JSON.stringify(treeView.rootIndex)))
+                                                                treeView.model.insertChild(treeView.rootIndex,res)
+                                                            }
+                                                        })
+                                  })
+        inputwin.cancel.connect(()=>{
+                                    inputwin.destroy()
+                                })
+    }
 
 }

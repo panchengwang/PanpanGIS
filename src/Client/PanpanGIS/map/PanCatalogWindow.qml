@@ -9,46 +9,69 @@ PanWindow {
     id: window
 
     caption: "空间数据管理"
-    standardButtonsVisible: false
-
 
     SplitView{
         id: split
         anchors.fill: parent
-        PanCatalogTree{
-            id: catalogTree
+
+        ColumnLayout{
+            height: parent.height
             SplitView.preferredWidth: Math.max(200,split.width * 0.3)
-            model: catalogModel
-        }
+            spacing: 0
+            Rectangle{
+                implicitHeight: row.height + PanStyles.default_padding
+                implicitWidth: parent.width
+                color:  PanStyles.color_light_grey
+                RowLayout{
+                    id: row
+                    width: parent.width - 2 * PanStyles.default_margin
+                    anchors.centerIn: parent
 
-        Rectangle{
-            PanJsonModel{
-                id: catalogModel
-
-                Component.onCompleted: {
-                    refresh()
-                }
-                function refresh(){
-                    PanConnector.post(PanApplication.nodeUrl,
-                                     {
-                                         "type": "CATALOG_GET_DATASET_TREE",
-                                         "data": {
-                                             "token": PanApplication.token
-                                         }
-                                     },window,true,
-                                     (data)=>{
-                                          console.log(JSON.stringify(data))
-                                        catalogModel.data = data.catalog;
-
-                                     },(data)=>{});
+                    PanLabel{
+                        text:""
+                        Layout.fillWidth: true
+                    }
+                    PanButton{
+                        icon:  PanAwesomeIcons.fa_folder_plus
+                        iconSize: 18
+                        dense: true
+                        backgroundVisible: false
+                        onClicked: {
+                            catalogTree.createFolder("0")
+                        }
+                    }
+                    PanButton{
+                        icon: PanGisIcons.fg_layer_2_add_o
+                        iconSize: 18
+                        iconFontName: PanFonts.gis.name
+                        backgroundVisible: false
+                    }
+                    PanButton{
+                        icon: PanGisIcons.fg_layer_upload
+                        iconSize: 18
+                        iconFontName: PanFonts.gis.name
+                        backgroundVisible: false
+                    }
                 }
             }
+            PanCatalogTree{
+                id: catalogTree
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
+
+        }
+
+
+
+        Rectangle{
+
             PanButton{
                 x: 50
                 y: 50
                 text: "刷新"
                 onClicked: {
-                    catalogModel.refresh()
+                    catalogTree.refresh()
                 }
             }
             PanButton{
@@ -64,7 +87,6 @@ PanWindow {
                 y: 50
                 text: "切换display key"
                 onClicked: {
-                    catalogModel.displayRole = "[name]<[id]>"
                 }
             }
         }

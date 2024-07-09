@@ -1,4 +1,4 @@
-// .pragma library
+
 
 function post(url,params,context,showBusyIndicator, success, failure) {
     var ajax = Qt.createQmlObject(

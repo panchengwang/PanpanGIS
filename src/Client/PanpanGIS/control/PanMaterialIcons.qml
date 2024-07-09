@@ -483,7 +483,7 @@ QtObject {
     // property string md_cottage : "\ue587";
     // property string md_countertops : "\uf1f7";
     // property string md_create : "\ue150";
-    // property string md_create_new_folder : "\ue2cc";
+    property string md_create_new_folder : "\ue2cc";
     // property string md_credit_card : "\ue870";
     // property string md_credit_card_off : "\ue4f4";
     // property string md_credit_score : "\ueff1";

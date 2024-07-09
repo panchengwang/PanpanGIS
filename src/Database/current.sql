@@ -17,7 +17,7 @@ set client_encoding to utf8;
 --              "type":"CATALOG_CREATE_FOLDER",
 --              "data": {
 --                  "token": "",
---                  "folder_name": 'folder',
+--                  "folder": 'folder',
 --                  "parent_id": '0'                    
 --              }
 --          }
@@ -26,31 +26,62 @@ set client_encoding to utf8;
 --      "success": true,
 --      "message": "ok"
 --      "data": { 
+--          
 --      }
 --  }
-create or replace function pan_catalog_get_dataset_tree(params jsonb) returns jsonb as 
+create or replace function pan_catalog_create_folder(params jsonb) returns jsonb as 
 $$
 declare
     sqlstr text;
     response jsonb;
-    
-    user_id varchar;
+    folder_id varchar;
     parent_id varchar;
+    catalog_table_name varchar;
+    folder_exist boolean;
 begin
-    user_id := pan_user_get_id_by_token(params->'data'->>'token');
-    if params->'data'->'parent_id' is null then 
-        parent_id := '0';
-    else 
-        parent_id := (params->'data'->>'parent_id');
+    catalog_table_name := pan_catalog_get_table_name_by_token(params->'data'->>'token');
+    -- 判断目录是否存在
+    sqlstr := '
+        select 
+            count(1) = 1 
+        from 
+            ' || catalog_table_name || ' 
+        where 
+            parent_id = ' || quote_literal(params->'data'->>'parent_id') || '
+            and 
+            name = ' || quote_literal(params->'data'->>'folder') || '
+        ';
+    execute sqlstr into folder_exist;
+    if folder_exist then 
+        return jsonb_build_object(
+            'success', false,
+            'message', '文件夹已经存在'
+        );
     end if;
 
-    response := pan_catalog_get_dataset_tree('pan_catalog_' || user_id, parent_id);
-    
+    -- 插入目录信息
+    folder_id := sc_uuid();
+    sqlstr := '
+        insert into ' || quote_ident(catalog_table_name) || '
+            (id,name,dataset_type,parent_id)
+        values (
+            ' || quote_literal(folder_id) || ',
+            ' || quote_literal(params->'data'->>'folder') || ',
+            0,
+            ' || quote_literal(params->'data'->>'parent_id') || '
+        )
+    ';
+    execute sqlstr;
+
+    -- 构造返回结果
     return jsonb_build_object(
         'success', true,
-        'message', 'ok',
-        'data', jsonb_build_object(
-            'catalog', response
+        'message', '目录创建成功',
+        'data',jsonb_build_object(
+            'id', folder_id,
+            'name', (params->'data'->>'folder'),
+            'dataset_type','folder',
+            'parent_id', (params->'data'->>'parent_id')
         )
     );
 end;

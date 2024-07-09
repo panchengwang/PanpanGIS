@@ -9,7 +9,7 @@
 PanAjax::PanAjax(QObject *parent) : QObject(parent)
 {
     _running = false;
-     qDebug() << "ajax create";
+    qDebug() << "ajax create";
 }
 
 PanAjax::~PanAjax()
@@ -33,12 +33,6 @@ void PanAjax::post(const QString &url, const QString &argname, const QString &ar
     query.addQueryItem(argname,argval);
 
     QNetworkReply *reply = manager->post(request, query.toString(QUrl::FullyEncoded).toUtf8() );
-    // QList<QSslError> errorsThatCanBeIgnored;
-
-    // errorsThatCanBeIgnored << QSslError(QSslError::HostNameMismatch);
-    // errorsThatCanBeIgnored << QSslError(QSslError::SelfSignedCertificate);
-
-    // // ignoreSslErrors(errorsThatCanBeIgnored);
     reply->ignoreSslErrors();
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this, SLOT(onErrorOccurred(QNetworkReply::NetworkError)));

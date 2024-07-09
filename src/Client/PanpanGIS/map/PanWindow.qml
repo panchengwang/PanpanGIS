@@ -365,6 +365,16 @@ Popup {
         window.open()
     }
 
+    function show(){
+        window.moveToTopLevel()
+    }
+
+
+    function toCenter(){
+        window.x = (window.parent.width - window.width) * 0.5
+        window.y = (window.parent.height - window.height) * 0.5
+    }
+
     function saveWindowStatus(){
         _originWindowX = window.x
         _originWindowY = window.y
