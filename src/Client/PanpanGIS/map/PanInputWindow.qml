@@ -28,7 +28,7 @@ PanFormWindow{
         type: "text"
         Layout.fillWidth: true
         placeholderText: ""
-        text: " "
+        text: ""
     }
 
     onOk: {
