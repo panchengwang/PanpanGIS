@@ -8,6 +8,7 @@ import "PanConnector.js" as PanConnector
 PanWindow {
     id: window
 
+    standardButtonsVisible: false
     caption: "空间数据管理"
 
     SplitView{

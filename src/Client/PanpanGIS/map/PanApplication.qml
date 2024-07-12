@@ -15,6 +15,7 @@ QtObject {
 
     property PanCatalogWindow catalogWindow: null                                               // 空间数据管理
     property PanMapEditorWindow mapEditorWindow: null                                           // 地图编辑窗口
+    property PanSymbolEditorWindow symbolEditorWindow: null                                     // 符号编辑窗口
 
     property int zIndexOfTopWin: 100                                                            // 最上层window的z index
 

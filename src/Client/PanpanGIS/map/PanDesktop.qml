@@ -23,11 +23,11 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 spacing: 100
                 Repeater{
-                    model: 3
+                    model: 1
                     Image{
-                        source:"/cn/pc/gis/control/icons/pcwang_gis2.svg"
+                        source:"/cn/pc/gis/control/icons/logo.svg"
                         sourceSize{
-                            width: container.width * 0.67 * 0.2
+                            width: container.width * 0.4
                             height: width
                         }
                         opacity: 0.3
@@ -83,9 +83,6 @@ ApplicationWindow {
             color: PanStyles.color_window_caption_background
             Layout.fillWidth: true
             height: PanStyles.header_implicit_height * 1.5
-
-
-
             RowLayout{
                 anchors.fill: parent
                 // height: parent.height
@@ -106,7 +103,7 @@ ApplicationWindow {
                     backgroundVisible: false
                     isImageIcon: true
                     iconSize: 26
-                    icon: "/cn/pc/gis/control/icons/pcwang_gis2.svg"
+                    icon: "/cn/pc/gis/control/icons/logo.svg"
                     // flat: true
                     implicitWidth: 40
                     implicitHeight: 40
@@ -149,6 +146,24 @@ ApplicationWindow {
 
                 PanButton{
                     Layout.alignment: Qt.AlignVCenter
+                    icon: PanAwesomeIcons.fa_star_half_alt
+                    iconFontName: PanFonts.awesomeSolid.name
+                    iconColor: PanStyles.color_primary
+                    iconSize: 24
+                    backgroundVisible: false
+                    implicitWidth: 40
+                    implicitHeight: 40
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 300
+                    ToolTip.text: "符号编辑"
+
+                    onClicked: {
+                        createSymbolEditorWindow();
+                    }
+                }
+
+                PanButton{
+                    Layout.alignment: Qt.AlignVCenter
                     icon: PanAwesomeIcons.fa_desktop
                     iconFontName: PanFonts.awesomeSolid.name
                     iconColor: PanStyles.color_primary
@@ -163,8 +178,10 @@ ApplicationWindow {
                     onClicked: {
                         if(PanApplication.catalogWindow)    PanApplication.catalogWindow.visible = false
                         if(PanApplication.mapEditorWindow)  PanApplication.mapEditorWindow.visible = false
+                        if(PanApplication.symbolEditorWindow) PanApplication.symbolEditorWindow.visible = false
                     }
                 }
+
 
                 Item{
                     Layout.fillWidth: true
@@ -196,6 +213,9 @@ ApplicationWindow {
 
             }
         }
+
+
+
     }
 
     Component.onCompleted: {
@@ -265,4 +285,22 @@ ApplicationWindow {
         PanApplication.mapEditorWindow.moveToTopLevel()
     }
 
+    function createSymbolEditorWindow(){
+        if(PanApplication.symbolEditorWindow === null){
+            const symbolEditorWindow = Qt.createQmlObject(`
+                                                       PanSymbolEditorWindow{
+                                                       x: Math.random() * (parent.width-width)
+                                                       y: Math.random() * (parent.height-height)  //Math.max(100 , (parent.height - height)*0.5-100)
+                                                       width: Math.max(400,parent.width*0.8)
+                                                       height: Math.max(400,parent.height*0.8)
+                                                       }
+                                                       `,
+                                                       PanApplication.windowContainer,
+                                                       "symbolEditorWindow"
+                                                       );
+
+            PanApplication.symbolEditorWindow = symbolEditorWindow;
+        }
+        PanApplication.symbolEditorWindow.moveToTopLevel()
+    }
 }

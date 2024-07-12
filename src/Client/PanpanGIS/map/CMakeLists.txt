@@ -63,6 +63,7 @@ qt_add_qml_module(PanMap
     RESOURCES
         images/wallpaper.webp
         QML_FILES PanInputWindow.qml
+        QML_FILES PanSymbolEditorWindow.qml
 
 )
 # qt_import_qml_plugins(PanMap

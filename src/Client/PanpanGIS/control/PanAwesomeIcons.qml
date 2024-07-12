@@ -1210,7 +1210,7 @@ QtObject {
     // property string fa_sort_numeric_up_alt: "\uf887";
     // property string fa_sort_up: "\uf0de";
     // property string fa_star: "\uf005";
-    // property string fa_star_half: "\uf089";
+    property string fa_star_half: "\uf089";
     // property string fa_sync: "\uf021";
     // property string fa_sync_alt: "\uf2f1";
     // property string fa_thumbs_down: "\uf165";
@@ -2115,7 +2115,7 @@ QtObject {
     // property string fa_smoking_ban: "\uf54d";
     // property string fa_star: "\uf005";
     // property string fa_star_half: "\uf089";
-    // property string fa_star_half_alt: "\uf5c0";
+    property string fa_star_half_alt: "\uf5c0";
     // property string fa_stream: "\uf550";
     // property string fa_thermometer_empty: "\uf2cb";
     // property string fa_thermometer_full: "\uf2c7";

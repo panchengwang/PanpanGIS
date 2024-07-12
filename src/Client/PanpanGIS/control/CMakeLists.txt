@@ -57,6 +57,7 @@ qt_add_qml_module(PanControl
         fonts/MaterialIcons-Regular.ttf
         icons/panpangis.svg
         icons/pcwang_gis2.svg
+        icons/logo.svg
 
     SOURCES
         src/MapCanvas.h
