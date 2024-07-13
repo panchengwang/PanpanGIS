@@ -1,6 +1,8 @@
 %\documentclass{minimal}
 \documentclass[tikz]{standalone}
 \usepackage[UTF8]{ctex}
+\setCJKfamilyfont{zhuanti}{zihunyoulongxiaozhuan.ttf}
+\newcommand{\zhuanti}{\CJKfamily{zhuanti}}
 \usepackage{tikz}
 %\usepackage[
 %	paperheight=21cm,
@@ -23,9 +25,20 @@
 		
 
 		
-		\draw[line width=1cm,mycolor](0,0) circle (9);
-		%\draw[line width=0.6cm, white ](0,0) circle (10);
+		\draw[line width=1.2cm,mycolor](0,0) circle (9);
+		\draw[line width=0.8cm, white,line cap=round ](9,0) arc (0:180:9);
 		%\draw[line width=0.01cm, black ](0,0) circle (9);
+
+		\path decorate [
+		decoration={
+			text along path,
+			text format delimiters={[}{]},
+			text color=mycolor,
+			text align={fit to path=true},
+			text={[\Large \bf \zhuanti]惟 此 独 立 之 精 神 自 由 之 思 想 历 千 万 祀 与 天 壤 而 同 久 共 三 光 而 永 光}
+		}]{ 
+			(-8.85,0) arc (180:0:8.85)
+		};
 
 		\path decorate [
 			decoration={
@@ -33,21 +46,23 @@
 				text format delimiters={[}{]},
 				text color=white,
 				text align={center},
-				text={[\Large  \bf]  庾 \ \ 信 \ \ 平 \ \ 生 \ \ 最 \ \ 萧 \ \ 瑟 \ \  \ \ 暮 \ \ 年 \ \ 诗 \ \ 赋 \ \ 动 \ \ 江 \ \ 关}
+				text={[\huge  \bf \zhuanti]  庾 \ \ 信 \ \ 平 \ \ 生 \ \ 最 \ \ 萧 \ \ 瑟 \ \  \ \ 暮 \ \ 年 \ \ 诗 \ \ 赋 \ \ 动 \ \ 江 \ \ 关}
 			}]{ 
 			 (-9.2,0) arc (180:360:9.2)
 			 };
 			 
-		\path decorate [
-		decoration={
-			text along path,
-			text format delimiters={[}{]},
-			text color=white,
-			text align={center},
-			text={[\Large \bfseries ] Qt/QML + WebAssembly + SQLCarto/PostGIS/PostgreSQL + PHP/Apache  }
-		}]{ 
-			(-8.85,0) arc (180:0:8.85)
-		};
+%		\path decorate [
+%		decoration={
+%			text along path,
+%			text format delimiters={[}{]},
+%			text color=white,
+%			text align={center},
+%			text={[\Large \bfseries ] Qt/QML + WebAssembly + SQLCarto/PostGIS/PostgreSQL + PHP/Apache  }
+%		}]{ 
+%			(-8.85,0) arc (180:0:8.85)
+%		};
+		
+
 			 
 		%\draw[] (-7,0) -- (0,7) -- (7,0) -- (0,-7) -- cycle;
 		
@@ -58,14 +73,16 @@
 		% pcwang
 		% W
 		\draw[line width=0.8cm,line cap=round,line join=round, mycolor] 
-			(-5.5,1.5 ) -- (-7,0) -- (-3.5,-3.5) -- (0,0) -- (3.5, -3.5) -- (7,0) -- ( 5.5, 1.5 );
+			(-4.5,2.5 ) -- (-7,0) -- (-3.5,-3.5) -- (0,0) -- (3.5, -3.5) -- (7,0) -- ( 4.5, 2.5 );
 		%P	
 		%\draw[line width=1cm,line cap=round,line join=round, mycolor]   (-4,3) -- (0, 7) -- (2.5,4.5) -- (0,2) -- (-2.5,4.5) ;
 		
-		\draw[line width=0.8cm,line cap=round,line join=round, mycolor]  (0,-6) --  (2,-4) -- (0,-2) -- (-2,-4) -- (0,-6) -- (0,-7) ;
+		\draw[line width=0.8cm,line cap=round,line join=round, mycolor]  (0,-6) --  (2,-4) -- (0,-2) -- (-2,-4) -- (0,-6) -- (0,-6) ;
+		\draw[line width=1.2cm,line cap=round ,line join=round, mycolor]  (0,-6) -- (0,-6.5) ;
+
 		
 		%C
-		\draw[line width=0.8cm,line cap=round,line join=round, mycolor]  (-1.5,3.5) -- (-2.5,4.5) -- (0,7) -- (2.5,4.5) -- (1.5,3.5) ;
+		\draw[line width=0.8cm,line cap=round,line join=round, mycolor]  (-1.5,2.5) -- (-3,4) -- (0,7) -- (3,4) -- (1.5,2.5) ;
 		
 		
 		% W
@@ -80,30 +97,18 @@
 		
 		%GIS
 		% G
-		%\draw[line width=0.5cm,line cap=round,line join=round, mycolor]   (-2.5,1.5) -- (-3.5,2.5) -- (-4.5,1.5) -- (-4.5,-0.5) -- (-3.5,-1.5) -- (-2.5,-0.5) -- (-2.5,0.5) -- (-3.5,0.5) ;
-		
-		\draw[line width=0.5cm,line cap=round,line join=round, mycolor]   (-2,1.0) arc (0:180:1.25 and 1) --  (-4.5,0)  arc (180:360:1.25 and 1) -- (-2,0.5) -- (-3.5,0.5) ;
+		\draw[line width=0.5cm,line cap=round,line join=round, mycolor]   (-2,0.75) arc (0:180:1.25 and 1) --  (-4.5,-0.25)  arc (180:360:1.25 and 1) -- (-2,0.25) -- (-3.5,0.25) ;
 		
 		%I
 		\draw[line width=0.1cm,line cap=round,line join=round,  mycolor]   (0,4.5) circle (0.4);
 		\fill[mycolor] (0,4.5) circle (0.4);
-		\draw[line width=0.5cm,line cap=round,line join=round, mycolor]   (0,3.5) -- (0,1);
+		\draw[line width=0.6cm,line cap=round,line join=round, mycolor]   (0,3.5) -- (0,1);
 			
 		% S
-		%\draw[line width=0.5cm,line cap=round,line join=round, mycolor]   (4.5,1.5) -- (3.5,2.5) -- (2.5,1.5) -- (4.5,-0.5) -- (3.5,-1.5) -- (2.5,-0.5) ; 
 		
-		\draw[line width=0.5cm,line cap=round,line join=round, mycolor]   (4.5,1) arc (0:180:1.25 and 1) -- (4.5,0) arc (0:-180:1.25 and 1) ; 
+		\draw[line width=0.5cm,line cap=round,line join=round, mycolor]   (4.5,0.75) arc (0:180:1.25 and 1) -- (4.5,-0.25) arc (0:-180:1.25 and 1) ; 
 		
-		% 小GIS
-		% G
-		%\draw[line width=0.2cm,line cap=round,line join=round, red!50]   (-2.5,1.5) -- (-3.5,2.5) -- (-4.5,1.5) -- (-4.5,-0.5) -- (-3.5,-1.5) -- (-2.5,-0.5) -- (-2.5,0.5) -- (-3.5,0.5) ;
-		
-		%I
-		%\draw[line width=0.2cm,line cap=round,line join=round, red!50]   (0,4.5) circle (0.0625);
-		%\draw[line width=0.2cm,line cap=round,line join=round, red!50]   (0,3.5) -- (0,1.5);
-		
-		% S
-		%\draw[line width=0.2cm,line cap=round,line join=round, red!50]   (4.5,1.5) -- (3.5,2.5) -- (2.5,1.5) -- (4.5,-0.5) -- (3.5,-1.5) -- (2.5,-0.5) ; 
+	
 		
 		
 		
