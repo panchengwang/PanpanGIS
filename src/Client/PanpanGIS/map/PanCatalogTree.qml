@@ -8,7 +8,7 @@ TreeView {
     id: treeView
     clip: true
 
-    property var currentIndex: null
+    property var currentIndex: treeView.rootIndex
 
     model: PanJsonModel{
         id: catalogModel
@@ -45,9 +45,15 @@ TreeView {
             color: control.hovered ? "#8831ccec" : (row % 2 === 0 ? PanStyles.color_white : "#EEEEEE")
             MouseArea{
                 anchors.fill: parent
-                acceptedButtons:  Qt.RightButton
+                acceptedButtons:  Qt.RightButton  //| Qt.LeftButton
                 onClicked: (mouse)=>{
                                let index = treeView.index(row,column);
+                               treeView.currentIndex = index;
+
+                               if(mouse.button !== Qt.RightButton){
+                                   return;
+                               }
+
                                let attributes = treeView.model.attributes(index)
                                let menu = null;
                                switch(attributes.dataset_type){
@@ -152,18 +158,16 @@ TreeView {
     PanCatalogTreeMenu{
         id: menuFolder
         Action {
-            text: qsTr("新建文件夹");
+            text: qsTr("新建子目录");
+            onTriggered: {
+                treeView.createFolder(menuFolder.index);
+            }
+        }
+        Action {
+            text: qsTr("删除");
             onTriggered: {
                 let attributes = treeView.model.attributes(menuFolder.index);
-                treeView.model.insertChild(
-                            menuFolder.index,
-                            {
-                                "dataset_type": "point",
-                                "name": "new layer",
-                                "parent_id": attributes.id,
-                                "id": 8
-                            },
-                            0)
+                treeView.removeFolder(attributes);
             }
         }
     }
@@ -189,39 +193,38 @@ TreeView {
                               }
                           },window,true,
                           (data)=>{
-                               treeView.model.data = data.catalog;
+                              treeView.model.data = data.catalog;
 
                           },(data)=>{});
     }
 
 
-    function createFolder(parent_id){
+    function createFolder(index){
         let inputwin = Qt.createQmlObject(`
                                           PanInputWindow{
-                                              modal: true
+                                          modal: true
                                           }
                                           `,
                                           PanApplication.windowContainer,"inputwin")
         inputwin.show()
         inputwin.toCenter()
         inputwin.accepted.connect((data)=>{
-                                      inputwin.destroy()
+
                                       PanConnector.post(PanApplication.nodeUrl,
                                                         {
                                                             type: "CATALOG_CREATE_FOLDER",
                                                             data:{
                                                                 token: PanApplication.token,
                                                                 folder: data,
-                                                                parent_id: parent_id
+                                                                parent_id: index === treeView.rootIndex ? "0": treeView.model.attributes(index).id
                                                             }
                                                         },
                                                         window,
                                                         true,
                                                         (res)=>{
-                                                            if(parent_id === "0"){
-                                                                console.log(treeView.model.attributes(JSON.stringify(treeView.rootIndex)))
-                                                                treeView.model.insertChild(treeView.rootIndex,res)
-                                                            }
+                                                                treeView.model.insertChild(index,res,0);
+                                                                treeView.expand(treeView.rowAtIndex(index));
+                                                                inputwin.destroy()
                                                         })
                                   })
         inputwin.cancel.connect(()=>{
@@ -229,4 +232,20 @@ TreeView {
                                 })
     }
 
+    function removeFolder(attributes){
+
+        PanConnector.post(PanApplication.nodeUrl,
+                          {
+                              type: "CATALOG_REMOVE",
+                              data:{
+                                  token: PanApplication.token,
+                                  id: attributes.id
+                              }
+                          },
+                          PanApplication.windowContainer,
+                          true,
+                          (res)=>{
+                          },()=>{
+                          });
+    }
 }

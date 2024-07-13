@@ -173,9 +173,14 @@ QJsonObject PanJsonModel::attributes(const QModelIndex &index)
 void PanJsonModel::insertChild(const QModelIndex &parent, const QJsonObject &attributes, int row)
 {
     beginInsertRows(parent,row,row);
-    PanCatalogNode* node = (PanCatalogNode*) parent.internalPointer();
-    if(!node){
-        return;
+    PanCatalogNode* node=nullptr;
+    if(parent.row() < 0){
+        node = _root;
+    }else{
+        node = (PanCatalogNode*) parent.internalPointer();
+        if(!node){
+            return;
+        }
     }
 
     PanCatalogNode *child = new PanCatalogNode(attributes.toVariantMap(),node);

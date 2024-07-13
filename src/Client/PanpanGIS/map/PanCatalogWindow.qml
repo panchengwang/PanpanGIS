@@ -38,7 +38,7 @@ PanWindow {
                         dense: true
                         backgroundVisible: false
                         onClicked: {
-                            catalogTree.createFolder("0")
+                            catalogTree.createFolder(catalogTree.currentIndex)
                         }
                     }
                     PanButton{
