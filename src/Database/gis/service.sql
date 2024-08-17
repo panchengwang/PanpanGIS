@@ -72,16 +72,7 @@ end;
 $$ language 'plpgsql';
 
 
---  函数:   pan_catalog_get_dataset_tree 
---  功能:   辅助函数, 由token获取对应的catalog表
---  参数: 
---      token       用户登录获取的token
---  返回:
---      catalog表名
-create or replace function pan_catalog_get_table_name_by_token(token varchar) returns varchar as 
-$$
-    select 'pan_catalog_' || pan_user_get_id_by_token(token);
-$$ language 'sql';
+
 
 
 
@@ -92,7 +83,7 @@ $$ language 'sql';
 --              "type":"CATALOG_GET_DATASET_TREE",
 --              "data": {
 --                  "token": "",
---                  "parent_id": '0'                    
+--                  "id": '0'                    
 --              }
 --          }
 --  返回:
@@ -112,16 +103,16 @@ declare
     response jsonb;
     
     user_id varchar;
-    parent_id varchar;
+    id varchar;
 begin
     user_id := pan_user_get_id_by_token(params->'data'->>'token');
-    if params->'data'->'parent_id' is null then 
-        parent_id := '0';
+    if params->'data'->'id' is null then 
+        id := '0';
     else 
-        parent_id := (params->'data'->>'parent_id');
+        id := (params->'data'->>'id');
     end if;
 
-    response := pan_catalog_get_dataset_tree('pan_catalog_' || user_id, parent_id);
+    response := pan_catalog_get_dataset_tree('pan_catalog_' || user_id, id);
     
     return jsonb_build_object(
         'success', true,

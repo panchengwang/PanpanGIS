@@ -26,19 +26,34 @@
 
 		
 		\draw[line width=1.2cm,mycolor](0,0) circle (9);
-		\draw[line width=0.8cm, white,line cap=round ](9,0) arc (0:180:9);
+		\pgfmathsetmacro\x{0+9*cos(200)}
+		\pgfmathsetmacro\y{0+9*sin(200)}
+		\draw[line width=0.8cm, white,line cap=round ](\x,\y) arc (200:-20:9);
 		%\draw[line width=0.01cm, black ](0,0) circle (9);
 
+%		\path decorate [
+%		decoration={
+%			text along path,
+%			text format delimiters={[}{]},
+%			text color=mycolor,
+%			text align={fit to path=true},
+%			text={[\Large \bf \zhuanti]惟 此 独 立 之 精 神 自 由 之 思 想 历 千 万 祀 与 天 壤 而 同 久 共 三 光 而 永 光}
+%		}]{ 
+%			(-8.85,0) arc (180:0:8.85)
+%		};
+		
 		\path decorate [
 		decoration={
+			raise=-0.2cm,
 			text along path,
 			text format delimiters={[}{]},
 			text color=mycolor,
 			text align={fit to path=true},
-			text={[\Large \bf \zhuanti]惟 此 独 立 之 精 神 自 由 之 思 想 历 千 万 祀 与 天 壤 而 同 久 共 三 光 而 永 光}
+			text={[\LARGE \bf \zhuanti]独 立 之 精 神 自 由 之 思 想  与 天 壤 而 同 久 共 三 光 而 永 光}
 		}]{ 
-			(-8.85,0) arc (180:0:8.85)
+			(\x,\y) arc (200:-20:9)
 		};
+		
 
 		\path decorate [
 			decoration={

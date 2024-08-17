@@ -33,12 +33,14 @@ void PanAjax::post(const QString &url, const QString &argname, const QString &ar
     query.addQueryItem(argname,argval);
 
     QNetworkReply *reply = manager->post(request, query.toString(QUrl::FullyEncoded).toUtf8() );
+    #ifndef Q_OS_WASM
+        connect(reply, SIGNAL(sslErrors(const QList<QSslError>&)), this, SLOT(onSslErrors(const QList<QSslError>&)));
+    #endif
+
     reply->ignoreSslErrors();
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this, SLOT(onErrorOccurred(QNetworkReply::NetworkError)));
-#ifndef Q_OS_WASM
-    connect(reply, SIGNAL(sslErrors(const QList<QSslError>&)), this, SLOT(onSslErrors(const QList<QSslError>&)));
-#endif
+
 }
 
 void PanAjax::get(const QString &url)

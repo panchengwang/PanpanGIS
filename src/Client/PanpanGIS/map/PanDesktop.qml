@@ -27,13 +27,47 @@ ApplicationWindow {
                     Image{
                         source:"/cn/pc/gis/control/icons/logo.svg"
                         sourceSize{
-                            width: container.width * 0.4
-                            height: width
+                            width: height
+                            height: container.height * 0.6
                         }
-                        opacity: 0.3
+                        opacity: 0.8
                     }
                 }
             }
+PanSpatialTableWindow{
+
+    visible: true
+    Component.onCompleted: {
+        toCenter();
+    }
+}
+            // TableView{
+            //     model: PanTableModel{
+            //         columns:[{
+            //                 label:"id"
+            //             },{
+            //                 label:"name"
+            //             }]
+            //         rows:[
+            //             { id: "1", name: "name 1" },
+            //             { id: "2", name: "name 2" },
+            //             { id: "3", name: "name 3" }
+            //         ]
+            //     }
+            //     delegate: Rectangle {
+            //         implicitWidth: 100
+            //         implicitHeight: 50
+            //         required property int row
+            //         required property int column
+            //         Text {
+            //             text: display
+            //         }
+            //         Component.onCompleted: {
+            //             console.log("row: ", row, "   col: " , column)
+            //         }
+            //     }
+            //     anchors.fill: parent
+            // }
 
             PanLogWindow{
                 id: logWindow
@@ -223,7 +257,7 @@ ApplicationWindow {
         // PanApplication.desktop = desktop
         PanApplication.windowContainer = container
 
-        createLoginWindow()
+        // createLoginWindow()
     }
 
     function createLoginWindow(){
@@ -288,16 +322,16 @@ ApplicationWindow {
     function createSymbolEditorWindow(){
         if(PanApplication.symbolEditorWindow === null){
             const symbolEditorWindow = Qt.createQmlObject(`
-                                                       PanSymbolEditorWindow{
-                                                       x: Math.random() * (parent.width-width)
-                                                       y: Math.random() * (parent.height-height)  //Math.max(100 , (parent.height - height)*0.5-100)
-                                                       width: Math.max(400,parent.width*0.8)
-                                                       height: Math.max(400,parent.height*0.8)
-                                                       }
-                                                       `,
-                                                       PanApplication.windowContainer,
-                                                       "symbolEditorWindow"
-                                                       );
+                                                          PanSymbolEditorWindow{
+                                                          x: Math.random() * (parent.width-width)
+                                                          y: Math.random() * (parent.height-height)  //Math.max(100 , (parent.height - height)*0.5-100)
+                                                          width: Math.max(400,parent.width*0.8)
+                                                          height: Math.max(400,parent.height*0.8)
+                                                          }
+                                                          `,
+                                                          PanApplication.windowContainer,
+                                                          "symbolEditorWindow"
+                                                          );
 
             PanApplication.symbolEditorWindow = symbolEditorWindow;
         }

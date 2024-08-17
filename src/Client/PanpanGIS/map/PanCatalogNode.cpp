@@ -27,6 +27,26 @@ void PanCatalogNode::appendChild(PanCatalogNode* child, int row)
     }
 }
 
+void PanCatalogNode::removeChild(PanCatalogNode* child)
+{
+    for(int i=0; i<childCount(); i++){
+        if(_children[i] == child){
+            _children.remove(i);
+            break;
+        }
+    }
+    delete child;
+}
+
+void PanCatalogNode::removeAllChildren()
+{
+    for(int i=0; i<childCount(); i++){
+        delete _children[i];
+    }
+    _children.clear();
+}
+
+
 
 
 PanCatalogNode *PanCatalogNode::child(int row)

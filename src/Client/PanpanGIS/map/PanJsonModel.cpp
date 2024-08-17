@@ -89,6 +89,53 @@ void PanJsonModel::setData(const QJsonObject &obj)
     // emit dataChanged();
 }
 
+bool PanJsonModel::removeRow(int row, const QModelIndex& parent)
+{
+    PanCatalogNode *parentnode = NULL;
+    if(!parent.isValid()){
+        parentnode = _root;
+    }else{
+        parentnode = (PanCatalogNode*) parent.internalPointer();
+    }
+    PanCatalogNode *node = parentnode->child(row);
+    beginRemoveRows(parent,row,row);
+    parentnode->removeChild(node);
+    endRemoveRows();
+    return true;
+
+}
+
+bool PanJsonModel::removeAllRows(const QModelIndex& parent)
+{
+    PanCatalogNode *parentnode = NULL;
+    if(!parent.isValid()){
+        parentnode = _root;
+    }else{
+        parentnode = (PanCatalogNode*) parent.internalPointer();
+    }
+
+    beginRemoveRows(parent,0,rowCount(parent)-1);
+    parentnode->removeAllChildren();
+    endRemoveRows();
+    return true;
+}
+
+void PanJsonModel::setChildren(const QJsonArray& children, const QModelIndex& parent)
+{
+    removeAllRows(parent);
+    PanCatalogNode *parentnode = NULL;
+    if(!parent.isValid()){
+        parentnode = _root;
+    }else{
+        parentnode = (PanCatalogNode*) parent.internalPointer();
+    }
+    beginInsertRows(parent,0,children.size()-1);
+    for(int i=0; i<children.size(); i++){
+        setupJsonObject(children.at(i).toObject(), parentnode);
+    }
+    endInsertRows();
+}
+
 QString PanJsonModel::displayRole() const
 {
     return _displayRole;

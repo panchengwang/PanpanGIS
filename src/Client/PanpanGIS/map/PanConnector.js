@@ -1,6 +1,9 @@
 
 
 function post(url,params,context,showBusyIndicator, success, failure) {
+
+    console.log(JSON.stringify(params));
+
     var ajax = Qt.createQmlObject(
                 `
                 import QtQuick

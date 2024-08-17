@@ -35,6 +35,9 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void setData(const QJsonObject& obj);
+    Q_INVOKABLE bool removeRow(int row, const QModelIndex &parent = QModelIndex());
+    Q_INVOKABLE bool removeAllRows(const QModelIndex &parent = QModelIndex());
+    Q_INVOKABLE void setChildren(const QJsonArray& children, const QModelIndex &parent = QModelIndex());
 
     QString displayRole() const;
     void setDisplayRole(const QString& key);

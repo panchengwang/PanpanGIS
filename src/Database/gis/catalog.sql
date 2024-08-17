@@ -31,3 +31,15 @@ values
 --     last_modify_time timestamp default now() not null 
 -- );
 
+
+
+--  函数:   pan_catalog_get_table_name_by_token 
+--  功能:   辅助函数, 由token获取对应的catalog表
+--  参数: 
+--      token       用户登录获取的token
+--  返回:
+--      catalog表名
+create or replace function pan_catalog_get_table_name_by_token(token varchar) returns varchar as 
+$$
+    select 'pan_catalog_' || pan_user_get_id_by_token(token);
+$$ language 'sql';

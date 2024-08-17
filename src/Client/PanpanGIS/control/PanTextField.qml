@@ -6,6 +6,7 @@ TextField {
     id: control
 
     property string type: "text"
+    property alias radius: rectBk.radius
 
     echoMode: type === "password" ? TextInput.Password:TextInput.Normal
     passwordCharacter: "*"
@@ -24,7 +25,8 @@ TextField {
     }
 
     background: Rectangle {
-        color: control.enabled ? "transparent" : "#ccc"
+        id: rectBk
+        color: control.enabled ? PanStyles.color_white : "#ccc"
         border.color: control.focus ? PanStyles.color_primary : PanStyles.color_light_grey
         border.width: 1
         radius: PanStyles.default_radius

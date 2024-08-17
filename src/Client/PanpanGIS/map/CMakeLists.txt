@@ -50,6 +50,12 @@ qt_add_qml_module(PanMap
         PanMenu.qml
         PanCatalogTreeMenu.qml
         PanConnector.js
+        PanSpatialTableWindow.qml
+        PanSymbolEditorWindow.qml
+        PanInputWindow.qml
+        PanCheckBox.qml
+        PanTableView.qml
+        PanSpatialTableTableView.qml
         ${SINGLETON_QML_FILES}
 
     SOURCES
@@ -59,11 +65,12 @@ qt_add_qml_module(PanMap
         PanJsonModel.cpp
         PanCatalogNode.h
         PanCatalogNode.cpp
+        PanTableModel.h
+        PanTableModel.cpp
 
     RESOURCES
         images/wallpaper.webp
-        QML_FILES PanInputWindow.qml
-        QML_FILES PanSymbolEditorWindow.qml
+        QML_FILES PanTableView_copy.qml
 
 )
 # qt_import_qml_plugins(PanMap
@@ -100,7 +107,7 @@ if(EMSCRIPTEN)
         POST_BUILD
             # COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
             COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.html
-            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/pcwang_gis2.svg ${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/html/logo.svg ${CMAKE_CURRENT_BINARY_DIR}/qtlogo.svg
     )
 elseif(WIN32)
     target_link_libraries(PanMap

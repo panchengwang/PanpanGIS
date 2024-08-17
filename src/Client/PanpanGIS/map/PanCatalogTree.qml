@@ -157,17 +157,42 @@ TreeView {
 
     PanCatalogTreeMenu{
         id: menuFolder
+        Action{
+            text: qsTr("刷新")
+            onTriggered: {
+                treeView.refresh(menuFolder.index);
+            }
+        }
+
+        MenuSeparator{}
+
         Action {
             text: qsTr("新建子目录");
             onTriggered: {
                 treeView.createFolder(menuFolder.index);
             }
         }
+        Action{
+            text: qsTr("新建数据表");
+            onTriggered: {
+                treeView.createTable(menuFolder.index);
+            }
+        }
+
         Action {
             text: qsTr("删除");
             onTriggered: {
-                let attributes = treeView.model.attributes(menuFolder.index);
-                treeView.removeFolder(attributes);
+
+                treeView.removeFolder(menuFolder.index);
+            }
+        }
+
+        MenuSeparator{}
+
+        Action {
+            text: qsTr("属性");
+            onTriggered: {
+                console.log(JSON.stringify(treeView.model.attributes(menuFolder.index)))
             }
         }
     }
@@ -184,22 +209,40 @@ TreeView {
     }
 
 
-    function refresh(){
+
+    function refresh(index){
+        let id = '0';
+        if(index){
+            let attributes = treeView.model.attributes(index);
+            id = attributes.id;
+        }
+
         PanConnector.post(PanApplication.nodeUrl,
                           {
                               "type": "CATALOG_GET_DATASET_TREE",
                               "data": {
-                                  "token": PanApplication.token
+                                  "token": PanApplication.token,
+                                  "id": id
                               }
                           },window,true,
                           (data)=>{
-                              treeView.model.data = data.catalog;
+                              if(id=='0'){
+                                  treeView.model.data = data.catalog;
+                                  return;
+                              }
+                              if(data.catalog.children && data.catalog.children.length >0){
+                                  treeView.model.setChildren(data.catalog.children, index);
+                                  treeView. expandRecursively(treeView.rowAtIndex(index));
+                              }
 
                           },(data)=>{});
     }
 
-
     function createFolder(index){
+        if(!index){
+            index = rootIndex;
+        }
+
         let inputwin = Qt.createQmlObject(`
                                           PanInputWindow{
                                           modal: true
@@ -215,16 +258,16 @@ TreeView {
                                                             type: "CATALOG_CREATE_FOLDER",
                                                             data:{
                                                                 token: PanApplication.token,
-                                                                folder: data,
+                                                                folder: data.trim(),
                                                                 parent_id: index === treeView.rootIndex ? "0": treeView.model.attributes(index).id
                                                             }
                                                         },
                                                         window,
                                                         true,
                                                         (res)=>{
-                                                                treeView.model.insertChild(index,res,0);
-                                                                treeView.expand(treeView.rowAtIndex(index));
-                                                                inputwin.destroy()
+                                                            treeView.model.insertChild(index,res,0);
+                                                            treeView.expand(treeView.rowAtIndex(index));
+                                                            inputwin.destroy()
                                                         })
                                   })
         inputwin.cancel.connect(()=>{
@@ -232,8 +275,8 @@ TreeView {
                                 })
     }
 
-    function removeFolder(attributes){
-
+    function removeFolder(index){
+        let attributes = treeView.model.attributes(index);
         PanConnector.post(PanApplication.nodeUrl,
                           {
                               type: "CATALOG_REMOVE",
@@ -245,7 +288,27 @@ TreeView {
                           PanApplication.windowContainer,
                           true,
                           (res)=>{
+                              treeView.currentIndex = index.parent;
+                              treeView.model.removeRow(index.row,index.parent);
                           },()=>{
+                              treeView.currentIndex = treeView.rootIndex;
                           });
+    }
+
+    function createTable(index){
+        if(!index){
+            index = rootIndex;
+        }
+
+        let tablewin = Qt.createQmlObject(`
+                                          PanTableWindow{
+                                          modal: true
+                                          }
+                                          `,
+                                          PanApplication.windowContainer,"tablewin")
+        tablewin.show()
+        tablewin.toCenter()
+
+        // let attributes = treeView.model.attributes(index);
     }
 }

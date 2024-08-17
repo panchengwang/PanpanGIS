@@ -5,6 +5,8 @@ Rectangle {
     id: border
     opacity: 0
 
+    signal sizeChanged(int x,int y, int w,int h)
+
     property string position: "right"
     property int borderWidth: 6
     property int minParentSize: 30
@@ -91,6 +93,8 @@ Rectangle {
                 if(h<=minheight || y + h >= target.parent.height) return
                 target.height = h
             }
+
+            border.sizeChanged(target.x,target.y,target.width,target.height)
         }
 
     }

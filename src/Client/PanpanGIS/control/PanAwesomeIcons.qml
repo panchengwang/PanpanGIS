@@ -1094,7 +1094,7 @@ QtObject {
     property string fa_check: "\uf00c";
     property string fa_check_circle: "\uf058";
     // property string fa_check_double: "\uf560";
-    // property string fa_check_square: "\uf14a";
+    property string fa_check_square: "\uf14a";
     // property string fa_circle: "\uf111";
     // property string fa_clipboard: "\uf328";
     // property string fa_clone: "\uf24d";
@@ -1163,7 +1163,7 @@ QtObject {
     // property string fa_pen_alt: "\uf305";
     // property string fa_pen_fancy: "\uf5ac";
     // property string fa_pencil_alt: "\uf303";
-    // property string fa_plus: "\uf067";
+    property string fa_plus: "\uf067";
     // property string fa_plus_circle: "\uf055";
     // property string fa_plus_square: "\uf0fe";
     // property string fa_poo: "\uf2fe";

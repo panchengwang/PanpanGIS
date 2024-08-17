@@ -12,6 +12,8 @@ public:
     virtual ~PanCatalogNode();
 
     void appendChild(PanCatalogNode *child, int row=-1);
+    void removeChild(PanCatalogNode *child);
+    void removeAllChildren();
 
     PanCatalogNode *child(int row);
     int childCount() const;
