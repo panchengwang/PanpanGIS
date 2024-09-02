@@ -34,13 +34,13 @@ ApplicationWindow {
                     }
                 }
             }
-PanSpatialTableWindow{
+// PanSpatialTableWindow{
 
-    visible: true
-    Component.onCompleted: {
-        toCenter();
-    }
-}
+//     visible: true
+//     Component.onCompleted: {
+//         toCenter();
+//     }
+// }
             // TableView{
             //     model: PanTableModel{
             //         columns:[{
@@ -257,7 +257,7 @@ PanSpatialTableWindow{
         // PanApplication.desktop = desktop
         PanApplication.windowContainer = container
 
-        // createLoginWindow()
+        createLoginWindow()
     }
 
     function createLoginWindow(){
