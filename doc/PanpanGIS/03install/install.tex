@@ -721,20 +721,70 @@ postgis使用到的bzero函数是bsd标准提供的，在ucrt系统中并不包�
 
 \section{打包postgresql}
 
-编写一个打包脚本pg_pack.sh，代码如下：
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
-\end{lstlisting}
+编写一个打包脚本pg\_pack.sh，代码如下：
 
 \begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
-	cd ~/software/sdb
-	# 将pgsql拷贝到一个单独的文件夹
-	cp -r $PGSQL /e
-	ldd $PGSQL/bin/*.exe > pg_pack.sh
-	sed '/.exe/d' pg_pack.sh > pg_pack2.sh & rm pg_pack.sh & mv pg_pack2.sh pg_pack.sh
-	sed 's/(.*)//' pg_pack.sh > pg_pack2.sh & rm pg_pack.sh & mv pg_pack2.sh pg_pack.sh
-	sort pg_pack.sh > pg_pack2.sh & rm pg_pack.sh & mv pg_pack2.sh pg_pack.sh
-	awk '!a[$0]++' pg_pack.sh > pg_pack2.sh & rm pg_pack.sh & mv pg_pack2.sh pg_pack.sh
-	sed 's/=>/ /' pg_pack.sh > pg_pack2.sh & rm pg_pack.sh & mv pg_pack2.sh pg_pack.sh
-	
-	
+#!/bin/sh
+
+cd ~/software/sdb
+
+PACK_DIR_PARENT=~/$(uuid)
+mkdir $PACK_DIR_PARENT
+PACK_DIR=$PACK_DIR_PARENT/pgsql
+
+TMPFILE=$(mktemp)
+
+# 将pgsql拷贝到一个单独的文件夹
+cp -r $PGSQL $PACK_DIR
+
+# 生成dll依赖库拷贝脚本
+# 查找exe和dll的依赖库
+ldd $PGSQL/bin/*.exe > $TMPFILE
+ldd $PGSQL/lib/*.dll >> $TMPFILE
+# 去除包含.exe:的行
+sed '/.exe:/d' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 去除包含.dll:的行
+sed '/.dll:/d' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 将形如(0x7ffc1cd30000)的字符串去除
+sed 's/(.*)//' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 排序以便去重
+sort $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 去重
+awk '!a[$0]++' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 将=>替换成空格
+sed 's/=>/ /' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 去除签到空白字符
+sed 's/^[ \t]*/ /' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+ESCAPE_PGSQL=$(echo "$PGSQL" | sed 's/\//\\\//g')
+# 去除已经包含在$PGSQL/lib中的dll库
+sed "/$ESCAPE_PGSQL/d" $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 将两列互换以便生成拷贝命令
+awk '{temp = $1; $1 = $2; $2 = "'$PACK_DIR/bin/'"temp; print $0}' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 生成拷贝脚本
+sed 's/^/cp -r /' $TMPFILE > ${TMPFILE}_bak & rm $TMPFILE & mv ${TMPFILE}_bak $TMPFILE
+# 将依赖库都拷贝至$PACK_DIR/bin目录
+sh $TMPFILE
+# 删除库拷贝脚本
+rm -f $TMPFILE
+
+# 打包
+tar -zcvf pgsql.tar.gz -C $PACK_DIR/.. $(shell basename $PACK_DIR)
+# 删除临时文件
+rm -rf $PACK_DIR_PARENT
 \end{lstlisting}
+
+在msys2 ucrt的命令行窗口运行：
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
+	sh pg_pack.sh
+\end{lstlisting}
+
+会在当前目录下生成一个名为pgsql.tar.gz的文件，里面包含在windows平台运行postgis/postgresql的所有可执行文件和动态库。将pgsql.tar.gz拷贝到某个目录，解压即可运行，无需依赖msys2。
+
+
+
+
+
+
+
+
+
