@@ -1,18 +1,19 @@
 #!/bin/sh
+CUR_DIR=$(cd `dirname $0`; pwd)
 
-VERSION=1.0
+sh ${CUR_DIR}/sqlcarto/combine_sql.sh
 
 
-PG_SRC_PATH=/d/software/sdb/postgresql-16.0
-rm -rf $PG_SRC_PATH/contrib/sqlcarto
-mkdir $PG_SRC_PATH/contrib/sqlcarto
-cp -rf ../sqlcarto/*  $PG_SRC_PATH/contrib/sqlcarto
-cd $PG_SRC_PATH/contrib/sqlcarto
-make
+POSTGIS_SRC_PATH=~/software/sdb/postgis-3.4.2
+# cd ${POSTGIS_SRC_PATH}/../
+# rm ${POSTGIS_SRC_PATH} -rf
+# tar -zvxf ${POSTGIS_SRC_PATH}.tar.gz
 
-SQL_FILE=sqlcarto--${VERSION}.sql
-cat ./sqlcarto.sql > $SQL_FILE
-cat ./email.sql >> $SQL_FILE
+cd ${CUR_DIR}
+cp -rf * ${POSTGIS_SRC_PATH}
 
+cd ${POSTGIS_SRC_PATH}
+sh patch.sh
+# ./configure --prefix=${PGSQL} --without-protobuf
+make -j 32
 make install
-./test.sh

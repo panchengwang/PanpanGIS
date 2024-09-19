@@ -1,0 +1,105 @@
+# contrib/sqlcarto/Makefile
+
+POSTGIS_SRC_PATH=${HOME}/software/sdb/postgis-3.4.2
+MODULE_big = sqlcarto
+# OBJS = 	${POSTGIS_SRC_PATH}/liblwgeom/*.o  \
+# 	${POSTGIS_SRC_PATH}/deps/ryu/*.o \
+# 	${POSTGIS_SRC_PATH}/deps/flatgeobuf/*.o \
+# 	${POSTGIS_SRC_PATH}/postgis/*.o \
+# 	${POSTGIS_SRC_PATH}/libpgcommon/*.o \
+# 	email.o \
+# 	bytea2cstring.o \
+# 	china_proj.o \
+# 	china_trans.o 
+OBJS = 	email.o \
+	bytea2cstring.o \
+	china_proj.o \
+	china_trans.o
+
+
+EXTENSION = sqlcarto
+DATA = sqlcarto--1.0.sql
+
+EXTRA_CLEAN = 
+
+HEADERS =
+
+REGRESS =
+
+
+PG_CPPFLAGS = \
+	-DPIC -std=gnu99 -g -O2 -fno-math-errno -fno-signed-zeros -Wall \
+	-DLIBDEFLATE_DLL -DNDEBUG   -DDLL_EXPORT \
+	$(shell curl-config --cflags) \
+	-I../../src/backend  \
+	-I${POSTGIS_SRC_PATH}/liblwgeom \
+	-I${POSTGIS_SRC_PATH}/libpgcommon \
+	-I${POSTGIS_SRC_PATH}/postgis 
+
+
+SHLIB_LINK_F = \
+		$(shell pkg-config libcurl --libs)
+
+OS = $(shell uname)
+
+ifeq ($(shell uname),Darwin)
+	SHLIB_LINK_F = \
+		-L$(shell pg_config --libdir) \
+		-lgeos_c \
+		$(shell sfcgal-config --libs) \
+		$(shell gdal-config --libs) \
+		-lproj \
+		-ljson-c 
+endif
+ifeq ($(shell uname),Linux)
+		SHLIB_LINK_F = \
+		-L$(shell pg_config --libdir) \
+		-lgeos_c \
+		$(shell sfcgal-config --libs) \
+		$(shell gdal-config --libs) \
+		-lproj \
+		-ljson-c \
+		-lpostgis 
+endif
+
+OS=$(shell expr substr $(shell uname) 1 7)
+
+ifeq (${OS},MINGW64)
+	SHLIB_LINK_F = \
+		-Wl,--exclude-libs,ALL -lstdc++ \
+		$(shell curl-config --libs) \
+		-L$(shell pg_config --libdir) \
+		$(shell geos-config --clibs) \
+		$(shell geos-config --cclibs) \
+		$(shell sfcgal-config --libs) \
+		$(shell gdal-config --libs) \
+		-lproj \
+		-ljson-c \
+		-L./libs -llwgeom -llwpgcommon -lpgcommon -lpostgres
+
+endif
+
+SHLIB_LINK := $(SHLIB_LINK_F) $(SHLIB_LINK)
+
+
+
+ifdef USE_PGXS
+PG_CONFIG = pg_config
+PGXS := $(shell $(PG_CONFIG) --pgxs)
+include $(PGXS)
+else
+subdir = contrib/sqlcarto
+top_builddir = ../..
+include $(top_builddir)/src/Makefile.global
+include $(top_srcdir)/contrib/contrib-global.mk
+endif
+
+
+
+distprep:
+
+maintainer-clean:
+
+
+test:
+	echo $(SHLIB_LINK_F)

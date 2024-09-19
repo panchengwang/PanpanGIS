@@ -101,6 +101,7 @@ ubuntu2004 config --default-user Username
 	 pacman -S mingw-w64-ucrt-x86_64-toolchain
 	 pacman -S ucrt64/mingw-w64-ucrt-x86_64-cmake 
 	 pacman -S msys/make
+	 pacman -S mingw-w64-ucrt-x86_64-autotools
 \end{lstlisting}
 
 \section{编译postgresql}
@@ -131,6 +132,8 @@ ubuntu2004 config --default-user Username
 	pacman -S ucrt64/mingw-w64-ucrt-x86_64-netcdf
 	
 	pacman -S ucrt64/mingw-w64-ucrt-x86_64-protobuf-c
+	
+	pacman -S ucrt64/mingw-w64-ucrt-x86_64-libxslt
 \end{lstlisting}
 
 
@@ -200,15 +203,71 @@ ubuntu2004 config --default-user Username
 	cd postgresql-16.4
 	# 由于uuid没有安装在/usr目录，而是安装在$PGSQL目录下，因此在配置时
 	# 应该指定LDFLAGS和CPPFLAGS环境变量，否则会提示找不到uuid库
-	LDFLAGS="-L$PGSQL/lib" CPPFLAGS="-I$PGSQL/include" ./configure --prefix=$PGSQL --with-ossp-uuid
+	LDFLAGS="-L$PGSQL/lib" CPPFLAGS="-I$PGSQL/include" ./configure --prefix=$PGSQL --with-ossp-uuid --with-libxml
 	make
 	make install
 	
 	# 编译postgresql的uuid扩展
-	cd contrib/uuid
+	cd contrib/uuid-ossp
+	make
+	make install
+	
+	# 编译postgresql的dblink扩展
+	cd ../dblink
+	make 
+	make install
+	
+	# 编译postgresql的file_fdw扩展
+	cd ../file_fdw
 	make
 	make install
 \end{lstlisting}
+
+如果在上述安装过程中出现下图所示错误\footnote{Ronggui Lai在win10下实测，作者在win11上未遇到。}：
+
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{03install/postgresql_compile_error_1.png}
+\end{center}
+
+则应该修改software~/sdb/postgresql-16.4/src/Makefile.port的代码：
+\begin{lstlisting}[
+	backgroundcolor = \color{codebackground}, 
+	language=bash, 	
+	escapeinside={(@*}{*@)},
+	numbers=left,numbersep=5pt,numberstyle=\tiny
+]
+	# src/makefiles/Makefile.win32
+	
+	ifdef PGXS
+	BE_DLLLIBS= -L$(libdir) -lpostgres
+	override CPPFLAGS+= -I$(includedir_server)/port/win32
+	else
+	BE_DLLLIBS= -L$(top_builddir)/src/backend -lpostgres
+	override CPPFLAGS+="-I$(top_srcdir)/src/include/port/win32"
+	endif
+	...
+	
+\end{lstlisting}
+修改第8行代码，将双引号改成单引号：
+\begin{lstlisting}[
+	backgroundcolor = \color{codebackground}, 
+	language=bash, 	
+	escapeinside={(@*}{*@)},
+	numbers=left,numbersep=5pt,numberstyle=\tiny
+	]
+	# src/makefiles/Makefile.win32
+	
+	ifdef PGXS
+	BE_DLLLIBS= -L$(libdir) -lpostgres
+	override CPPFLAGS+= -I$(includedir_server)/port/win32
+	else
+	BE_DLLLIBS= -L$(top_builddir)/src/backend -lpostgres
+	override CPPFLAGS+='-I$(top_srcdir)/src/include/port/win32'
+	endif
+	...
+	
+\end{lstlisting}
+
 
 \subsection{安装geos}
 geos提供空间分析功能。
@@ -229,7 +288,10 @@ geos提供空间分析功能。
 
 \subsection{安装gdal}
 gdal提供地理空间数据矢量、栅格文件读取api。如需使用postgis的raster扩展功能，必须安装gdal。
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
+\begin{lstlisting}[
+	backgroundcolor = \color{codebackground}, language=bash, 
+		escapeinside={(@*}{*@)}
+	]
 	cd ~/software/sdb
 	
 	# 下载源代码
@@ -636,17 +698,15 @@ Enable QHULL (external)
 postgis使用到的bzero函数是bsd标准提供的，在ucrt系统中并不包含此函数，因此需要自行实现。
 修改postgis\_config.h.in，代码如下：
 
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
-
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=c, escapeinside={(@*}{*@)}]
 #include "postgis_revision.h"
 
-// 解决编译sfcgal时找不到GEOS_interruptRegisterCallback函数的错误 
+// 解决编译sfcgal时找不到GEOS_interruptRegisterCallback函数的错误
 #include <geos_c.h>
 
 // 添加bzero实现代码
-(@* \textcolor[rgb]{1,0,0}{
-\#define bzero(buf,n) memset(buf,0,n)
-} *@)
+#define bzero(buf,n) memset(buf,0,n)
+
 \end{lstlisting}
 
 
