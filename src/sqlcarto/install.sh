@@ -2,8 +2,6 @@
 CUR_DIR=$(cd `dirname $0`; pwd)
 
 sh ${CUR_DIR}/sqlcarto/combine_sql.sh
-
-
 POSTGIS_SRC_PATH=~/software/sdb/postgis-3.4.2
 # cd ${POSTGIS_SRC_PATH}/../
 # rm ${POSTGIS_SRC_PATH} -rf

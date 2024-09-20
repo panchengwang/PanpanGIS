@@ -10,6 +10,10 @@
 #include <skia/include/core/SkData.h>
 #include <skia/include/core/SkEncodedImageFormat.h>
 #include <skia/include/core/SkPath.h>
+#include <skia/include/core/SkStream.h>
+#include <skia/include/encode/SkPngEncoder.h>
+#include <skia/include/encode/SkJpegEncoder.h>
+#include <skia/include/encode/SkWebpEncoder.h>
 #include <string.h>
 
 SK_SURFACE_H sk_surface_create(int width, int height){
@@ -25,24 +29,59 @@ void sk_surface_destroy(SK_SURFACE_H hSurface){
 
 void sk_surface_save_to_file(SK_SURFACE_H hSurface, 
     const char* filename, 
-    const char* filetype){
+    const char* type){
 
     SkSurface* surface = (SkSurface*)hSurface;
     sk_sp<SkImage> img = surface->makeImageSnapshot();
-    if(strcasecmp(filetype,"png") == 0){
-        sk_sp<SkData> data(img->encodeToData(SkEncodedImageFormat::kPNG, 100));
-        FILE *fd = fopen(filename,"wb");
-        if(!fd){
-            printf("Can not open file : %s to write.\n", filename);
-            return;
-        }
-
-        fwrite(data->bytes(),data->size(),1,fd);
-        
-        fclose(fd);
+    if(!img){
+        return;
     }
     
+    sk_sp<SkData> imgdata;
+    if(strcasecmp(type,"png") == 0){
+        imgdata = img->encodeToData(SkEncodedImageFormat::kPNG, 100);
+    }else if(strcasecmp(type,"jpeg") ==0 || strcasecmp(type,"jpg") == 0){
+        imgdata = img->encodeToData(SkEncodedImageFormat::kJPEG,100);
+    }else if(strcasecmp(type,"webp") ==0){
+        imgdata = img->encodeToData(SkEncodedImageFormat::kWEBP,100);
+    }
+
+    if (!imgdata)
+    {
+        return;
+    }
+    SkFILEWStream out(filename);
+    out.write(imgdata->data(), imgdata->size());
 }
+
+
+const char* sk_surface_get_image_data(SK_SURFACE_H hSurface, const char* type, uint32_t *len){
+    SkSurface* surface = (SkSurface*)hSurface;
+    sk_sp<SkImage> img = surface->makeImageSnapshot();
+    if(!img){
+        *len = 0;
+        return NULL;
+    }
+    
+    sk_sp<SkData> imgdata;
+    if(strcasecmp(type,"png") == 0){
+        imgdata = img->encodeToData(SkEncodedImageFormat::kPNG, 100);
+    }else if(strcasecmp(type,"jpeg") ==0 || strcasecmp(type,"jpg") == 0){
+        imgdata = img->encodeToData(SkEncodedImageFormat::kJPEG,100);
+    }else if(strcasecmp(type,"webp") ==0){
+        imgdata = img->encodeToData(SkEncodedImageFormat::kWEBP,100);
+    }
+
+    if (!imgdata)
+    {
+        *len = 0;
+        return NULL;
+    }
+
+    *len = imgdata->size();
+    return (const char*)imgdata->data();
+}
+
 
 SK_CANVAS_H sk_canvas_create(SK_SURFACE_H hSurface){
     SkSurface* surface = (SkSurface*) hSurface;
@@ -90,6 +129,36 @@ void sk_paint_set_style(SK_PAINT_H hPaint, uint8_t style){
 }
 
 
+void sk_paint_set_stroke_cap(SK_PAINT_H hPaint, uint8_t cap)
+{
+    SkPaint* paint = (SkPaint*)hPaint;
+    paint->setStrokeCap((SkPaint::Cap)cap);
+}
+
+
+void sk_paint_set_stroke_join(SK_PAINT_H hPaint, uint8_t join)
+{
+    SkPaint* paint = (SkPaint*)hPaint;
+    paint->setStrokeJoin((SkPaint::Join)join);
+}
+
+
+void sk_paint_set_stroke_miter(SK_PAINT_H hPaint, float miter)
+{
+    SkPaint* paint = (SkPaint*)hPaint;
+    paint->setStrokeMiter(miter);
+}
+
+
+void sk_paint_set_stroke_width(SK_PAINT_H hPaint, float width)
+{
+    SkPaint* paint = (SkPaint*)hPaint;
+    paint->setStrokeWidth(width);
+}
+
+
+
+
 void sk_canvas_draw_arc(SK_CANVAS_H hCanvas, SK_PAINT_H hPaint , float x,float y,float width, float height, float startAngle, float  sweepAngle, bool useCenter )
 {
     SkCanvas* canvas = (SkCanvas*)hCanvas;
@@ -104,7 +173,6 @@ void sk_canvas_draw_point(SK_CANVAS_H hCanvas, SK_PAINT_H hPaint , float x, floa
 {
     SkCanvas* canvas = (SkCanvas*)hCanvas;
     SkPaint* paint = (SkPaint*)hPaint;
-
     
     canvas->drawPoint(SkPoint::Make(x,y), *paint);
 }
@@ -139,6 +207,13 @@ void sk_canvas_draw_line(SK_CANVAS_H hCanvas, SK_PAINT_H hPaint, float x0, float
     canvas->drawLine(x0,y0,x1,y1,*paint);
 }
 
+void sk_canvas_draw_path(SK_CANVAS_H hCanvas, SK_PAINT_H hPaint, SK_PATH_H hPath){
+    SkCanvas* canvas = (SkCanvas*)hCanvas;
+    SkPaint* paint = (SkPaint*)hPaint;
+    SkPath* path = (SkPath*)hPath;
+    canvas->drawPath(*path, *paint);    
+}
+
 
 SK_PATH_H sk_path_create()
 {
@@ -158,6 +233,8 @@ void sk_path_set_fill_type(SK_PATH_H hPath, int filltype){
 
 
 void sk_path_add_poly(SK_PATH_H hPath, float *x, float *y, uint32_t npts, uint8_t close){
+
+    
     SkPath* path = (SkPath*)hPath;
 
     SkPoint *points = new SkPoint[npts];
