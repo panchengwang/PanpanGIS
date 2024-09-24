@@ -27,7 +27,8 @@ OBJS = sqlcarto.o \
 	china_proj.o \
 	china_trans.o \
 	bytea2cstring.o \
-	symbol.o 
+	symbol.o \
+	canvas.o
 
 # Libraries to link into the module (proj, geos)
 #
@@ -45,8 +46,11 @@ SHLIB_LINK_F = @top_builddir@/libpgcommon/libpgcommon.a @top_builddir@/liblwgeom
 CURL_INCLUDES = $(shell pkg-config libcurl --cflags)
 CURL_LIBS = $(shell pkg-config libcurl --libs)
 
-PG_CPPFLAGS += $(CURL_INCLUDES)
-SHLIB_LINK_F += $(CURL_LIBS)
+SKIA_C_INCLUDES = -I$(shell pg_config --includedir)
+SKIA_C_LIBS = -L$(shell pg_config --bindir) -lskia_c
+
+PG_CPPFLAGS += $(CURL_INCLUDES) $(SKIA_C_INCLUDES)
+SHLIB_LINK_F += $(CURL_LIBS) $(SKIA_C_LIBS)
 
 # Add SFCGAL Flags if defined
 ifeq (@SFCGAL@,sfcgal)

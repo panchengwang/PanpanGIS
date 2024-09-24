@@ -41,4 +41,6 @@ Datum SYMBOL_out(PG_FUNCTION_ARGS)
 	// GSERIALIZED *geom = PG_GETARG_GSERIALIZED_P(0);
 	// LWGEOM *lwgeom = lwgeom_from_gserialized(geom);
 	// PG_RETURN_CSTRING(lwgeom_to_hexwkb_buffer(lwgeom, WKB_EXTENDED));
+
+	PG_RETURN_POINTER(NULL);
 }

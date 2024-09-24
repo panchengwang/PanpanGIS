@@ -1,37 +1,31 @@
 #ifndef __SYMBOL_H
 #define __SYMBOL_H
 
-#define GSYMBOL_SHAPE_POINT             1
-#define GSYMBOL_SHAPE_LINESTRING        2
-#define GSYMBOL_SHAPE_POLYGON           3
-#define GSYMBOL_SHAPE_CIRCLE            4
-#define GSYMBOL_SHAPE_PIE               5               
-#define GSYMBOL_SHAPE_ARC               6
-#define GSYMBOL_SHAPE_CHORD             7
-#define GSYMBOL_SHAPE_ELLIPSE           8
-#define GSYMBOL_SHAPE_RECTANGLE         9
-#define GSYMBOL_SHAPE_SYSTEM_LINE       10
+#include <types.h>
 
-typedef struct{
-    unsigned char red,green,blue,alpha;
-}GColor;
+#define SYMBOL_SHAPE_POINT             1
+#define SYMBOL_SHAPE_LINESTRING        2
+#define SYMBOL_SHAPE_POLYGON           3
+#define SYMBOL_SHAPE_CIRCLE            4
+#define SYMBOL_SHAPE_PIE               5               
+#define SYMBOL_SHAPE_ARC               6
+#define SYMBOL_SHAPE_CHORD             7
+#define SYMBOL_SHAPE_ELLIPSE           8
+#define SYMBOL_SHAPE_RECTANGLE         9
+#define SYMBOL_SHAPE_SYSTEM_LINE       10
 
 
 typedef struct{
-    int type;
-}GSymShape;
+    uint8_t antiAlias;              // 1 antiAlias, 0 not antiAlias
+    uint8_t red,green,blue,alpha;
+    uint8_t style;                  // fill 0, stroke 1, strokeandfill 2
+    uint8_t strokeCap;              // Butt  0, Round 1, square 2, last 3, default 4
+    uint8_t strokeJoin;             // Miter   0,Round   1, Bevel   2, Last    3 , Default 4
+    float strokeMiter;              // 
+    float strokeWidth; 
 
-typedef struct{
-    double x,y;
-}GSymPoint;
+}MapPaint;
 
-typedef struct{
-    int type;
-    
-}GSymLineString;
 
-typedef struct{
-    int nshapes;
-}GSymbol;
 
 #endif

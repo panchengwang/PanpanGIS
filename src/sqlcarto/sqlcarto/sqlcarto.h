@@ -26,3 +26,5 @@
 #include "access/stratnum.h"
 #include "utils/array.h"
 #include "utils/float.h"
+#include "utils/builtins.h"
+

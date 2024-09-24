@@ -34,4 +34,4 @@ install:
 	cp -f $(CUR_DIR)/sk_capi.h `pg_config --includedir` 
 
 run: 
-	time $(CUR_DIR)/test/test.exe 
+	$(CUR_DIR)/test/test.exe 
