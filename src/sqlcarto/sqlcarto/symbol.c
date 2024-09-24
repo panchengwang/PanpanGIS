@@ -29,7 +29,7 @@ Datum SYMBOL_in(PG_FUNCTION_ARGS)
 
 
 /*
- * LWGEOM_out(lwgeom) --> cstring
+ * LWGEOM_out(lwgeom) --> cstring  
  * output is 'SRID=#;<wkb in hex form>'
  * ie. 'SRID=-99;0101000000000000000000F03F0000000000000040'
  * WKB is machine endian
