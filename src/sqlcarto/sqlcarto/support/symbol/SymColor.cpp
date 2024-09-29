@@ -1,0 +1,45 @@
+#include "SymColor.h"
+#include "jsonutils.h"
+
+SymColor::SymColor()
+{
+    _alpha = 255;
+    _red = 255;
+    _green = 255;
+    _blue = 255;
+}
+
+SymColor::SymColor(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue)
+{
+    _alpha = alpha;
+    _red = red;
+    _green = green;
+    _blue = blue;
+}
+
+json_object *SymColor::to_json_object()
+{
+    json_object *obj = json_object_new_object();
+    
+    JSON_ADD_INT(obj,"alpha",_alpha);
+    JSON_ADD_INT(obj,"red",_red);
+    JSON_ADD_INT(obj,"green",_green);
+    JSON_ADD_INT(obj,"blue",_blue);
+
+    return obj;
+}
+
+bool SymColor::from_json_object(json_object *obj)
+{
+    JSON_GET_INT(obj,"alpha",_alpha,_errorMessage);
+    JSON_GET_INT(obj,"red",_red,_errorMessage);
+    JSON_GET_INT(obj,"green",_green,_errorMessage);
+    JSON_GET_INT(obj,"blue",_blue,_errorMessage);
+    return true;
+}
+
+
+
+const std::string& SymColor::getErrorMessage() const{
+    return _errorMessage;
+}

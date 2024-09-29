@@ -27,6 +27,7 @@ OBJS = sqlcarto.o \
 	china_proj.o \
 	china_trans.o \
 	bytea2cstring.o \
+	symbol_inout.o \
 	symbol.o \
 	canvas.o
 
@@ -49,11 +50,16 @@ CURL_LIBS = $(shell pkg-config libcurl --libs)
 SKIA_C_INCLUDES = -I$(shell pg_config --includedir)
 SKIA_C_LIBS = -L$(shell pg_config --bindir) -lskia_c
 
+JSON_C_INCLUDES = $(shell pkg-config --cflags)
+JSON_C_LIBS = $(shell pkg-config --libs)
+
 PG_CPPFLAGS += $(CURL_INCLUDES) \
-	$(SKIA_C_INCLUDES)
+	$(SKIA_C_INCLUDES)	\
+	$(JSON_C_INCLUDES)
 	
 SHLIB_LINK_F += $(CURL_LIBS) \
-	$(SKIA_C_LIBS)
+	$(SKIA_C_LIBS)	\
+	$(JSON_C_LIBS)
 
 # Add SFCGAL Flags if defined
 ifeq (@SFCGAL@,sfcgal)
