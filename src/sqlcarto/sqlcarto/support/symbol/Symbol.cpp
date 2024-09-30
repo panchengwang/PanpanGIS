@@ -10,6 +10,15 @@ Symbol::Symbol()
 {
 }
 
+
+Symbol::~Symbol()
+{
+    for(size_t i=0; i<_shapes.size(); i++){
+        delete _shapes.at(i);
+    }
+    _shapes.clear();
+}
+
 bool Symbol::from_json_file(const char *filename)
 {
     FILE *fd = fopen(filename, "r");
@@ -73,17 +82,26 @@ bool Symbol::from_json_object(json_object *obj)
     JSON_GET_DOUBLE(obj, "xscale", _xscale, _errorMessage);
     JSON_GET_DOUBLE(obj, "yscale", _yscale, _errorMessage);
 
-    json_object *shpobjs = json_object_object_get(obj, "shapes");
-    size_t nobjs = json_object_array_length(shpobjs);
+    json_object *shpobjarr = json_object_object_get(obj, "shapes");
+    size_t nobjs = json_object_array_length(shpobjarr);
     for (size_t i = 0; i < nobjs; i++)
     {
-        json_object *shpobj = json_object_array_get_idx(shpobjs, i);
+        json_object *shpobj = json_object_array_get_idx(shpobjarr, i);
         std::string typestr;
         JSON_GET_STRING(shpobj,"type",typestr,_errorMessage);
+        
         SymShape *shp = NULL;
         if(typestr == "SYSTEM_LINE"){
+            
             shp = new SymSystemLine();
         }
+
+        if(shp){
+            if(!shp->from_json_object(shpobj)){
+                return false;
+            }
+        }
+        _shapes.push_back(shp);
     }
     return true;
 }
@@ -94,6 +112,13 @@ json_object *Symbol::to_json_object()
     json_object_object_add(obj, "offset", _offset.to_json_object());
     json_object_object_add(obj, "xscale", json_object_new_double(_xscale));
     json_object_object_add(obj, "yscale", json_object_new_double(_yscale));
+
+    json_object *shpobjarr = json_object_new_array();
+    for(size_t i=0; i<_shapes.size(); i++){
+        json_object *shpobj = _shapes.at(i)->to_json_object();
+        json_object_array_add(shpobjarr,shpobj);
+    }
+    json_object_object_add(obj,"shapes",shpobjarr);
     return obj;
 }
 

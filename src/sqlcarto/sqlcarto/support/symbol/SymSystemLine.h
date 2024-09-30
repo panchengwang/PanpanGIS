@@ -9,7 +9,9 @@
 class DLL_EXPORT SymSystemLine : public SymShape
 {
 public:
-
+    SymSystemLine();
+    virtual ~SymSystemLine();
+    
     virtual bool from_json_object(json_object* obj) ;
     virtual json_object* to_json_object() ;
     

@@ -8,7 +8,7 @@
     {                                                                       \
         json_object *myobj = json_object_object_get(parent,key);            \
         if(!myobj){                                                         \
-            errormsg = "error: parse #key of SymPoint ";                   \
+            errormsg = "no key: #key ";                   \
             return false;                                                   \
         }                                                                   \
         val = json_object_get_double(myobj);                                \
@@ -18,7 +18,7 @@
     {                                                                       \
         json_object *myobj = json_object_object_get(parent,key);            \
         if(!myobj){                                                         \
-            errormsg = "error: parse #key of SymPoint ";                   \
+            errormsg = "no key: #key ";                   \
             return false;                                                   \
         }                                                                   \
         val = json_object_get_int(myobj);                                \
@@ -28,7 +28,7 @@
     {                                                                       \
         json_object *myobj = json_object_object_get(parent,key);            \
         if(!myobj){                                                         \
-            errormsg = "error: parse #key of SymPoint ";                   \
+            errormsg = "no key: #key ";                   \
             return false;                                                   \
         }                                                                   \
         val = json_object_get_string(myobj);                                \
@@ -41,5 +41,9 @@
 
 #define JSON_ADD_INT(parent,key,val)                                        \
     json_object_object_add(parent,key,json_object_new_int(val));
+
+
+#define JSON_ADD_STRING(parent,key,val)                                        \
+    json_object_object_add(parent,key,json_object_new_string(val));
 
 #endif

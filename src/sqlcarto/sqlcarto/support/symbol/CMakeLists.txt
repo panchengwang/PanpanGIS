@@ -8,19 +8,37 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSON_C REQUIRED json-c)
 
-add_library(symbol SHARED
+list(APPEND HEADERS 
   Symbol.h
-  Symbol.cpp
   SymPoint.h
-  SymPoint.cpp 
   SymColor.h
-  SymColor.cpp
   SymStroke.h
-  SymStroke.cpp
   SymShape.h
-  SymShape.cpp
   SymSystemLine.h
+  SymFill.h
+  SymCircle.h
+  SymArc.h
+  SymPie.h 
+  SymChord.h
+)
+
+list(APPEND SOURCES 
+  Symbol.cpp
+  SymPoint.cpp
+  SymColor.cpp
+  SymStroke.cpp
+  SymShape.cpp
   SymSystemLine.cpp
+  SymFill.cpp
+  SymCircle.cpp
+  SymArc.cpp
+  SymPie.cpp
+  SymChord.cpp
+)
+
+add_library(symbol SHARED
+  ${HEADERS}
+  ${SOURCES}
 )
 target_link_libraries(symbol ${JSON_C_LIBRARIES})
 target_include_directories(symbol PUBLIC 
@@ -38,8 +56,8 @@ install(TARGETS symbol
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-install(FILES Symbol.h 
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+install(FILES ${HEADERS} 
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/symbol
 )
 
 

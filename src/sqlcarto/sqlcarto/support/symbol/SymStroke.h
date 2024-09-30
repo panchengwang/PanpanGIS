@@ -5,10 +5,15 @@
 #include "SymColor.h"
 #include <string>
 #include <json_tokener.h>
+#include <vector>
 
+#define LINE_CAP_BUTT       1
+#define LINE_CAP_ROUND      2
+#define LINE_CAP_SQUARE     3
 
-
-
+#define LINE_JOIN_MITER     1
+#define LINE_JOIN_ROUND     2
+#define LINE_JOIN_BEVEL     3
 
 class DLL_EXPORT SymStroke
 {
@@ -20,6 +25,11 @@ public:
 
 protected:
     SymColor    _color;
+    double _width;
+    std::vector<double> _dashes;
+    uint8_t _cap;
+    uint8_t _join;
+    double _miter;
     std::string _errorMessage; 
 };
 
