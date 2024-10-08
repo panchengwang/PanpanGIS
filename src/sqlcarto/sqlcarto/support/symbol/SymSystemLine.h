@@ -1,12 +1,9 @@
 #ifndef __SYM_SYSTEM_LINE_H
 #define __SYM_SYSTEM_LINE_H
 
-#include <dllexport.h>
-#include <stdint.h>
-#include "json_tokener.h"
-#include "SymShape.h"
+#include "SymShapeWithStroke.h"
 
-class DLL_EXPORT SymSystemLine : public SymShape
+class DLL_EXPORT SymSystemLine : public SymShapeWithStroke
 {
 public:
     SymSystemLine();

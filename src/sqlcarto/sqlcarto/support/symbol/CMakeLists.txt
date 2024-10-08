@@ -16,10 +16,16 @@ list(APPEND HEADERS
   SymShape.h
   SymSystemLine.h
   SymFill.h
+  SymFillSolid.h
   SymCircle.h
+  SymEllipse.h
   SymArc.h
   SymPie.h 
   SymChord.h
+  SymLineString.h
+  SymPolygon.h
+  SymShapeWithStroke.h
+  SymShapeWithStrokeAndFill.h
 )
 
 list(APPEND SOURCES 
@@ -30,10 +36,17 @@ list(APPEND SOURCES
   SymShape.cpp
   SymSystemLine.cpp
   SymFill.cpp
+  SymFillSolid.cpp
   SymCircle.cpp
+  SymEllipse.cpp
   SymArc.cpp
   SymPie.cpp
   SymChord.cpp
+  SymLineString.cpp
+  SymPolygon.cpp
+  SymShapeWithStroke.cpp 
+  SymShapeWithStrokeAndFill.cpp 
+  
 )
 
 add_library(symbol SHARED

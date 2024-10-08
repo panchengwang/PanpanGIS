@@ -4,7 +4,13 @@
 #include <iostream>
 #include "jsonutils.h"
 #include "SymSystemLine.h"
-#include "SymShape.h"
+#include "SymArc.h"
+#include "SymCircle.h"
+#include "SymEllipse.h"
+#include "SymPie.h"
+#include "SymChord.h"
+#include "SymLineString.h"
+#include "SymPolygon.h"
 
 Symbol::Symbol()
 {
@@ -92,12 +98,26 @@ bool Symbol::from_json_object(json_object *obj)
         
         SymShape *shp = NULL;
         if(typestr == "SYSTEM_LINE"){
-            
             shp = new SymSystemLine();
+        }else if(typestr == "ARC"){
+            shp = new SymArc();
+        }else if(typestr == "CIRCLE"){
+            shp = new SymCircle();
+        }else if(typestr == "ELLIPSE"){
+            shp = new SymEllipse();
+        }else if(typestr == "PIE"){
+            shp = new SymPie();
+        }else if(typestr == "CHORD"){
+            shp = new SymChord();
+        }else if(typestr == "LINESTRING"){
+            shp = new SymLineString();
+        }else if(typestr == "POLYGON"){
+            shp = new SymPolygon();
         }
 
         if(shp){
             if(!shp->from_json_object(shpobj)){
+                _errorMessage = shp->getErrorMessage();
                 return false;
             }
         }

@@ -1,6 +1,6 @@
 #include "SymPoint.h"
 #include "jsonutils.h"
-
+#include <limits>
 
 
 SymPoint::SymPoint()
@@ -17,6 +17,10 @@ SymPoint::~SymPoint()
 {
 }
 
+SymPoint::SymPoint(const SymPoint& other){
+    _x = other._x;
+    _y = other._y;
+}
 
 const std::string& SymPoint::getErrorMessage() const{
     return _errorMessage;
@@ -45,4 +49,14 @@ json_object *SymPoint::to_json_object()
     json_object_object_add(obj,"x",json_object_new_double(_x));
     json_object_object_add(obj,"y",json_object_new_double(_y));
     return obj;
+}
+
+
+bool operator==(const SymPoint& pt1, const SymPoint& pt2){
+    return (pt1._x - pt2._x)*(pt1._x - pt2._x) + (pt1._y - pt2._y) * (pt1._y - pt2._y) <= std::numeric_limits<double>::epsilon();
+}
+
+
+bool operator!=(const SymPoint& pt1, const SymPoint& pt2){
+    return !(pt1 == pt2);
 }

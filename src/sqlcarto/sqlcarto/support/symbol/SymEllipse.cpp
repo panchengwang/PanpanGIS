@@ -1,18 +1,18 @@
-#include "SymCircle.h"
+#include "SymEllipse.h"
 #include "jsonutils.h"
 
-SymCircle::SymCircle()
+SymEllipse::SymEllipse()
 {
     _type = SYM_SHAPE_CIRCLE;
 }
 
 
-SymCircle::~SymCircle()
+SymEllipse::~SymEllipse()
 {
 
 }
 
-bool SymCircle::from_json_object(json_object *obj)
+bool SymEllipse::from_json_object(json_object *obj)
 {
     _type = SYM_SHAPE_CIRCLE;
     if (!SymShapeWithStrokeAndFill::from_json_object(obj))
@@ -26,16 +26,17 @@ bool SymCircle::from_json_object(json_object *obj)
         _errorMessage = _center.getErrorMessage();
         return false;
     }
-    JSON_GET_DOUBLE(obj,"radius",_radius,_errorMessage);
-
+    JSON_GET_DOUBLE(obj,"xradius",_xradius,_errorMessage);
+    JSON_GET_DOUBLE(obj,"yradius",_yradius,_errorMessage);
     return true;
 }
 
-json_object *SymCircle::to_json_object()
+json_object *SymEllipse::to_json_object()
 {
     json_object *obj = SymShapeWithStrokeAndFill::to_json_object();
-    JSON_ADD_STRING(obj, "type", "CIRCLE");
+    JSON_ADD_STRING(obj, "type", "ELLIPSE");
     json_object_object_add(obj,"center",_center.to_json_object());
-    JSON_ADD_DOUBLE(obj,"radius",_radius);
+    JSON_ADD_DOUBLE(obj,"xradius",_xradius);
+    JSON_ADD_DOUBLE(obj,"yradius",_yradius);
     return obj;
 }

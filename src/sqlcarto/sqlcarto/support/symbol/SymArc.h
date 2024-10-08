@@ -1,15 +1,10 @@
 #ifndef __SYM_ARC_H
 #define __SYM_ARC_H
 
-#include <dllexport.h>
+#include "SymShapeWithStroke.h"
 #include "SymPoint.h"
-#include <string>
-#include <json_tokener.h>
-#include <vector>
-#include "SymShape.h"
 
-
-class DLL_EXPORT SymArc : public SymShape
+class DLL_EXPORT SymArc : public SymShapeWithStroke
 {
 public:
     SymArc();
@@ -17,7 +12,9 @@ public:
     virtual json_object* to_json_object() ;
 
 protected:
-    
+    SymPoint _center;
+    double _xradius,_yradius;
+    double _startAngle,_endAngle;
 };
 
 #endif

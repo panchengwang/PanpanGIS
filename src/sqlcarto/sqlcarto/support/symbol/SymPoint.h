@@ -11,6 +11,7 @@ class DLL_EXPORT SymPoint
 public:
     SymPoint();
     SymPoint(double x, double y);
+    SymPoint(const SymPoint& other);
     virtual ~SymPoint();
 
     bool from_json_object(json_object* obj);
@@ -20,6 +21,9 @@ public:
 protected:
     float _x,_y;
     std::string _errorMessage;
+
+    friend bool operator==(const SymPoint& pt1, const SymPoint& pt2);
+    friend bool operator!=(const SymPoint& pt1, const SymPoint& pt2);
 };
 
 #endif
