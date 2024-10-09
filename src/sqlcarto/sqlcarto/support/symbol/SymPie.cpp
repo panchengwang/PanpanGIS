@@ -6,7 +6,7 @@ SymPie::SymPie()
     _type = SYM_SHAPE_PIE;
 }
 
-bool SymPie::from_json_object(json_object *obj)
+bool SymPie::from_json_object(json_object* obj)
 {
     _type = SYM_SHAPE_PIE;
     if (!SymShapeWithStrokeAndFill::from_json_object(obj))
@@ -14,7 +14,7 @@ bool SymPie::from_json_object(json_object *obj)
         return false;
     }
 
-    json_object *centerobj = NULL;
+    json_object* centerobj = NULL;
     JSON_GET_OBJ(obj, "center", centerobj, _errorMessage);
     if (!_center.from_json_object(centerobj))
     {
@@ -28,14 +28,43 @@ bool SymPie::from_json_object(json_object *obj)
     return true;
 }
 
-json_object *SymPie::to_json_object()
+json_object* SymPie::to_json_object()
 {
-    json_object *obj = SymShapeWithStrokeAndFill::to_json_object();
+    json_object* obj = SymShapeWithStrokeAndFill::to_json_object();
     JSON_ADD_STRING(obj, "type", "PIE");
-    json_object_object_add(obj,"center",_center.to_json_object());
-    JSON_ADD_DOUBLE(obj,"xradius",_xradius);
-    JSON_ADD_DOUBLE(obj,"yradius",_yradius);
-    JSON_ADD_DOUBLE(obj,"startangle",_startAngle);
-    JSON_ADD_DOUBLE(obj,"endangle",_endAngle);
+    json_object_object_add(obj, "center", _center.to_json_object());
+    JSON_ADD_DOUBLE(obj, "xradius", _xradius);
+    JSON_ADD_DOUBLE(obj, "yradius", _yradius);
+    JSON_ADD_DOUBLE(obj, "startangle", _startAngle);
+    JSON_ADD_DOUBLE(obj, "endangle", _endAngle);
     return obj;
+}
+
+
+size_t SymPie::memory_size() {
+    size_t len = SymShapeWithStrokeAndFill::memory_size();
+
+    len += _center.memory_size();
+    len += sizeof(_xradius);
+    len += sizeof(_yradius);
+    len += sizeof(_startAngle);
+    len += sizeof(_endAngle);
+    return len;
+}
+
+
+char* SymPie::serialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStrokeAndFill::serialize(p);
+    p = _center.serialize(p);
+    memcpy(p, (void*)&_xradius, sizeof(_xradius));
+    p += sizeof(_xradius);
+    memcpy(p, (void*)&_yradius, sizeof(_yradius));
+    p += sizeof(_yradius);
+    memcpy(p, (void*)&_startAngle, sizeof(_startAngle));
+    p += sizeof(_startAngle);
+    memcpy(p, (void*)&_endAngle, sizeof(_endAngle));
+    p += sizeof(_endAngle);
+    return p;
+
 }

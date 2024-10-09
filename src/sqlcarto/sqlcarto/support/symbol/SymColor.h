@@ -9,8 +9,8 @@
 class DLL_EXPORT SymColor
 {
 public:
-   SymColor();
-   SymColor(uint8_t alpha,uint8_t red, uint8_t green, uint8_t blue);
+    SymColor();
+    SymColor(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue);
 
 
 
@@ -18,10 +18,11 @@ public:
     bool from_json_object(json_object* obj);
 
     const std::string& getErrorMessage() const;
-    
+    size_t memory_size();
+    char* serialize(const char* buf);
 protected:
-    uint8_t _alpha,_red,_green,_blue;
-    std::string _errorMessage; 
+    uint8_t _alpha, _red, _green, _blue;
+    std::string _errorMessage;
 };
 
 #endif

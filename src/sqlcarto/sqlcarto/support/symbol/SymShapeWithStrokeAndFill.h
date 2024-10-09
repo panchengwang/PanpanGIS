@@ -11,10 +11,11 @@ public:
     SymShapeWithStrokeAndFill();
     virtual ~SymShapeWithStrokeAndFill();
     virtual bool from_json_object(json_object* obj);
-    virtual json_object* to_json_object()  ;
-
+    virtual json_object* to_json_object();
+    size_t memory_size();
+    char* serialize(const char* buf);
 protected:
-    SymFill*    _fill;
+    SymFill* _fill;
 };
 
 #endif

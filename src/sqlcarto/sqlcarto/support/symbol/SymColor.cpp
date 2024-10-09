@@ -17,29 +17,54 @@ SymColor::SymColor(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue)
     _blue = blue;
 }
 
-json_object *SymColor::to_json_object()
+json_object* SymColor::to_json_object()
 {
-    json_object *obj = json_object_new_object();
-    
-    JSON_ADD_INT(obj,"alpha",_alpha);
-    JSON_ADD_INT(obj,"red",_red);
-    JSON_ADD_INT(obj,"green",_green);
-    JSON_ADD_INT(obj,"blue",_blue);
+    json_object* obj = json_object_new_object();
+
+    JSON_ADD_INT(obj, "alpha", _alpha);
+    JSON_ADD_INT(obj, "red", _red);
+    JSON_ADD_INT(obj, "green", _green);
+    JSON_ADD_INT(obj, "blue", _blue);
 
     return obj;
 }
 
-bool SymColor::from_json_object(json_object *obj)
+bool SymColor::from_json_object(json_object* obj)
 {
-    JSON_GET_INT(obj,"alpha",_alpha,_errorMessage);
-    JSON_GET_INT(obj,"red",_red,_errorMessage);
-    JSON_GET_INT(obj,"green",_green,_errorMessage);
-    JSON_GET_INT(obj,"blue",_blue,_errorMessage);
+    JSON_GET_INT(obj, "alpha", _alpha, _errorMessage);
+    JSON_GET_INT(obj, "red", _red, _errorMessage);
+    JSON_GET_INT(obj, "green", _green, _errorMessage);
+    JSON_GET_INT(obj, "blue", _blue, _errorMessage);
     return true;
 }
 
 
 
-const std::string& SymColor::getErrorMessage() const{
+const std::string& SymColor::getErrorMessage() const {
     return _errorMessage;
+}
+
+
+size_t SymColor::memory_size() {
+    size_t len = 0;
+    len += sizeof(_alpha);
+    len += sizeof(_red);
+    len += sizeof(_green);
+    len += sizeof(_blue);
+    return len;
+}
+
+
+
+char* SymColor::serialize(const char* buf) {
+    char* p = (char*)buf;
+    memcpy(p, (void*)&_alpha, sizeof(_alpha));
+    p += sizeof(_alpha);
+    memcpy(p, (void*)&_red, sizeof(_red));
+    p += sizeof(_red);
+    memcpy(p, (void*)&_green, sizeof(_green));
+    p += sizeof(_green);
+    memcpy(p, (void*)&_blue, sizeof(_blue));
+    p += sizeof(_blue);
+    return p;
 }

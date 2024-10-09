@@ -11,7 +11,7 @@ public:
     SymChord();
     virtual ~SymChord();
     virtual bool from_json_object(json_object* obj);
-    virtual json_object* to_json_object() ;
+    virtual json_object* to_json_object();
 
 protected:
 

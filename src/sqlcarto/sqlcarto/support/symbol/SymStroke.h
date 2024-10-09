@@ -22,7 +22,8 @@ public:
     const std::string& getErrorMessage() const;
     bool from_json_object(json_object* obj);
     json_object* to_json_object();
-
+    size_t memory_size();
+    char* serialize(const char* buf);
 protected:
     SymColor    _color;
     double _width;
@@ -30,7 +31,7 @@ protected:
     uint8_t _cap;
     uint8_t _join;
     double _miter;
-    std::string _errorMessage; 
+    std::string _errorMessage;
 };
 
 #endif

@@ -44,6 +44,11 @@
 
 #define JSON_ADD_DOUBLE(parent,key,val)                                     \
     json_object_object_add(parent,key,json_object_new_double(val));
+    // {                                                                       \
+    //     char buf[64];                                                       \
+    //     sprintf(buf,".8f",val);                                             \
+    //     json_object_object_add(parent,key,json_object_new_double_s(val,buf));     \
+    // }
 
 #define JSON_ADD_INT(parent,key,val)                                        \
     json_object_object_add(parent,key,json_object_new_int(val));

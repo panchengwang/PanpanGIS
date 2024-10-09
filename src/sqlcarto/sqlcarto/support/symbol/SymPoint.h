@@ -18,8 +18,10 @@ public:
     json_object* to_json_object();
 
     const std::string& getErrorMessage() const;
+    size_t memory_size();
+    char* serialize(const char* buf);
 protected:
-    float _x,_y;
+    float _x, _y;
     std::string _errorMessage;
 
     friend bool operator==(const SymPoint& pt1, const SymPoint& pt2);

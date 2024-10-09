@@ -17,6 +17,8 @@
 #define SYM_SHAPE_PIE               8
 #define SYM_SHAPE_CHORD             9
 #define SYM_SHAPE_PATH              10
+#define SYM_SHAPE_REGULAR_POLYGON   11
+
 
 
 
@@ -24,11 +26,13 @@ class DLL_EXPORT SymShape
 {
 public:
 
-    virtual bool from_json_object(json_object* obj)=0;
-    virtual json_object* to_json_object() = 0 ;
+    virtual bool from_json_object(json_object* obj) = 0;
+    virtual json_object* to_json_object() = 0;
+    virtual size_t memory_size();
+    virtual const std::string& getErrorMessage() const;
 
-    const std::string& getErrorMessage() const;
-    
+    virtual char* serialize(const char* buf);
+
 protected:
     uint8_t  _type;
     std::string _errorMessage;

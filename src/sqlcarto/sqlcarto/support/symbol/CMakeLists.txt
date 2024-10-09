@@ -15,6 +15,7 @@ list(APPEND HEADERS
   SymStroke.h
   SymShape.h
   SymSystemLine.h
+  SymSystemFill.h
   SymFill.h
   SymFillSolid.h
   SymCircle.h
@@ -26,6 +27,7 @@ list(APPEND HEADERS
   SymPolygon.h
   SymShapeWithStroke.h
   SymShapeWithStrokeAndFill.h
+  SymRegularPolygon.h 
 )
 
 list(APPEND SOURCES 
@@ -35,6 +37,7 @@ list(APPEND SOURCES
   SymStroke.cpp
   SymShape.cpp
   SymSystemLine.cpp
+  SymSystemFill.cpp
   SymFill.cpp
   SymFillSolid.cpp
   SymCircle.cpp
@@ -46,7 +49,7 @@ list(APPEND SOURCES
   SymPolygon.cpp
   SymShapeWithStroke.cpp 
   SymShapeWithStrokeAndFill.cpp 
-  
+  SymRegularPolygon.cpp
 )
 
 add_library(symbol SHARED

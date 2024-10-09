@@ -1,5 +1,5 @@
 #include "SymShape.h"
-
+#include <string.h>
 
 // bool SymShape::from_json_object(json_object* obj){
 //     json_object *strokeobj = json_object_object_get(obj,"stroke");
@@ -19,12 +19,23 @@
 //     json_object* obj = json_object_new_object();
 
 //     json_object_object_add(obj,"stroke",_stroke.to_json_object());
-    
+
 //     return obj;
 // }
 
 
-const std::string& SymShape::getErrorMessage() const{
-    return _errorMessage; 
+const std::string& SymShape::getErrorMessage() const {
+    return _errorMessage;
 }
 
+
+size_t SymShape::memory_size() {
+    return sizeof(_type);
+}
+
+
+char* SymShape::serialize(const char* buf) {
+    char* p = (char*)buf;
+    memcpy(p, (const char*)&_type, sizeof(_type));
+    return p;
+}

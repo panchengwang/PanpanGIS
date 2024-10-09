@@ -6,7 +6,7 @@ SymLineString::SymLineString()
     _type = SYM_SHAPE_LINESTRING;
 }
 
-bool SymLineString::from_json_object(json_object *obj)
+bool SymLineString::from_json_object(json_object* obj)
 {
     _points.clear();
 
@@ -16,17 +16,17 @@ bool SymLineString::from_json_object(json_object *obj)
         return false;
     }
 
-    json_object* ptarr = json_object_object_get(obj,"points");
-    if(!ptarr){
+    json_object* ptarr = json_object_object_get(obj, "points");
+    if (!ptarr) {
         _errorMessage = "no points in linestring";
         return false;
     }
-    size_t i=0;
-    size_t len= json_object_array_length(ptarr);
-    for(i=0; i<len; i++){
-        json_object *ptobj = json_object_array_get_idx(ptarr, i);
+    size_t i = 0;
+    size_t len = json_object_array_length(ptarr);
+    for (i = 0; i < len; i++) {
+        json_object* ptobj = json_object_array_get_idx(ptarr, i);
         SymPoint pt;
-        if(!pt.from_json_object(ptobj)){
+        if (!pt.from_json_object(ptobj)) {
             _errorMessage = pt.getErrorMessage();
             return false;
         }
@@ -36,15 +36,43 @@ bool SymLineString::from_json_object(json_object *obj)
     return true;
 }
 
-json_object *SymLineString::to_json_object()
+json_object* SymLineString::to_json_object()
 {
-    json_object *obj = SymShapeWithStroke::to_json_object();
+    json_object* obj = SymShapeWithStroke::to_json_object();
     JSON_ADD_STRING(obj, "type", "LINESTRING");
-    json_object *ptarr = json_object_new_array();
-    for(std::vector<SymPoint>::iterator it=_points.begin(); it != _points.end(); it++){
-        json_object *ptobj = it->to_json_object();
-        json_object_array_add(ptarr,ptobj);
+    json_object* ptarr = json_object_new_array();
+    for (std::vector<SymPoint>::iterator it = _points.begin(); it != _points.end(); it++) {
+        json_object* ptobj = it->to_json_object();
+        json_object_array_add(ptarr, ptobj);
     }
-    json_object_object_add(obj,"points",ptarr);
+    json_object_object_add(obj, "points", ptarr);
     return obj;
 }
+
+
+size_t SymLineString::memory_size() {
+    size_t len = SymShapeWithStroke::memory_size();
+
+    len += sizeof(size_t);    // for num of  points
+
+    for (std::vector<SymPoint>::iterator it = _points.begin(); it != _points.end(); it++) {
+        len += it->memory_size();
+    }
+
+    return len;
+
+}
+
+
+char* SymLineString::serialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStroke::serialize(p);
+    size_t numPoints = _points.size();
+    memcpy(p, (void*)&numPoints, sizeof(numPoints));
+    p += sizeof(numPoints);
+    for (size_t i = 0; i < numPoints; i++) {
+        p += _points[i].serialize(p);
+    }
+    return p;
+}
+
