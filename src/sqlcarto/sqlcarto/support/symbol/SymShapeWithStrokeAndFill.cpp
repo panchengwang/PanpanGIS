@@ -67,3 +67,30 @@ char* SymShapeWithStrokeAndFill::serialize(const char* buf) {
 
     return p;
 }
+
+
+char* SymShapeWithStrokeAndFill::deserialize(const char* buf) {
+    char* p = (char*)buf;
+
+    p = SymShapeWithStroke::deserialize(p);
+    uint8_t filltype;
+    memcpy((void*)&filltype, p, sizeof(filltype));
+    // p += sizeof(filltype);
+
+    SymFill* myfill = NULL;
+    if (filltype == FILL_SOLID) {
+        myfill = new SymFillSolid();
+    }
+
+    if (!myfill) {
+        return p;
+    }
+
+    p = myfill->deserialize(p);
+    if (_fill) {
+        delete _fill;
+    }
+    _fill = myfill;
+
+    return p;
+}

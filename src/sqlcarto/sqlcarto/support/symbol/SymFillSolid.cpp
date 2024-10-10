@@ -40,3 +40,11 @@ char* SymFillSolid::serialize(const char* buf) {
     p = _color.serialize(p);
     return p;
 }
+
+
+char* SymFillSolid::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymFill::deserialize(p);
+    p = _color.deserialize(p);
+    return p;
+}

@@ -69,3 +69,20 @@ char* SymPoint::serialize(const char* buf) {
     p += sizeof(_y);
     return p;
 }
+
+
+char* SymPoint::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    memcpy((void*)&_x, p, sizeof(_x));
+    p += sizeof(_x);
+    memcpy((void*)&_y, p, sizeof(_y));
+    p += sizeof(_y);
+    return p;
+}
+
+
+
+std::ostream& operator<<(std::ostream& out, const SymPoint& pt) {
+    out << "x: " << pt._x << ", y: " << pt._y;
+    return out;
+}

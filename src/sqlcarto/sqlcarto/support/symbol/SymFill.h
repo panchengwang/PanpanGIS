@@ -21,6 +21,7 @@ public:
     virtual json_object* to_json_object() = 0;
     virtual size_t memory_size();
     virtual char* serialize(const char* buf);
+    virtual char* deserialize(const char* buf);
 protected:
     uint8_t _type;
     std::string _errorMessage;

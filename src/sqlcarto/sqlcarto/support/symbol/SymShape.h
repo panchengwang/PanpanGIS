@@ -32,7 +32,7 @@ public:
     virtual const std::string& getErrorMessage() const;
 
     virtual char* serialize(const char* buf);
-
+    virtual char* deserialize(const char* buf);
 protected:
     uint8_t  _type;
     std::string _errorMessage;

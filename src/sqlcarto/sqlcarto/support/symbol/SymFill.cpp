@@ -20,3 +20,10 @@ char* SymFill::serialize(const char* buf) {
     p += sizeof(_type);
     return p;
 }
+
+char* SymFill::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    memcpy((void*)&_type, p, sizeof(_type));
+    p += sizeof(_type);
+    return p;
+}

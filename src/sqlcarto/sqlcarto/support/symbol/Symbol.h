@@ -27,7 +27,8 @@ public:
     size_t memory_size();
 
     char* serialize(size_t& len);
-    // void deserialize(const char* buf);
+    bool deserialize(const char* buf);
+
 
 protected:
     bool from_json_object(json_object* obj);

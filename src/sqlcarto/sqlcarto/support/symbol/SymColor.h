@@ -20,6 +20,7 @@ public:
     const std::string& getErrorMessage() const;
     size_t memory_size();
     char* serialize(const char* buf);
+    char* deserialize(const char* buf);
 protected:
     uint8_t _alpha, _red, _green, _blue;
     std::string _errorMessage;

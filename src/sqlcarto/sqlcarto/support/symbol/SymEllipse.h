@@ -13,6 +13,7 @@ public:
     virtual json_object* to_json_object();
     size_t memory_size();
     char* serialize(const char* buf);
+    char* deserialize(const char* buf);
 protected:
     SymPoint _center;
     double _xradius;

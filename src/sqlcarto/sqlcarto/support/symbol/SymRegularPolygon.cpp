@@ -61,3 +61,15 @@ char* SymRegularPolygon::serialize(const char* buf) {
     p += sizeof(_numEdges);
     return p;
 }
+
+
+char* SymRegularPolygon::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStrokeAndFill::deserialize(p);
+    p = _center.deserialize(p);
+    memcpy((void*)&_radius, p, sizeof(_radius));
+    p += sizeof(_radius);
+    memcpy((void*)&_numEdges, p, sizeof(_numEdges));
+    p += sizeof(_numEdges);
+    return p;
+}

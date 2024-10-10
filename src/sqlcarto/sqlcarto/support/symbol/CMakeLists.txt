@@ -43,13 +43,13 @@ list(APPEND SOURCES
   SymCircle.cpp
   SymEllipse.cpp
   SymArc.cpp
-  SymPie.cpp
+  SymPie.cpp 
   SymChord.cpp
   SymLineString.cpp
   SymPolygon.cpp
-  SymShapeWithStroke.cpp 
-  SymShapeWithStrokeAndFill.cpp 
-  SymRegularPolygon.cpp
+  SymShapeWithStroke.cpp
+  SymShapeWithStrokeAndFill.cpp
+  SymRegularPolygon.cpp 
 )
 
 add_library(symbol SHARED

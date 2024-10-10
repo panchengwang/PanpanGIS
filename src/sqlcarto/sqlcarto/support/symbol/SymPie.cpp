@@ -68,3 +68,20 @@ char* SymPie::serialize(const char* buf) {
     return p;
 
 }
+
+
+char* SymPie::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStrokeAndFill::deserialize(p);
+    p = _center.deserialize(p);
+    memcpy((void*)&_xradius, p, sizeof(_xradius));
+    p += sizeof(_xradius);
+    memcpy((void*)&_yradius, p, sizeof(_yradius));
+    p += sizeof(_yradius);
+    memcpy((void*)&_startAngle, p, sizeof(_startAngle));
+    p += sizeof(_startAngle);
+    memcpy((void*)&_endAngle, p, sizeof(_endAngle));
+    p += sizeof(_endAngle);
+    return p;
+
+}

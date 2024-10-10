@@ -23,7 +23,7 @@ bool SymSystemLine::from_json_object(json_object* obj)
 
 json_object* SymSystemLine::to_json_object() {
     json_object* obj = SymShapeWithStroke::to_json_object();
-    JSON_ADD_STRING(obj, "type", "SYSTEM_LINE");
+    JSON_ADD_STRING(obj, "type", "SYSTEMLINE");
     return obj;
 }
 
@@ -32,4 +32,16 @@ size_t SymSystemLine::memory_size() {
     size_t len = SymShapeWithStroke::memory_size();
 
     return len;
+}
+
+char* SymSystemLine::serialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStroke::serialize(p);
+    return p;
+}
+
+char* SymSystemLine::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStroke::deserialize(p);
+    return p;
 }

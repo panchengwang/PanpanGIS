@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <json-c/json_tokener.h>
 #include <string>
+#include <iostream>
 
 class DLL_EXPORT SymPoint
 {
@@ -20,12 +21,14 @@ public:
     const std::string& getErrorMessage() const;
     size_t memory_size();
     char* serialize(const char* buf);
+    char* deserialize(const char* buf);
 protected:
     float _x, _y;
     std::string _errorMessage;
 
     friend bool operator==(const SymPoint& pt1, const SymPoint& pt2);
     friend bool operator!=(const SymPoint& pt1, const SymPoint& pt2);
+    friend std::ostream& operator<<(std::ostream& out, const SymPoint& pt);
 };
 
 #endif

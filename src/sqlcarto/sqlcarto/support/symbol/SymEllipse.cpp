@@ -60,3 +60,15 @@ char* SymEllipse::serialize(const char* buf) {
     p += sizeof(_yradius);
     return p;
 }
+
+
+char* SymEllipse::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStrokeAndFill::deserialize(p);
+    p = _center.deserialize(p);
+    memcpy((void*)&_xradius, p, sizeof(_xradius));
+    p += sizeof(_xradius);
+    memcpy((void*)&_yradius, p, sizeof(_yradius));
+    p += sizeof(_yradius);
+    return p;
+}

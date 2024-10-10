@@ -4,7 +4,7 @@
 
 SymSystemFill::SymSystemFill() {
     _type = SYM_SHAPE_SYSTEM_FILL;
-    _fill = NULL;
+    _fill = new SymFillSolid();
 }
 
 
@@ -63,5 +63,36 @@ size_t SymSystemFill::memory_size() {
 
 
 char* SymSystemFill::serialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShape::serialize(p);
+    if (_fill) {
+        p = _fill->serialize(p);
+    }
+    return p;
+}
 
+char* SymSystemFill::deserialize(const char* buf) {
+    char* p = (char*)buf;
+
+    p = SymShape::deserialize(p);
+    uint8_t filltype;
+    memcpy((void*)&filltype, p, sizeof(filltype));
+
+
+    SymFill* myfill = NULL;
+    if (filltype == FILL_SOLID) {
+        myfill = new SymFillSolid();
+    }
+
+    if (!myfill) {
+        return p;
+    }
+
+    p = myfill->deserialize(p);
+    if (_fill) {
+        delete _fill;
+    }
+    _fill = myfill;
+
+    return p;
 }

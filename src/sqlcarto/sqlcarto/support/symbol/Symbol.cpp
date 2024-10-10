@@ -103,7 +103,7 @@ bool Symbol::from_json_object(json_object* obj)
         JSON_GET_STRING(shpobj, "type", typestr, _errorMessage);
 
         SymShape* shp = NULL;
-        if (typestr == "SYSTEM_LINE") {
+        if (typestr == "SYSTEMLINE") {
             shp = new SymSystemLine();
         }
         else if (typestr == "ARC") {
@@ -183,4 +183,88 @@ size_t Symbol::memory_size() {
         len += _shapes[i]->memory_size();
     }
     return len;
+}
+
+char* Symbol::serialize(size_t& len) {
+    len = memory_size();
+    char* buf = (char*)malloc(len);
+    char* p = buf;
+
+    p = _offset.serialize(p);
+    memcpy(p, (void*)&_xscale, sizeof(_xscale));
+    p += sizeof(_xscale);
+    memcpy(p, (void*)&_yscale, sizeof(_yscale));
+    p += sizeof(_yscale);
+    size_t nshapes = _shapes.size();
+    memcpy(p, (void*)&nshapes, sizeof(nshapes));
+    p += sizeof(nshapes);
+    for (size_t i = 0; i < nshapes; i++) {
+        p = _shapes[i]->serialize(p);
+    }
+
+    return buf;
+}
+
+bool Symbol::deserialize(const char* buf) {
+    char* p = (char*)buf;
+
+    p = _offset.deserialize(p);
+
+    memcpy((void*)&_xscale, p, sizeof(_xscale));
+    p += sizeof(_xscale);
+    memcpy((void*)&_yscale, p, sizeof(_yscale));
+    p += sizeof(_yscale);
+    size_t nshapes = 0;
+    memcpy((void*)&nshapes, p, sizeof(nshapes));
+    p += sizeof(nshapes);
+
+    for (size_t i = 0; i < nshapes; i++) {
+        uint8_t shptype;
+        memcpy((void*)&shptype, p, sizeof(shptype));
+
+        SymShape* shp = NULL;
+        if ((int)shptype == SYM_SHAPE_ARC) {
+            shp = new SymArc();
+        }
+        else if (shptype == SYM_SHAPE_SYSTEM_LINE) {
+            shp = new SymSystemLine();
+        }
+        else if (shptype == SYM_SHAPE_SYSTEM_FILL) {
+            shp = new SymSystemFill();
+        }
+        else if (shptype == SYM_SHAPE_CIRCLE) {
+            shp = new SymCircle();
+        }
+        else if (shptype == SYM_SHAPE_ELLIPSE) {
+            shp = new SymEllipse();
+        }
+        else if (shptype == SYM_SHAPE_LINESTRING) {
+            shp = new SymLineString();
+        }
+        else if (shptype == SYM_SHAPE_POLYGON) {
+            shp = new SymPolygon();
+        }
+        else if (shptype == SYM_SHAPE_PIE) {
+            shp = new SymPie();
+        }
+        else if (shptype == SYM_SHAPE_CHORD) {
+            shp = new SymChord();
+        }
+        else if (shptype == SYM_SHAPE_REGULAR_POLYGON) {
+            shp = new SymRegularPolygon();
+        }
+
+        if (!shp) {
+            _errorMessage = "Invalid shape type !";
+            return false;
+        }
+
+        p = shp->deserialize(p);
+
+        _shapes.push_back(shp);
+
+    }
+
+    return true;
+
 }

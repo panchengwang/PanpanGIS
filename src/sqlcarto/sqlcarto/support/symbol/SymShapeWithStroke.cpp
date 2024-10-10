@@ -52,3 +52,11 @@ char* SymShapeWithStroke::serialize(const char* buf) {
     p = _stroke->serialize(p);
     return p;
 }
+
+
+char* SymShapeWithStroke::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShape::deserialize(p);
+    p = _stroke->deserialize(p);
+    return p;
+}

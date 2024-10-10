@@ -57,3 +57,14 @@ char* SymCircle::serialize(const char* buf) {
 
     return p;
 }
+
+
+char* SymCircle::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    p = SymShapeWithStrokeAndFill::deserialize(p);
+    p = _center.deserialize(p);
+    memcpy((void*)&_radius, p, sizeof(_radius));
+    p += sizeof(_radius);
+
+    return p;
+}

@@ -68,3 +68,17 @@ char* SymColor::serialize(const char* buf) {
     p += sizeof(_blue);
     return p;
 }
+
+
+char* SymColor::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    memcpy((void*)&_alpha, p, sizeof(_alpha));
+    p += sizeof(_alpha);
+    memcpy((void*)&_red, p, sizeof(_red));
+    p += sizeof(_red);
+    memcpy((void*)&_green, p, sizeof(_green));
+    p += sizeof(_green);
+    memcpy((void*)&_blue, p, sizeof(_blue));
+    p += sizeof(_blue);
+    return p;
+}

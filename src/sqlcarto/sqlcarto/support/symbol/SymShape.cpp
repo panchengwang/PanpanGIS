@@ -1,6 +1,6 @@
 #include "SymShape.h"
 #include <string.h>
-
+#include <iostream>
 // bool SymShape::from_json_object(json_object* obj){
 //     json_object *strokeobj = json_object_object_get(obj,"stroke");
 //     if(!strokeobj){
@@ -36,6 +36,16 @@ size_t SymShape::memory_size() {
 
 char* SymShape::serialize(const char* buf) {
     char* p = (char*)buf;
-    memcpy(p, (const char*)&_type, sizeof(_type));
+    memcpy(p, (void*)&_type, sizeof(_type));
+    p += sizeof(_type);
+    return p;
+}
+
+
+
+char* SymShape::deserialize(const char* buf) {
+    char* p = (char*)buf;
+    memcpy((void*)&_type, p, sizeof(_type));
+    p += sizeof(_type);
     return p;
 }
