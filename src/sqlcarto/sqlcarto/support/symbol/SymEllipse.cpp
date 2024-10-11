@@ -3,7 +3,7 @@
 
 SymEllipse::SymEllipse()
 {
-    _type = SYM_SHAPE_CIRCLE;
+    _type = SYM_SHAPE_ELLIPSE;
 }
 
 
@@ -14,7 +14,7 @@ SymEllipse::~SymEllipse()
 
 bool SymEllipse::from_json_object(json_object* obj)
 {
-    _type = SYM_SHAPE_CIRCLE;
+    _type = SYM_SHAPE_ELLIPSE;
     if (!SymShapeWithStrokeAndFill::from_json_object(obj)) {
         return false;
     }

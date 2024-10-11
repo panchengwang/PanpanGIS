@@ -94,8 +94,9 @@ char* SymPolygon::deserialize(const char* buf) {
     char* p = (char*)buf;
     p = SymShapeWithStrokeAndFill::deserialize(p);
     size_t numPoints = _points.size();
-    memcpy(p, (void*)&numPoints, sizeof(numPoints));
+    memcpy((void*)&numPoints, p, sizeof(numPoints));
     p += sizeof(numPoints);
+    _points.clear();
     for (size_t i = 0; i < numPoints; i++) {
         SymPoint pt;
         p = pt.deserialize(p);

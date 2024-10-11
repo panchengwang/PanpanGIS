@@ -53,13 +53,18 @@ SKIA_C_LIBS = -L$(shell pg_config --bindir) -lskia_c
 JSON_C_INCLUDES = $(shell pkg-config --cflags)
 JSON_C_LIBS = $(shell pkg-config --libs)
 
+SYMBOL_C_INCLUDES = -I$(shell pg_config --includedir)
+SYMBOL_C_LIBS = -L$(shell pg_config --bindir) -lsymbol_c
+
 PG_CPPFLAGS += $(CURL_INCLUDES) \
 	$(SKIA_C_INCLUDES)	\
-	$(JSON_C_INCLUDES)
+	$(JSON_C_INCLUDES) \
+	$(SYMBOL_C_INCLUDES)
 	
 SHLIB_LINK_F += $(CURL_LIBS) \
 	$(SKIA_C_LIBS)	\
-	$(JSON_C_LIBS)
+	$(JSON_C_LIBS)	\
+	$(SYMBOL_C_LIBS)
 
 # Add SFCGAL Flags if defined
 ifeq (@SFCGAL@,sfcgal)

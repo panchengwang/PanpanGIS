@@ -76,5 +76,20 @@ install(FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/symbol
 )
 
+message(STATUS ${JSON_C_LIBRARIES})
 
-
+add_library(symbol_c SHARED
+  symbol_c.h
+  symbol_c.cpp
+)
+target_link_libraries(symbol_c 
+  symbol
+)
+target_compile_definitions(symbol_c PRIVATE AS_LIBRARY)
+target_include_directories(symbol PUBLIC 
+  .
+)
+install(TARGETS symbol_c
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)

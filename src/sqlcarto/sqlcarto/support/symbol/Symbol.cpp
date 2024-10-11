@@ -198,6 +198,7 @@ char* Symbol::serialize(size_t& len) {
     size_t nshapes = _shapes.size();
     memcpy(p, (void*)&nshapes, sizeof(nshapes));
     p += sizeof(nshapes);
+    std::cout << "nshapes: " << nshapes << std::endl;
     for (size_t i = 0; i < nshapes; i++) {
         p = _shapes[i]->serialize(p);
     }
@@ -217,11 +218,11 @@ bool Symbol::deserialize(const char* buf) {
     size_t nshapes = 0;
     memcpy((void*)&nshapes, p, sizeof(nshapes));
     p += sizeof(nshapes);
-
+    std::cout << "deserialize nshapes: " << nshapes << std::endl;
     for (size_t i = 0; i < nshapes; i++) {
         uint8_t shptype;
         memcpy((void*)&shptype, p, sizeof(shptype));
-
+        std::cout << "deserialize type: " << (int)shptype << std::endl;
         SymShape* shp = NULL;
         if ((int)shptype == SYM_SHAPE_ARC) {
             shp = new SymArc();
@@ -256,6 +257,7 @@ bool Symbol::deserialize(const char* buf) {
 
         if (!shp) {
             _errorMessage = "Invalid shape type !";
+            std::cout << "error: " << _errorMessage << " type: " << (int)shptype << std::endl;
             return false;
         }
 

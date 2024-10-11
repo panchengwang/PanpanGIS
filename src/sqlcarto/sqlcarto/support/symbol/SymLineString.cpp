@@ -84,6 +84,7 @@ char* SymLineString::deserialize(const char* buf) {
     size_t numPoints = _points.size();
     memcpy((void*)&numPoints, p, sizeof(numPoints));
     p += sizeof(numPoints);
+    _points.clear();
     for (size_t i = 0; i < numPoints; i++) {
         SymPoint pt;
         p = pt.deserialize(p);
