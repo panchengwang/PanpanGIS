@@ -19,8 +19,174 @@
 \end{minted}
 
 
+\chapter{Ubuntu之PostGIS/PostgreSQL编译安装}
 
-\chapter{Windows WSL(Ubuntu)子系统}
+\section{系统版本}
+Ubuntu 2024.04 LTS
+
+\section{安装编译工具链}
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
+	# 更新ubuntu源
+	sudo apt update
+	# 安装基础编译工具gcc
+	sudo apt install build-essential 
+	# cmake
+	sudo apt install cmake 
+	# git
+	sudo apt install git
+	# curl 
+	sudo apt install curl 
+	# ninja
+	sudo apt install ninja generate-ninja
+\end{lstlisting}
+
+
+\section{安装支持库}
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
+	# libreadline用来记录psql中的输入命令
+	sudo apt install libreadline-dev 
+	# ossp uuid 生成唯一id
+	sudo apt install libossp-uuid-dev
+	# postgis使用sfcgal进行3D分析，sfcgal是计算机图形库cgal的c语言wrapper
+	sudo apt install libsfcgal-dev
+	# 地图投影变换
+	sudo apt install libproj-dev
+	# 地理栅格数据格式geotiff
+	sudo apt install libgeotiff-dev
+	# 
+	sudo apt install libfreetype-dev
+	# cairo二维图形绘制库
+	# 我本来是想使用skia图形库来绘制地图的，但是skia的代码下载和编译需要连接境外服务器，而现在的网络环境一言难尽...。所以就只能换成cairo图形库来进行地图的绘制咯。
+	sudo apt install libcairo-dev
+	# 安装curl开发库，如果下面一行命令运行错误，可能是找不到软件包名
+	# 请改用sudo apt install libcurl4-openssl-dev
+	sudo apt install libcurl-dev
+	sudo apt install libicu-dev
+	sudo apt install libxml2-dev
+	sudo apt install protobuf-c-compiler
+	sudo apt install libprotobuf-c-dev
+	
+\end{lstlisting}
+
+上面的所有支持库可以放在一条命令中：
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
+	sudo apt install libreadline-dev libossp-uuid-dev libsfcgal-dev libproj-dev libgeotiff-dev libcairo-dev libcurl-dev libicu-dev libxml2-dev protobuf-c-compiler libprotobuf-c-dev
+	
+\end{lstlisting}
+
+\section{设置环境变量}
+编辑/etc/profile，在最末尾添加下列内容：
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
+	export PGSQL=/usr/local/pgsql
+	export PATH=$PGSQL/bin:$PGSQL/lib:$PATH
+	export LD_LIBRARY_PATH=$PGSQL/lib:$LD_LIBRARY_PATH
+	export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PGSQL/lib/pkgconfig
+\end{lstlisting}
+注销，重新登录。
+
+\section{安装postgresql}
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
+	cd ~/software/sdb
+	
+	# 下载源代码
+	# 注意curl命令使用的参数，此处模拟chrome来下载文件
+	# 如直接使用：
+	# curl 'https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2' --output postgresql-16.4.tar.bz2
+	# 则不能成功下载源码文件
+	# 可以根据需要改变版本号来下载对应的版本的postgresql源码
+	# curl 'https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2' \
+	#	-H 'Referer: https://www.postgresql.org/' \
+	#	-H 'Upgrade-Insecure-Requests: 1' \
+	#	-H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
+	#	-H 'sec-ch-ua: "Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"' \
+	#	-H 'sec-ch-ua-mobile: ?0' \
+	#	-H 'sec-ch-ua-platform: "Windows"' \
+	#	--output postgresql-16.4.tar.bz2
+	# 使用curl的-LJO 参数下载文件
+	curl -LJO 'https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2'
+	
+	tar -jvxf postgresql-16.4.tar.bz2
+	cd postgresql-16.4
+	# 由于uuid没有安装在/usr目录，而是安装在$PGSQL目录下，因此在配置时
+	# 应该指定LDFLAGS和CPPFLAGS环境变量，否则会提示找不到uuid库
+	./configure --prefix=$PGSQL --with-ossp-uuid 
+	make -j 8
+	sudo make install
+	
+	# 编译postgresql的uuid扩展
+	cd contrib/uuid-ossp
+	make
+	sudo make install
+	
+	# 编译postgresql的dblink扩展
+	cd ../dblink
+	make 
+	sudo make install
+	
+	# 编译postgresql的file_fdw扩展
+	cd ../file_fdw
+	make
+	sudo make install
+\end{lstlisting}
+
+
+\section{安装geos}
+geos提供空间分析功能。
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
+	cd ~/software/sdb
+	curl -LJO https://download.osgeo.org/geos/geos-3.12.2.tar.bz2
+	tar -jvxf geos-3.12.2.tar.bz2
+	cd geos-3.12.2
+	mkdir build
+	cd build
+	cmake -DCMAKE_INSTALL_PREFIX=$PGSQL -DCMAKE_BUILD_TYPE=Release ..
+	# 某些geos版本已经不能使用make构建工具，只能使用下列的cmake命令进行构建和安装
+	cmake --build . -- -j 8
+	# 安装
+	sudo cmake --build . --target install 
+	
+\end{lstlisting}
+
+
+\section{安装gdal}
+gdal提供地理空间数据矢量、栅格文件读取api。如需使用postgis的raster扩展功能，必须安装gdal。
+\begin{lstlisting}[
+	backgroundcolor = \color{codebackground}, language=bash, 
+	escapeinside={(@*}{*@)}
+	]
+	cd ~/software/sdb
+	
+	# 下载源代码
+	# 注意curl命令使用的参数
+	curl -LJO https://download.osgeo.org/gdal/3.9.2/gdal-3.9.2.tar.gz
+	tar -zvxf gdal-3.9.2.tar.gz
+	cd gdal-3.9.2
+	mkdir build
+	cd build
+	cmake -DCMAKE_INSTALL_PREFIX=$PGSQL -DCMAKE_BUILD_TYPE=Release ..
+	# 编译
+	cmake --build . -- -j 8
+	# 安装
+	sudo cmake --build . --target install 
+\end{lstlisting}
+
+
+\section{安装postgis}
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
+	cd ~/software/sdb
+	curl -LJO https://download.osgeo.org/postgis/source/postgis-3.4.2.tar.gz
+	tar -zvxf postgis-3.4.2.tar.gz
+	cd postgis-3.4.2
+	./configure --prefix=$PGSQL 
+	make -j 8
+	sudo make install
+\end{lstlisting}
+
+
+
+\chapter{Windows WSL(Ubuntu)子系统安装PostGIS/PostgreSQL}
+
+Window操作系统可以先通过WSL子系统安装Ubuntu。安装好Ubuntu系统后，即可参见上一章编译安装PostGIS/PostgreSQL。
 
 \section{WSL安装}
 
@@ -61,6 +227,27 @@ wsl --import Ubuntu-20.04 D:\wsl\ubuntu D:\ubuntu20.04.tar --version 2
 \begin{lstlisting}[language=bash]
 ubuntu2004 config --default-user Username
 \end{lstlisting}
+
+\subsection{cmake权限}
+在ubuntu迁移到非c盘后，使用cmake时会遇到权限问题：
+\begin{lstlisting}[language=bash]
+CMake Error at /usr/share/cmake-3.22/Modules/CMakeDetermineSystem.cmake:193 (configure_file):
+Operation not permitted
+Call Stack (most recent call first):
+CMakeLists.txt:3 (project)
+\end{lstlisting}
+
+可以通过修改wsl系统的配置文件来解决此问题，在/etc/wsl.conf最后增加下面内容：
+\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
+......
+
+[automount]
+enabled = true
+options = "metadata"
+
+\end{lstlisting}
+
+重新启动wsl后此问题可得到解决。
 
 
 \chapter{Windows msys2之PostGIS/PostgreSQL编译安装}
@@ -846,167 +1033,6 @@ rm -rf $PACK_DIR_PARENT
 
 
 
-\chapter{Ubuntu之PostGIS/PostgreSQL编译安装}
-
-\section{系统版本}
-Ubuntu 2024.04 LTS
-
-\section{安装编译工具链}
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
-	# 更新ubuntu源
-	sudo apt update
-	# 安装基础编译工具gcc
-	sudo apt install build-essential 
-	# cmake
-	sudo apt install cmake 
-	# git
-	sudo apt install git
-	# curl 
-	sudo apt install curl 
-	# ninja
-	sudo apt install ninja generate-ninja
-\end{lstlisting}
-
-
-\section{安装支持库}
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
-	# libreadline用来记录psql中的输入命令
-	sudo apt install libreadline-dev 
-	# ossp uuid 生成唯一id
-	sudo apt install libossp-uuid-dev
-	# postgis使用sfcgal进行3D分析，sfcgal是计算机图形库cgal的c语言wrapper
-	sudo apt install libsfcgal-dev
-	# 地图投影变换
-	sudo apt install libproj-dev
-	# 地理栅格数据格式geotiff
-	sudo apt install libgeotiff-dev
-	# 
-	sudo apt install libfreetype-dev
-	# cairo二维图形绘制库
-	# 我本来是想使用skia图形库来绘制地图的，但是skia的代码下载和编译需要连接境外服务器，而现在的网络环境一言难尽...。所以就只能换成cairo图形库来进行地图的绘制咯。
-	sudo apt install libcairo-dev
-	
-	sudo apt install libcurl-dev
-	sudo apt install libicu-dev
-	sudo apt install libxml2-dev
-	sudo apt install protobuf-c-compiler
-	sudo apt install libprotobuf-c-dev
-
-\end{lstlisting}
-
-上面的所有支持库可以放在一条命令中：
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
-	sudo apt install libreadline-dev libossp-uuid-dev libsfcgal-dev libproj-dev libgeotiff-dev libcairo-dev libcurl-dev libicu-dev libxml2-dev protobuf-c-compiler libprotobuf-c-dev
-	
-\end{lstlisting}
-
-\section{设置环境变量}
-编辑/etc/profile，在最末尾添加下列内容：
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash]
-	export PGSQL=/usr/local/pgsql
-	export PATH=$PGSQL/bin:$PGSQL/lib:$PATH
-	export LD_LIBRARY_PATH=$PGSQL/lib:$LD_LIBRARY_PATH
-	export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$PGSQL/lib/pkgconfig
-\end{lstlisting}
-注销，重新登录。
-
-\section{安装postgresql}
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
-	cd ~/software/sdb
-	
-	# 下载源代码
-	# 注意curl命令使用的参数，此处模拟chrome来下载文件
-	# 如直接使用：
-	# curl 'https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2' --output postgresql-16.4.tar.bz2
-	# 则不能成功下载源码文件
-	# 可以根据需要改变版本号来下载对应的版本的postgresql源码
-	# curl 'https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2' \
-	#	-H 'Referer: https://www.postgresql.org/' \
-	#	-H 'Upgrade-Insecure-Requests: 1' \
-	#	-H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
-	#	-H 'sec-ch-ua: "Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"' \
-	#	-H 'sec-ch-ua-mobile: ?0' \
-	#	-H 'sec-ch-ua-platform: "Windows"' \
-	#	--output postgresql-16.4.tar.bz2
-	# 使用curl的-LJO 参数下载文件
-	curl -LJO 'https://ftp.postgresql.org/pub/source/v16.4/postgresql-16.4.tar.bz2'
-	
-	tar -jvxf postgresql-16.4.tar.bz2
-	cd postgresql-16.4
-	# 由于uuid没有安装在/usr目录，而是安装在$PGSQL目录下，因此在配置时
-	# 应该指定LDFLAGS和CPPFLAGS环境变量，否则会提示找不到uuid库
-	./configure --prefix=$PGSQL --with-ossp-uuid 
-	make -j 8
-	sudo make install
-	
-	# 编译postgresql的uuid扩展
-	cd contrib/uuid-ossp
-	make
-	sudo make install
-	
-	# 编译postgresql的dblink扩展
-	cd ../dblink
-	make 
-	sudo make install
-	
-	# 编译postgresql的file_fdw扩展
-	cd ../file_fdw
-	make
-	sudo make install
-\end{lstlisting}
-
-
-\section{安装geos}
-geos提供空间分析功能。
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
-	cd ~/software/sdb
-	curl -LJO https://download.osgeo.org/geos/geos-3.12.2.tar.bz2
-	tar -jvxf geos-3.12.2.tar.bz2
-	cd geos-3.12.2
-	mkdir build
-	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=$PGSQL -DCMAKE_BUILD_TYPE=Release ..
-	# 某些geos版本已经不能使用make构建工具，只能使用下列的cmake命令进行构建和安装
-	cmake --build . -- -j 8
-	# 安装
-	sudo cmake --build . --target install 
-	
-\end{lstlisting}
-
-
-\section{安装gdal}
-gdal提供地理空间数据矢量、栅格文件读取api。如需使用postgis的raster扩展功能，必须安装gdal。
-\begin{lstlisting}[
-	backgroundcolor = \color{codebackground}, language=bash, 
-	escapeinside={(@*}{*@)}
-	]
-	cd ~/software/sdb
-	
-	# 下载源代码
-	# 注意curl命令使用的参数
-	curl -LJO https://download.osgeo.org/gdal/3.9.2/gdal-3.9.2.tar.gz
-	tar -zvxf gdal-3.9.2.tar.gz
-	cd gdal-3.9.2
-	mkdir build
-	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=$PGSQL -DCMAKE_BUILD_TYPE=Release ..
-	# 编译
-	cmake --build . -- -j 8
-	# 安装
-	sudo cmake --build . --target install 
-\end{lstlisting}
-
-
-\section{安装postgis}
-\begin{lstlisting}[backgroundcolor = \color{codebackground}, language=bash, escapeinside={(@*}{*@)}]
-	cd ~/software/sdb
-	curl -LJO https://download.osgeo.org/postgis/source/postgis-3.4.2.tar.gz
-	tar -zvxf postgis-3.4.2.tar.gz
-	cd postgis-3.4.2
-	./configure --prefix=$PGSQL 
-	make -j 8
-	sudo make install
-\end{lstlisting}
 
 
 

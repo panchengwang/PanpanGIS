@@ -19,18 +19,28 @@ Datum SYMBOL_in(PG_FUNCTION_ARGS)
 	char* buf;
 	size_t len;
 
-	if (PG_NARGS() != 1) {
-		ereport(ERROR, (errmsg("parse symbol error - no input ")));
+
+	if (PG_NARGS() <= 2) {
+		elog(ERROR, "parse symbol error - no input ");
 		PG_RETURN_NULL();
 	}
 
 	if (str[0] == '{') {
-		hSym = sym_form_json_string(str);
+		hSym = sym_from_json_string(str);
 		if (!hSym) {
-			ereport(ERROR, (errmsg("parse error - invalid json format")));
+			elog(ERROR, "Invalid symbol json string:");
 			PG_RETURN_NULL();
 		}
-
+		buf = sym_serialize(hSym, &len);
+		sym = (SYMSERIALIZED*)palloc(VARHDRSZ + len);
+		SET_VARSIZE(sym, len + VARHDRSZ);
+		memcpy((void*)VARDATA(sym), buf, len);
+		free(buf);
+		sym_destroy(hSym);
+		PG_RETURN_POINTER(sym);
+	}
+	else {
+		elog(ERROR, "Invalid symbol string");
 	}
 
 	PG_RETURN_POINTER(NULL);
@@ -40,9 +50,37 @@ Datum SYMBOL_in(PG_FUNCTION_ARGS)
 PG_FUNCTION_INFO_V1(SYMBOL_out);
 Datum SYMBOL_out(PG_FUNCTION_ARGS)
 {
-	// GSERIALIZED *geom = PG_GETARG_GSERIALIZED_P(0);
-	// LWGEOM *lwgeom = lwgeom_from_gserialized(geom);
-	// PG_RETURN_CSTRING(lwgeom_to_hexwkb_buffer(lwgeom, WKB_EXTENDED));
+	SYMSERIALIZED* sym = PG_GETARG_SYMSERIALIZED_P(0);
+	SYMBOL_H hSym = NULL;
+	char* json_string = NULL;
+	char* buf;
+	size_t len;
 
-	PG_RETURN_POINTER(NULL);
+	if (PG_ARGISNULL(0)) {
+		PG_RETURN_NULL();
+	}
+
+	if (!(hSym = sym_deserialize(VARDATA(sym)))) {
+		elog(ERROR, "deserialize symbol error");
+		PG_RETURN_NULL();
+	}
+
+	buf = sym_to_json_string(hSym, &len);
+	json_string = (char*)palloc(len + 1);
+	memcpy(json_string, buf, len);
+	json_string[len] = '\0';
+	free(buf);
+
+	PG_RETURN_CSTRING(json_string);
 }
+
+
+// GSERIALIZED* geometry_serialize(LWGEOM *lwgeom)
+// {
+// 	size_t ret_size;
+// 	GSERIALIZED *g;
+
+// 	g = gserialized_from_lwgeom(lwgeom, &ret_size);
+// 	SET_VARSIZE(g, ret_size);
+// 	return g;
+// }

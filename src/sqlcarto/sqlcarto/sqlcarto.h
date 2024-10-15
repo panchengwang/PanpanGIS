@@ -1,7 +1,7 @@
 /**********************************************************************
  *
- * SQLCarto - 
- * 
+ * SQLCarto -
+ *
  **********************************************************************
  *
  * Copyright 2012-2013 pcwang <sqlcarto@163.com>
@@ -27,4 +27,14 @@
 #include "utils/array.h"
 #include "utils/float.h"
 #include "utils/builtins.h"
+#include <signal.h>
+
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
 

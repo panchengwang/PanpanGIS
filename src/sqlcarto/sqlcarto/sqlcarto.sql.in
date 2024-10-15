@@ -265,25 +265,23 @@ LANGUAGE C IMMUTABLE STRICT;
 
 
 
-create or replace function sc_canvas_create() 
-returns text 
-AS 'MODULE_PATHNAME','sc_canvas_create'
-LANGUAGE C IMMUTABLE STRICT;
+-- Availability: 0.1.0
+CREATE OR REPLACE FUNCTION sc_symbol_in(cstring)
+	RETURNS symbol
+	AS 'MODULE_PATHNAME','SYMBOL_in'
+	LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE;
 
+-- Availability: 0.1.0
+CREATE OR REPLACE FUNCTION sc_symbol_out(symbol)
+	RETURNS cstring
+	AS 'MODULE_PATHNAME','SYMBOL_out'
+	LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE;
 
-create or replace function sc_canvas_destroy(text) 
-returns text 
-AS 'MODULE_PATHNAME','sc_canvas_destroy'
-LANGUAGE C IMMUTABLE STRICT;
-
-
-create or replace function sc_canvas_draw_geometry(text,geometry) 
-returns text 
-AS 'MODULE_PATHNAME','sc_canvas_draw_geometry'
-LANGUAGE C IMMUTABLE STRICT;
-
-
-create or replace function sc_canvas_save_to_file(text, text, text) 
-returns text 
-AS 'MODULE_PATHNAME','sc_canvas_save_to_file'
-LANGUAGE C IMMUTABLE STRICT;
+-- Availability: 0.1.0
+CREATE TYPE symbol (
+	internallength = variable,
+	input = sc_symbol_in,
+	output = sc_symbol_out,
+	alignment = double,
+	storage = main
+);

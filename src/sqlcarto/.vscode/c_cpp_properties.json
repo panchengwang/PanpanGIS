@@ -5,7 +5,9 @@
             "includePath": [
                 "${default}",
                 "D:/msys64/ucrt64/include/c++/14.1.0/x86_64-w64-mingw32",
-                "${workspaceFolder}/sqlcarto/support"
+                "${workspaceFolder}/sqlcarto/support",
+                "${workspaceFolder}/sqlcarto/support/symbol/cpp",
+                "${workspaceFolder}/sqlcarto/support/symbol/c_wrapper"
             ],
             "defines": [
                 "_DEBUG",

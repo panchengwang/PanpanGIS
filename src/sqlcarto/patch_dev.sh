@@ -2,8 +2,8 @@
 
 # 以下内容为首次安装时使用，仅仅调试sqlcarto时，注释掉
 #######################################################################################
-sed -i 's/^[ \t]*SUBDIRS[ \t]*=[ \t]*postgis[ \t]*$/SUBDIRS = postgis postgis_sqlcarto/g' extensions/Makefile.in 
-sed -i 's/^[ \t]*SUBDIRS[ \t]*=.*loader[ \t]*$/SUBDIRS = liblwgeom @RASTER@ loader sqlcarto/g' GNUmakefile.in 
+# sed -i 's/^[ \t]*SUBDIRS[ \t]*=[ \t]*postgis[ \t]*$/SUBDIRS = postgis postgis_sqlcarto/g' extensions/Makefile.in 
+# sed -i 's/^[ \t]*SUBDIRS[ \t]*=.*loader[ \t]*$/SUBDIRS = liblwgeom @RASTER@ loader sqlcarto/g' GNUmakefile.in 
 
 os=$(uname | cut -c 1-5)
 

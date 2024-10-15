@@ -1,0 +1,23 @@
+#ifndef __SYM_ARC_H
+#define __SYM_ARC_H
+
+#include "SymShapeWithStroke.h"
+#include "SymPoint.h"
+
+class DLL_EXPORT SymArc : public SymShapeWithStroke
+{
+public:
+    SymArc();
+    virtual bool fromJsonObject(json_object* obj);
+    virtual json_object* toJsonObject();
+    size_t memorySize();
+    char* serialize(const char* buf);
+    char* deserialize(const char* buf);
+    virtual SymRect getMBR(double xscale, double yscale);
+protected:
+    SymPoint _center;
+    double _xradius, _yradius;
+    double _startAngle, _endAngle;
+};
+
+#endif
