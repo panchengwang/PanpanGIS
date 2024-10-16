@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 #include <string.h>
-
+#include "SymRect.h"
 
 class DLL_EXPORT SymPoint
 {
@@ -27,6 +27,8 @@ public:
 
     double x() const;
     double y() const;
+    SymRect getMBR() const;
+
 protected:
     double _x, _y;
     std::string _errorMessage;

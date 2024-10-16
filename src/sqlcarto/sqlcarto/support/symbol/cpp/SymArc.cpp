@@ -83,6 +83,11 @@ char* SymArc::deserialize(const char* buf) {
     return p;
 }
 
-SymRect SymArc::getMBR(double xscale, double yscale) {
-    _center.x() + _xradius * cos(M_PI * _startAngle / 180.0);
+SymRect SymArc::getMBR() const {
+    double x1 = (_center.x() - _xradius);
+    double y1 = (_center.y() - _yradius);
+    double x2 = (_center.x() + _xradius);
+    double y2 = (_center.y() + _yradius);
+
+    return SymRect(x1, y1, x2, y2);
 }

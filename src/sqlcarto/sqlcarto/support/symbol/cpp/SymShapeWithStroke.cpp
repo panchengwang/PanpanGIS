@@ -60,3 +60,13 @@ char* SymShapeWithStroke::deserialize(const char* buf) {
     p = _stroke->deserialize(p);
     return p;
 }
+
+
+double SymShapeWithStroke::getStrokeWidth() const {
+    return _stroke->getWidth();
+}
+
+
+SymRect SymShapeWithStroke::getMBR() const {
+    return SymRect();
+}

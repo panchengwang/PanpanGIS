@@ -72,3 +72,12 @@ char* SymEllipse::deserialize(const char* buf) {
     p += sizeof(_yradius);
     return p;
 }
+
+SymRect SymEllipse::getMBR() const {
+    double x1 = (_center.x() - _xradius);
+    double y1 = (_center.y() - _yradius);
+    double x2 = (_center.x() + _xradius);
+    double y2 = (_center.y() + _yradius);
+
+    return SymRect(x1, y1, x2, y2);
+}

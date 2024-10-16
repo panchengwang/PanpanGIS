@@ -1,6 +1,7 @@
 #include "SymRect.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 SymRect::SymRect() {
     _minx = _maxx = 0.0f;
@@ -36,3 +37,30 @@ std::string SymRect::toString() const {
     sprintf(buf, "minx: %lf, miny: %lf, maxx: %lf, maxy: %lf", _minx, _miny, _maxx, _maxy);
     return buf;
 }
+
+
+
+SymRect& SymRect::scale(double xscale, double yscale) {
+    _minx *= xscale;
+    _miny *= yscale;
+    _maxx *= xscale;
+    _maxy *= yscale;
+    return *this;
+}
+
+SymRect SymRect::ensureSymmetry() const {
+    double maxx = std::max(fabs(_minx), fabs(_maxx));
+    double maxy = std::max(fabs(_miny), fabs(_maxy));
+    return SymRect(-maxx, -maxy, maxx, maxy);
+}
+
+
+double SymRect::getWidth() const {
+    return _maxx - _minx;
+}
+
+
+double SymRect::getHeight() const {
+    return _maxy - _miny;
+}
+

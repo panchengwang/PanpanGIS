@@ -73,3 +73,13 @@ char* SymRegularPolygon::deserialize(const char* buf) {
     p += sizeof(_numEdges);
     return p;
 }
+
+
+SymRect SymRegularPolygon::getMBR() const {
+    double x1 = (_center.x() - _radius);
+    double y1 = (_center.y() - _radius);
+    double x2 = (_center.x() + _radius);
+    double y2 = (_center.y() + _radius);
+
+    return SymRect(x1, y1, x2, y2);
+}

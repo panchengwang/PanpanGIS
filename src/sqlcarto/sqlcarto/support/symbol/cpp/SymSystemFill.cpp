@@ -96,3 +96,8 @@ char* SymSystemFill::deserialize(const char* buf) {
 
     return p;
 }
+
+
+SymRect SymSystemFill::getMBR() const {
+    return SymRect(0, 0, 0, 0);
+}

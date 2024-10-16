@@ -51,7 +51,10 @@ char* SymShape::deserialize(const char* buf) {
 }
 
 
-SymRect SymShape::getMBR(double xscale, double yscale) {
-    return SymRect();
-}
+// SymRect SymShape::getMBR() {
+//     return SymRect();
+// }
 
+double SymShape::getStrokeWidth()  const {
+    return 0.0f;
+}

@@ -29,7 +29,9 @@ public:
     char* serialize(size_t& len);
     bool deserialize(const char* buf);
 
-    SymRect getMBR();             // 计算绘制范围
+    SymRect getMBR() const;             // 计算绘制范围
+
+    unsigned char* toImage(const char* format, double dotsPerMM, size_t& len);
 protected:
     bool fromJsonObject(json_object* obj);
     json_object* toJsonObject();

@@ -14,6 +14,7 @@ public:
     size_t memorySize();
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
+    SymRect getMBR() const;
 protected:
     std::vector<SymPoint> _points;
 };

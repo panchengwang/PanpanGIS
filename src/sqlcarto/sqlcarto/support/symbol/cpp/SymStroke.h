@@ -26,6 +26,7 @@ public:
     size_t memorySize();
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
+    double getWidth() const;
 protected:
     SymColor    _color;
     double _width;

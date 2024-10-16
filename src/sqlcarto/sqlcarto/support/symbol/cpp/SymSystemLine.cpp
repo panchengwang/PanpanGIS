@@ -45,3 +45,8 @@ char* SymSystemLine::deserialize(const char* buf) {
     p = SymShapeWithStroke::deserialize(p);
     return p;
 }
+
+
+SymRect SymSystemLine::getMBR() const {
+    return SymRect(-1, 0, 1, 0);
+}

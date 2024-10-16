@@ -15,6 +15,11 @@ public:
     void extend(const SymRect& rect);
 
     std::string toString() const;
+
+    SymRect& scale(double xscale, double yscale);
+    SymRect ensureSymmetry() const;
+    double getWidth() const;
+    double getHeight() const;
 protected:
     double _minx, _miny, _maxx, _maxy;
 };

@@ -174,3 +174,8 @@ char* SymStroke::deserialize(const char* buf) {
     p += sizeof(_miter);
     return p;
 }
+
+
+double SymStroke::getWidth() const {
+    return _width;
+}

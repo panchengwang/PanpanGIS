@@ -37,8 +37,8 @@ public:
     virtual char* serialize(const char* buf);
     virtual char* deserialize(const char* buf);
 
-    virtual SymRect getMBR(double xscale, double yscale);
-
+    virtual SymRect getMBR() const = 0;
+    virtual double getStrokeWidth()  const;
 protected:
     uint8_t  _type;
     std::string _errorMessage;

@@ -104,3 +104,12 @@ char* SymPolygon::deserialize(const char* buf) {
     }
     return p;
 }
+
+
+SymRect SymPolygon::getMBR() const {
+    SymRect rect = _points[0].getMBR();
+    for (size_t i = 1; i < _points.size(); i++) {
+        rect.extend(_points[i].getMBR());
+    }
+    return rect;
+}

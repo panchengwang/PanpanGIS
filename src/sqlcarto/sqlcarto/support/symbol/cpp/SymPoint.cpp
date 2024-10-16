@@ -95,3 +95,8 @@ double SymPoint::x() const {
 double SymPoint::y() const {
     return _y;
 }
+
+
+SymRect SymPoint::getMBR() const {
+    return SymRect(_x, _y, _x, _y);
+}

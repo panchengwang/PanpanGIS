@@ -16,6 +16,9 @@ public:
 
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
+
+    double getStrokeWidth() const;
+    virtual SymRect getMBR() const;
 protected:
     SymStroke* _stroke;
 };
