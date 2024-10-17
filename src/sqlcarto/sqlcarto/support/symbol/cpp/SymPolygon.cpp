@@ -1,5 +1,7 @@
 #include "SymPolygon.h"
 #include "jsonutils.h"
+#include "SymCanvas.h"
+
 
 SymPolygon::SymPolygon()
 {
@@ -112,4 +114,24 @@ SymRect SymPolygon::getMBR() const {
         rect.extend(_points[i].getMBR());
     }
     return rect;
+}
+
+
+
+void SymPolygon::draw(SymCanvas* canvas) {
+    cairo_t* cairo = canvas->getCairoContext();
+
+    cairo_save(cairo);
+    cairo_new_path(cairo);
+    cairo_move_to(cairo, _points[0].x(), _points[0].y());
+    for (size_t i = 1; i < _points.size();i++) {
+        cairo_line_to(cairo, _points[i].x(), _points[i].y());
+    }
+    cairo_close_path(cairo);
+    cairo_restore(cairo);
+
+    canvas->setFill(_fill);
+    cairo_fill_preserve(cairo);
+    canvas->setStroke(_stroke);
+    cairo_stroke(cairo);
 }

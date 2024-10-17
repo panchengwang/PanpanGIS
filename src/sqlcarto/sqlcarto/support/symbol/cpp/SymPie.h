@@ -16,6 +16,7 @@ public:
     char* deserialize(const char* buf);
 
     SymRect getMBR() const;
+    virtual void draw(SymCanvas* canvas);
 protected:
     SymPoint _center;
     double _xradius, _yradius;

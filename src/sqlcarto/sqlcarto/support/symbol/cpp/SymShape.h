@@ -9,6 +9,7 @@
 #include <string.h>
 #include "SymRect.h"
 
+#include <math.h>
 
 #define SYM_SHAPE_SYSTEM_LINE       1
 #define SYM_SHAPE_SYSTEM_FILL       2
@@ -23,7 +24,7 @@
 #define SYM_SHAPE_REGULAR_POLYGON   11
 
 
-
+class SymCanvas;
 
 class DLL_EXPORT SymShape
 {
@@ -39,6 +40,7 @@ public:
 
     virtual SymRect getMBR() const = 0;
     virtual double getStrokeWidth()  const;
+    virtual void draw(SymCanvas* canvas);
 protected:
     uint8_t  _type;
     std::string _errorMessage;

@@ -49,3 +49,8 @@ char* SymFillSolid::deserialize(const char* buf) {
     p = _color.deserialize(p);
     return p;
 }
+
+
+const SymColor& SymFillSolid::getColor() const {
+    return _color;
+}

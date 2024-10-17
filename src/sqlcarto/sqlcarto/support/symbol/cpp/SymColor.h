@@ -23,6 +23,12 @@ public:
     size_t memorySize();
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
+
+
+    uint8_t getAlpha() const;
+    uint8_t getRed() const;
+    uint8_t getGreen() const;
+    uint8_t getBlue() const;
 protected:
     uint8_t _alpha, _red, _green, _blue;
     std::string _errorMessage;

@@ -1,6 +1,8 @@
 #include "SymShape.h"
 #include <string.h>
 #include <iostream>
+#include <cairo.h>
+#include "SymCanvas.h"
 // bool SymShape::from_json_object(json_object* obj){
 //     json_object *strokeobj = json_object_object_get(obj,"stroke");
 //     if(!strokeobj){
@@ -57,4 +59,12 @@ char* SymShape::deserialize(const char* buf) {
 
 double SymShape::getStrokeWidth()  const {
     return 0.0f;
+}
+
+
+
+void SymShape::draw(SymCanvas* canvas) {
+    cairo_save(canvas->_cairo);
+    std::cerr << " shape draw " << std::endl;
+    cairo_restore(canvas->_cairo);
 }

@@ -28,3 +28,22 @@ json_object* SymChord::toJsonObject()
     JSON_ADD_STRING(obj, "type", "CHORD");
     return obj;
 }
+
+
+void SymChord::draw(SymCanvas* canvas) {
+    cairo_t* cairo = canvas->getCairoContext();
+
+    cairo_save(cairo);
+    cairo_translate(cairo, _center.x(), _center.y());
+    cairo_scale(cairo, 1, _yradius / _xradius);
+    cairo_new_path(cairo);
+    cairo_arc(cairo, 0, 0, _xradius, _startAngle / 180.0 * M_PI, _endAngle / 180.0 * M_PI);
+    cairo_close_path(cairo);
+    cairo_restore(cairo);
+
+    canvas->setFill(_fill);
+    cairo_fill_preserve(cairo);
+    canvas->setStroke(_stroke);
+    cairo_stroke(cairo);
+}
+

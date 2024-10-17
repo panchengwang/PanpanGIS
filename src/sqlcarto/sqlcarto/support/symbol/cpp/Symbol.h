@@ -9,9 +9,12 @@
 #include "SymShape.h"
 #include "SymRect.h"
 
+class SymCanvas;
 
 class DLL_EXPORT Symbol
 {
+
+    friend class SymCanvas;
 public:
     Symbol();
     virtual ~Symbol();
@@ -32,6 +35,8 @@ public:
     SymRect getMBR() const;             // 计算绘制范围
 
     unsigned char* toImage(const char* format, double dotsPerMM, size_t& len);
+    const std::vector<SymShape*>& getShapes() const;
+
 protected:
     bool fromJsonObject(json_object* obj);
     json_object* toJsonObject();

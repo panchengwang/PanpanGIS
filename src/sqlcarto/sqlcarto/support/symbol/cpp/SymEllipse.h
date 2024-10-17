@@ -3,6 +3,8 @@
 
 #include "SymShapeWithStrokeAndFill.h"
 #include "SymPoint.h"
+#include "SymCanvas.h"
+#include "SymRect.h"
 
 class DLL_EXPORT SymEllipse : public SymShapeWithStrokeAndFill
 {
@@ -15,6 +17,7 @@ public:
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
     SymRect getMBR() const;
+    virtual void draw(SymCanvas* canvas);
 protected:
     SymPoint _center;
     double _xradius;

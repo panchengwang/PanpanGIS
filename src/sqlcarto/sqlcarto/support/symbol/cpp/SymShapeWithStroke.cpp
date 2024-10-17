@@ -1,5 +1,5 @@
 #include "SymShapeWithStroke.h"
-
+#include <iostream>
 #include "jsonutils.h"
 
 SymShapeWithStroke::SymShapeWithStroke() {
@@ -69,4 +69,9 @@ double SymShapeWithStroke::getStrokeWidth() const {
 
 SymRect SymShapeWithStroke::getMBR() const {
     return SymRect();
+}
+
+
+void SymShapeWithStroke::draw(SymCanvas* canvas) {
+    std::cerr << "SymShapeWithStroke::draw(SymCanvas* canvas)" << std::endl;
 }

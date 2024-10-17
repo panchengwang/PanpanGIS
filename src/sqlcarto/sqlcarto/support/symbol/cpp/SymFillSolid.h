@@ -14,6 +14,8 @@ public:
     size_t memorySize();
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
+
+    const SymColor& getColor() const;
 protected:
     SymColor _color;
 };

@@ -18,6 +18,7 @@ public:
     char* deserialize(const char* buf);
 
     SymRect getMBR() const;
+    virtual void draw(SymCanvas* canvas);
 protected:
     SymFill* _fill;
 };

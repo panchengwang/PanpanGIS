@@ -1,5 +1,8 @@
 #include "SymCircle.h"
 #include "jsonutils.h"
+#include <cairo.h>
+#include "SymCanvas.h"
+
 
 SymCircle::SymCircle()
 {
@@ -77,4 +80,19 @@ SymRect SymCircle::getMBR() const {
     double y2 = (_center.y() + _radius);
 
     return SymRect(x1, y1, x2, y2);
+}
+
+
+
+void SymCircle::draw(SymCanvas* canvas) {
+    cairo_t* cairo = canvas->getCairoContext();
+    cairo_save(cairo);
+    cairo_translate(cairo, _center.x(), _center.y());
+    cairo_arc(cairo, 0, 0, _radius, 0, 2 * M_PI);
+    cairo_restore(cairo);
+
+    canvas->setStroke(_stroke);
+    cairo_stroke_preserve(cairo);
+    canvas->setFill(_fill);
+    cairo_fill(cairo);
 }

@@ -82,3 +82,18 @@ char* SymColor::deserialize(const char* buf) {
     p += sizeof(_blue);
     return p;
 }
+
+
+
+uint8_t SymColor::getAlpha() const {
+    return _alpha;
+}
+uint8_t SymColor::getRed() const {
+    return _red;
+}
+uint8_t SymColor::getGreen() const {
+    return _green;
+}
+uint8_t SymColor::getBlue() const {
+    return _blue;
+}

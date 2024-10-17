@@ -13,11 +13,12 @@ public:
     SymRect(const SymRect& rect);
 
     void extend(const SymRect& rect);
+    void extend(double len);// 往四周扩展len长度
 
     std::string toString() const;
 
     SymRect& scale(double xscale, double yscale);
-    SymRect ensureSymmetry() const;
+    const SymRect& ensureSymmetry();
     double getWidth() const;
     double getHeight() const;
 protected:

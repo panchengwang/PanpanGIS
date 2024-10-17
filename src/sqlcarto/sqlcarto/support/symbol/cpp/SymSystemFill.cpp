@@ -101,3 +101,15 @@ char* SymSystemFill::deserialize(const char* buf) {
 SymRect SymSystemFill::getMBR() const {
     return SymRect(0, 0, 0, 0);
 }
+
+
+void SymSystemFill::draw(SymCanvas* canvas) {
+    // cairo_t* cairo = canvas->getCairoContext();
+    // cairo_save(cairo);
+    // cairo_translate(cairo, _center.x(), _center.y());
+    // canvas->setStroke(_stroke);
+    // cairo_scale(cairo, 1, _yradius / _xradius);
+    // cairo_arc(cairo, 0, 0, _xradius, _startAngle * M_1_PI, _endAngle * M_1_PI);
+    // cairo_stroke(cairo);
+    // cairo_restore(cairo);
+}

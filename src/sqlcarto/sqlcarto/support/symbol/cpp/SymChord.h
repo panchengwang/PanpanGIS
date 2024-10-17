@@ -12,7 +12,7 @@ public:
     virtual ~SymChord();
     virtual bool fromJsonObject(json_object* obj);
     virtual json_object* toJsonObject();
-
+    virtual void draw(SymCanvas* canvas);
 protected:
 
 };

@@ -91,3 +91,18 @@ SymRect SymArc::getMBR() const {
 
     return SymRect(x1, y1, x2, y2);
 }
+
+
+
+void SymArc::draw(SymCanvas* canvas) {
+    cairo_t* cairo = canvas->getCairoContext();
+
+    cairo_save(cairo);
+    cairo_translate(cairo, _center.x(), _center.y());
+    cairo_scale(cairo, 1, _yradius / _xradius);
+    cairo_arc(cairo, 0, 0, _xradius, _startAngle / 180.0 * M_PI, _endAngle / 180.0 * M_PI);
+    cairo_restore(cairo);
+
+    canvas->setStroke(_stroke);
+    cairo_stroke(cairo);
+}

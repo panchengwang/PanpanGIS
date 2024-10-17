@@ -22,6 +22,7 @@ public:
     virtual size_t memorySize();
     virtual char* serialize(const char* buf);
     virtual char* deserialize(const char* buf);
+    uint8_t getType() const;
 protected:
     uint8_t _type;
     std::string _errorMessage;

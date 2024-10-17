@@ -1,5 +1,6 @@
 #include "SymEllipse.h"
 #include "jsonutils.h"
+#include "SymCanvas.h"
 
 SymEllipse::SymEllipse()
 {
@@ -80,4 +81,21 @@ SymRect SymEllipse::getMBR() const {
     double y2 = (_center.y() + _yradius);
 
     return SymRect(x1, y1, x2, y2);
+}
+
+
+void SymEllipse::draw(SymCanvas* canvas) {
+    cairo_t* cairo = canvas->getCairoContext();
+
+    cairo_save(cairo);
+    cairo_translate(cairo, _center.x(), _center.y());
+    cairo_scale(cairo, 1, _yradius / _xradius);
+    cairo_arc(cairo, 0, 0, _xradius, 0, M_PI * 2.0);
+    cairo_restore(cairo);
+
+    canvas->setFill(_fill);
+    cairo_fill_preserve(cairo);
+    canvas->setStroke(_stroke);
+    cairo_stroke(cairo);
+
 }

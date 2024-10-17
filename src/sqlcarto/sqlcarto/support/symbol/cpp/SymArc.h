@@ -3,6 +3,7 @@
 
 #include "SymShapeWithStroke.h"
 #include "SymPoint.h"
+#include "SymCanvas.h"
 
 class DLL_EXPORT SymArc : public SymShapeWithStroke
 {
@@ -14,6 +15,7 @@ public:
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
     virtual SymRect getMBR() const;
+    virtual void draw(SymCanvas* canvas);
 protected:
     SymPoint _center;
     double _xradius, _yradius;

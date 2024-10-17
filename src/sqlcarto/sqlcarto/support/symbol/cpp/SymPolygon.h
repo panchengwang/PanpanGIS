@@ -15,6 +15,7 @@ public:
     char* serialize(const char* buf);
     char* deserialize(const char* buf);
     SymRect getMBR() const;
+    virtual void draw(SymCanvas* canvas);
 protected:
     std::vector<SymPoint> _points;
 };

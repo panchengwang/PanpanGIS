@@ -16,6 +16,8 @@
 #include <string.h>
 #include <iostream>
 #include <cairo.h>
+#include "SymCanvas.h"
+#include <inttypes.h>
 
 Symbol::Symbol()
 {
@@ -280,10 +282,10 @@ SymRect Symbol::getMBR() const {
     }
 
     SymRect rect = _shapes[0]->getMBR();
-
     for (size_t i = 1; i < _shapes.size(); i++) {
         rect.extend(_shapes[i]->getMBR());
     }
+    rect.extend(SymRect(-1, -1, 1, 1));
     rect.scale(_xscale, _yscale);
     return rect;
 
@@ -311,61 +313,78 @@ _write_image(void* closure,
 
 unsigned char* Symbol::toImage(const char* format, double dotsPerMM, size_t& len) {
     SymRect rect = getMBR();
+    double maxstrokewidth = 0.0f;
+    for (size_t i = 0; i < _shapes.size(); i++) {
+        maxstrokewidth = std::max(maxstrokewidth, _shapes[i]->getStrokeWidth());
+    }
+    rect.extend(2.0 * maxstrokewidth / dotsPerMM);
     rect.ensureSymmetry();
 
-    SymRect imagerect = rect;
-    imagerect.scale(dotsPerMM, dotsPerMM);
+    SymCanvas canvas(rect.getWidth(), rect.getHeight(), "png");
+    canvas.setDotsPerMM(dotsPerMM);
+    canvas.setScale(_xscale, _yscale);
+    unsigned char* buf;
+    // size_t len;
+    canvas.begin();
+    canvas.draw(*this);
+    canvas.end();
+    buf = canvas.imageData(len);
+    return buf;
+    // cairo_surface_t* sf;
+    // cairo_t* cr;
 
-    cairo_surface_t* sf;
-    cairo_t* cr;
+    // sf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(imagerect.getWidth()), ceil(imagerect.getHeight()));
+    // cr = cairo_create(sf);
 
-    sf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(imagerect.getWidth()), ceil(imagerect.getHeight()));
-    cr = cairo_create(sf);
-
-    for (size_t i = 0; i < _shapes.size(); i++) {
-        cairo_save(cr);
-        cairo_translate(cr, imagerect.getWidth() * 0.5, imagerect.getHeight() * 0.5);
-        cairo_scale(cr, dotsPerMM, -dotsPerMM);
-        cairo_set_source_rgba(cr, 0, 0, 0, 1);
-        cairo_set_line_width(cr, 1);
-
-
-        cairo_save(cr);
-        cairo_translate(cr, 2, 2);
-        cairo_set_source_rgba(cr, 1, 0, 0, 1);
-        cairo_arc(cr, 0, 0, 5, 0, M_PI_2);
-        cairo_stroke(cr);
-        cairo_restore(cr);
-
-        cairo_save(cr);
-        cairo_translate(cr, -2, -2);
-        cairo_set_source_rgba(cr, 0, 1, 0, 1);
-        cairo_arc(cr, 0, 0, 5, 0, 360);
-        cairo_stroke_preserve(cr);
-        cairo_set_source_rgba(cr, 0, 1, 0, 0.5);
-        cairo_fill(cr);
-        cairo_restore(cr);
-
-        cairo_arc(cr, 0, 0, 1, 0, 360);
-        cairo_stroke(cr);
-
-        cairo_restore(cr);
-    }
+    // for (size_t i = 0; i < _shapes.size(); i++) {
+    //     cairo_save(cr);
+    //     cairo_translate(cr, imagerect.getWidth() * 0.5, imagerect.getHeight() * 0.5);
+    //     cairo_scale(cr, dotsPerMM, -dotsPerMM);
+    //     cairo_set_source_rgba(cr, 0, 0, 0, 1);
+    //     cairo_set_line_width(cr, 1);
 
 
+    //     cairo_save(cr);
+    //     cairo_translate(cr, 2, 2);
+    //     cairo_set_source_rgba(cr, 1, 0, 0, 1);
+    //     cairo_arc(cr, 0, 0, 5, 0, M_PI_2);
+    //     cairo_stroke(cr);
+    //     cairo_restore(cr);
 
-    // 保存
-    DataBuffer buffer;
-    buffer.data = NULL;
-    buffer.len = 0;
+    //     cairo_save(cr);
+    //     cairo_translate(cr, -2, -2);
+    //     cairo_set_source_rgba(cr, 0, 1, 0, 1);
+    //     cairo_arc(cr, 0, 0, 5, 0, 360);
+    //     cairo_stroke_preserve(cr);
+    //     cairo_set_source_rgba(cr, 0, 1, 0, 0.5);
+    //     cairo_fill(cr);
+    //     cairo_restore(cr);
 
-    cairo_surface_flush(sf);
-    cairo_surface_write_to_png_stream(sf, _write_image, &buffer);
-    cairo_surface_finish(sf);
-    cairo_destroy(cr);
-    cairo_surface_destroy(sf);
+    //     cairo_arc(cr, 0, 0, 1, 0, 360);
+    //     cairo_stroke(cr);
 
-    len = buffer.len;
-    return buffer.data;
+    //     cairo_restore(cr);
+    // }
 
+
+
+    // // 保存
+    // DataBuffer buffer;
+    // buffer.data = NULL;
+    // buffer.len = 0;
+
+    // cairo_surface_flush(sf);
+    // cairo_surface_write_to_png_stream(sf, _write_image, &buffer);
+    // cairo_surface_finish(sf);
+    // cairo_destroy(cr);
+    // cairo_surface_destroy(sf);
+
+    // len = buffer.len;
+    // return buffer.data;
+
+}
+
+
+const std::vector<SymShape*>& Symbol::getShapes()  const {
+    return _shapes;
 }

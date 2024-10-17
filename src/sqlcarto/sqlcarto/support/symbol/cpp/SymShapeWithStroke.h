@@ -3,10 +3,12 @@
 
 #include "SymShape.h"
 
+class SymCanvas;
 
 
 class DLL_EXPORT SymShapeWithStroke : public SymShape
 {
+    friend class SymCanvas;
 public:
     SymShapeWithStroke();
     virtual ~SymShapeWithStroke();
@@ -19,6 +21,7 @@ public:
 
     double getStrokeWidth() const;
     virtual SymRect getMBR() const;
+    void draw(SymCanvas* canvas);
 protected:
     SymStroke* _stroke;
 };

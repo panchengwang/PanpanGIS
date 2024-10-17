@@ -179,3 +179,32 @@ char* SymStroke::deserialize(const char* buf) {
 double SymStroke::getWidth() const {
     return _width;
 }
+
+
+const SymColor& SymStroke::getColor() const {
+    return _color;
+}
+
+
+const std::vector<double>& SymStroke::getDashes() const {
+    return _dashes;
+}
+
+
+uint8_t SymStroke::getCap() const {
+    return _cap;
+}
+
+
+
+uint8_t SymStroke::getJoin() const {
+    return _join;
+}
+
+
+
+double SymStroke::getMiter() const {
+    return _miter;
+}
+
+

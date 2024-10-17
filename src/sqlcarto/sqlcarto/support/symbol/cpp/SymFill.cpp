@@ -27,3 +27,9 @@ char* SymFill::deserialize(const char* buf) {
     p += sizeof(_type);
     return p;
 }
+
+
+uint8_t SymFill::getType() const {
+    return _type;
+
+}

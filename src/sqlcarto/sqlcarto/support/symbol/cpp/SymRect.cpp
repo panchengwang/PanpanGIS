@@ -48,10 +48,14 @@ SymRect& SymRect::scale(double xscale, double yscale) {
     return *this;
 }
 
-SymRect SymRect::ensureSymmetry() const {
+const SymRect& SymRect::ensureSymmetry() {
     double maxx = std::max(fabs(_minx), fabs(_maxx));
     double maxy = std::max(fabs(_miny), fabs(_maxy));
-    return SymRect(-maxx, -maxy, maxx, maxy);
+    _minx = -maxx;
+    _maxx = maxx;
+    _miny = -maxy;
+    _maxy = maxy;
+    return *this;
 }
 
 
@@ -64,3 +68,10 @@ double SymRect::getHeight() const {
     return _maxy - _miny;
 }
 
+
+void SymRect::extend(double len) {
+    _minx -= len;
+    _maxx += len;
+    _miny -= len;
+    _maxy += len;
+}

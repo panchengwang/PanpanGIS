@@ -1,5 +1,7 @@
 #include "SymRegularPolygon.h"
 #include "jsonutils.h"
+#include "SymCanvas.h"
+#include <math.h>
 
 SymRegularPolygon::SymRegularPolygon()
 {
@@ -82,4 +84,34 @@ SymRect SymRegularPolygon::getMBR() const {
     double y2 = (_center.y() + _radius);
 
     return SymRect(x1, y1, x2, y2);
+}
+
+
+void SymRegularPolygon::draw(SymCanvas* canvas) {
+    cairo_t* cairo = canvas->getCairoContext();
+    cairo_save(cairo);
+    cairo_translate(cairo, _center.x(), _center.y());
+    double rotateangle = 0.0;
+    if (_numEdges % 2 == 1) {
+        rotateangle = M_PI_2;
+    }
+    else if (_numEdges % 4 == 0) {
+        rotateangle = M_PI / _numEdges;
+    }
+    cairo_rotate(cairo, rotateangle);
+    double step = 2 * M_PI / _numEdges;
+
+    cairo_new_path(cairo);
+    cairo_move_to(cairo, _radius, 0);
+    for (size_t i = 0; i < _numEdges; i++) {
+        cairo_line_to(cairo, _radius * cos(i * step), _radius * sin(i * step));
+    }
+    cairo_close_path(cairo);
+
+    cairo_restore(cairo);
+
+    canvas->setStroke(_stroke);
+    cairo_stroke_preserve(cairo);
+    canvas->setFill(_fill);
+    cairo_fill(cairo);
 }
