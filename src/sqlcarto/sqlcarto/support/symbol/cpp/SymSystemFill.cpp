@@ -1,6 +1,7 @@
 #include "SymSystemFill.h"
 #include "jsonutils.h"
 #include "SymFillSolid.h"
+#include "SymCanvas.h"
 
 SymSystemFill::SymSystemFill() {
     _type = SYM_SHAPE_SYSTEM_FILL;
@@ -99,17 +100,23 @@ char* SymSystemFill::deserialize(const char* buf) {
 
 
 SymRect SymSystemFill::getMBR() const {
-    return SymRect(0, 0, 0, 0);
+    return SymRect(-1, -1, 1, 1);
 }
 
 
 void SymSystemFill::draw(SymCanvas* canvas) {
-    // cairo_t* cairo = canvas->getCairoContext();
+    cairo_t* cairo = canvas->getCairoContext();
+
     // cairo_save(cairo);
     // cairo_translate(cairo, _center.x(), _center.y());
-    // canvas->setStroke(_stroke);
+    // cairo_rotate(cairo, _rotate);
     // cairo_scale(cairo, 1, _yradius / _xradius);
-    // cairo_arc(cairo, 0, 0, _xradius, _startAngle * M_1_PI, _endAngle * M_1_PI);
-    // cairo_stroke(cairo);
+    // cairo_arc(cairo, 0, 0, _xradius, 0, M_PI * 2.0);
     // cairo_restore(cairo);
+
+    canvas->setFill(_fill);
+    cairo_paint(cairo);
+    // cairo_fill_preserve(cairo);
+    // canvas->setStroke(_stroke);
+    // cairo_stroke(cairo);
 }

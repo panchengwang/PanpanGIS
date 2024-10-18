@@ -1,7 +1,7 @@
 #include "SymPolygon.h"
 #include "jsonutils.h"
 #include "SymCanvas.h"
-
+#include "serializeutils.h"
 
 SymPolygon::SymPolygon()
 {
@@ -82,6 +82,8 @@ size_t SymPolygon::memorySize() {
 char* SymPolygon::serialize(const char* buf) {
     char* p = (char*)buf;
     p = SymShapeWithStrokeAndFill::serialize(p);
+
+
     size_t numPoints = _points.size();
     memcpy(p, (void*)&numPoints, sizeof(numPoints));
     p += sizeof(numPoints);
@@ -95,6 +97,7 @@ char* SymPolygon::serialize(const char* buf) {
 char* SymPolygon::deserialize(const char* buf) {
     char* p = (char*)buf;
     p = SymShapeWithStrokeAndFill::deserialize(p);
+
     size_t numPoints = _points.size();
     memcpy((void*)&numPoints, p, sizeof(numPoints));
     p += sizeof(numPoints);
@@ -110,9 +113,10 @@ char* SymPolygon::deserialize(const char* buf) {
 
 SymRect SymPolygon::getMBR() const {
     SymRect rect = _points[0].getMBR();
-    for (size_t i = 1; i < _points.size(); i++) {
+    for (size_t i = 0; i < _points.size(); i++) {
         rect.extend(_points[i].getMBR());
     }
+
     return rect;
 }
 

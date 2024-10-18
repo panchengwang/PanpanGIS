@@ -20,6 +20,7 @@ public:
     virtual void draw(SymCanvas* canvas);
 protected:
     SymPoint _center;
+    double _rotate;
     double _xradius;
     double _yradius;
 };

@@ -2,6 +2,7 @@
 #include "jsonutils.h"
 #include "SymCanvas.h"
 #include <math.h>
+#include "serializeutils.h"
 
 SymRegularPolygon::SymRegularPolygon()
 {
@@ -22,12 +23,14 @@ bool SymRegularPolygon::fromJsonObject(json_object* obj)
         return false;
     }
 
-    json_object* centerobj = NULL;
-    JSON_GET_OBJ(obj, "center", centerobj, _errorMessage);
-    if (!_center.fromJsonObject(centerobj)) {
-        _errorMessage = _center.getErrorMessage();
-        return false;
-    }
+    // json_object* centerobj = NULL;
+    // JSON_GET_OBJ(obj, "center", centerobj, _errorMessage);
+    // if (!_center.fromJsonObject(centerobj)) {
+    //     _errorMessage = _center.getErrorMessage();
+    //     return false;
+    // }
+    JSON_GET_POINT(obj, "center", _center, _errorMessage);
+    JSON_GET_DOUBLE(obj, "rotate", _rotate, _errorMessage);
     JSON_GET_DOUBLE(obj, "radius", _radius, _errorMessage);
     JSON_GET_INT(obj, "numedges", _numEdges, _errorMessage);
     return true;
@@ -38,6 +41,7 @@ json_object* SymRegularPolygon::toJsonObject()
     json_object* obj = SymShapeWithStrokeAndFill::toJsonObject();
     JSON_ADD_STRING(obj, "type", "CIRCLE");
     json_object_object_add(obj, "center", _center.toJsonObject());
+    JSON_ADD_DOUBLE(obj, "rotate", _rotate);
     JSON_ADD_DOUBLE(obj, "radius", _radius);
     JSON_ADD_INT(obj, "numedges", _numEdges);
     return obj;
@@ -47,6 +51,7 @@ json_object* SymRegularPolygon::toJsonObject()
 size_t SymRegularPolygon::memorySize() {
     size_t len = SymShapeWithStrokeAndFill::memorySize();
     len += _center.memorySize();
+    len += sizeof(_rotate);
     len += sizeof(_radius);
     len += sizeof(_numEdges);
     return len;
@@ -57,10 +62,15 @@ char* SymRegularPolygon::serialize(const char* buf) {
     char* p = (char*)buf;
     p = SymShapeWithStrokeAndFill::serialize(p);
     p = _center.serialize(p);
-    memcpy(p, (void*)&_radius, sizeof(_radius));
-    p += sizeof(_radius);
-    memcpy(p, (void*)&_numEdges, sizeof(_numEdges));
-    p += sizeof(_numEdges);
+
+    SERIALIZE_TO_BUF(p, _rotate);
+    SERIALIZE_TO_BUF(p, _radius);
+    SERIALIZE_TO_BUF(p, _numEdges);
+
+    // memcpy(p, (void*)&_radius, sizeof(_radius));
+    // p += sizeof(_radius);
+    // memcpy(p, (void*)&_numEdges, sizeof(_numEdges));
+    // p += sizeof(_numEdges);
     return p;
 }
 
@@ -69,10 +79,13 @@ char* SymRegularPolygon::deserialize(const char* buf) {
     char* p = (char*)buf;
     p = SymShapeWithStrokeAndFill::deserialize(p);
     p = _center.deserialize(p);
-    memcpy((void*)&_radius, p, sizeof(_radius));
-    p += sizeof(_radius);
-    memcpy((void*)&_numEdges, p, sizeof(_numEdges));
-    p += sizeof(_numEdges);
+    DESERIALIZE_FROM_BUF(p, _rotate);
+    DESERIALIZE_FROM_BUF(p, _radius);
+    DESERIALIZE_FROM_BUF(p, _numEdges);
+    // memcpy((void*)&_radius, p, sizeof(_radius));
+    // p += sizeof(_radius);
+    // memcpy((void*)&_numEdges, p, sizeof(_numEdges));
+    // p += sizeof(_numEdges);
     return p;
 }
 
@@ -91,6 +104,7 @@ void SymRegularPolygon::draw(SymCanvas* canvas) {
     cairo_t* cairo = canvas->getCairoContext();
     cairo_save(cairo);
     cairo_translate(cairo, _center.x(), _center.y());
+    cairo_rotate(cairo, _rotate / 180.0 * M_PI);
     double rotateangle = 0.0;
     if (_numEdges % 2 == 1) {
         rotateangle = M_PI_2;

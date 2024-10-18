@@ -22,7 +22,7 @@
 #define SYM_SHAPE_CHORD             9
 #define SYM_SHAPE_PATH              10
 #define SYM_SHAPE_REGULAR_POLYGON   11
-
+#define SYM_SHAPE_STAR              12
 
 class SymCanvas;
 
@@ -41,6 +41,7 @@ public:
     virtual SymRect getMBR() const = 0;
     virtual double getStrokeWidth()  const;
     virtual void draw(SymCanvas* canvas);
+    uint8_t getType() const;
 protected:
     uint8_t  _type;
     std::string _errorMessage;

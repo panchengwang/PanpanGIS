@@ -68,3 +68,8 @@ void SymShape::draw(SymCanvas* canvas) {
     std::cerr << " shape draw " << std::endl;
     cairo_restore(canvas->_cairo);
 }
+
+
+uint8_t SymShape::getType() const {
+    return _type;
+}

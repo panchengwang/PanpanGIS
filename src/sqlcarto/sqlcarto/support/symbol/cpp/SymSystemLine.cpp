@@ -1,7 +1,7 @@
 #include "SymSystemLine.h"
 #include "jsonutils.h"
 #include <iostream>
-
+#include "SymCanvas.h"
 
 SymSystemLine::SymSystemLine()
 {
@@ -51,14 +51,19 @@ SymRect SymSystemLine::getMBR() const {
     return SymRect(-1, 0, 1, 0);
 }
 
+double SymSystemLine::getStrokeWidth()  const {
+    return _stroke->getWidth();
+}
+
 
 void SymSystemLine::draw(SymCanvas* canvas) {
-    // cairo_t* cairo = canvas->getCairoContext();
-    // cairo_save(cairo);
-    // cairo_translate(cairo, _center.x(), _center.y());
-    // canvas->setStroke(_stroke);
-    // cairo_scale(cairo, 1, _yradius / _xradius);
-    // cairo_arc(cairo, 0, 0, _xradius, _startAngle * M_1_PI, _endAngle * M_1_PI);
-    // cairo_stroke(cairo);
-    // cairo_restore(cairo);
+    cairo_t* cairo = canvas->getCairoContext();
+
+    cairo_save(cairo);
+    cairo_move_to(cairo, -1, 0);
+    cairo_line_to(cairo, 1, 0);
+    cairo_restore(cairo);
+
+    canvas->setStroke(_stroke);
+    cairo_stroke(cairo);
 }

@@ -134,7 +134,7 @@ void SymCanvas::setStroke(SymStroke* stroke) {
         for (size_t i = 0; i < dashes.size(); i++) {
             mydashes[i] = dashes[i] / _xscale;
         }
-        cairo_set_dash(_cairo, mydashes, dashes.size(), 0);
+        cairo_set_dash(_cairo, mydashes, dashes.size(), stroke->_dashOffset / _xscale);
         delete mydashes;
     }
 

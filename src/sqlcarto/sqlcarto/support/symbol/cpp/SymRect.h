@@ -5,6 +5,7 @@
 #include <dllexport.h>
 #include <string>
 
+class SymPoint;
 class DLL_EXPORT SymRect
 {
 public:
@@ -14,7 +15,8 @@ public:
 
     void extend(const SymRect& rect);
     void extend(double len);// 往四周扩展len长度
-
+    void offset(double x, double y);
+    void offset(const SymPoint& pt);
     std::string toString() const;
 
     SymRect& scale(double xscale, double yscale);

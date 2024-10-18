@@ -21,6 +21,9 @@ extern "C" {
 
     DLL_EXPORT char* sym_serialize(SYMBOL_H hSym, size_t* len);
     DLL_EXPORT SYMBOL_H* sym_deserialize(const char* data);
+    DLL_EXPORT unsigned char* sym_to_image(SYMBOL_H hSym, const char* format, double dotsPerMM, size_t* len);
+
+    DLL_EXPORT char symbol_parse_error[1024];
 
 #ifdef __cplusplus
 }

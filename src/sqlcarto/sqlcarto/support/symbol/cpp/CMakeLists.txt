@@ -31,6 +31,7 @@ list(APPEND HEADERS
   SymRegularPolygon.h 
   SymCanvas.h
   SymRect.h
+  SymStar.h
 )
 
 list(APPEND SOURCES 
@@ -55,6 +56,7 @@ list(APPEND SOURCES
   SymRegularPolygon.cpp 
   SymCanvas.cpp
   SymRect.cpp
+  SymStar.cpp
 )
 
 add_library(symbol SHARED

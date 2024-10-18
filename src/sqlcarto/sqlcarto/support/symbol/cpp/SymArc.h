@@ -18,6 +18,7 @@ public:
     virtual void draw(SymCanvas* canvas);
 protected:
     SymPoint _center;
+    double _rotate;
     double _xradius, _yradius;
     double _startAngle, _endAngle;
 };

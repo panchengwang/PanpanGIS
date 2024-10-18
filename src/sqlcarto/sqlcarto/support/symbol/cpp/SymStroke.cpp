@@ -2,6 +2,7 @@
 #include <iostream>
 #include "jsonutils.h"
 #include <string.h>
+#include "serializeutils.h"
 
 SymStroke::SymStroke()
 {
@@ -67,6 +68,8 @@ bool SymStroke::fromJsonObject(json_object* obj)
         _dashes.push_back(json_object_get_double(dobj));
     }
 
+    JSON_GET_DOUBLE(obj, "dashoffset", _dashOffset, _errorMessage);
+
     return true;
 }
 
@@ -106,6 +109,7 @@ json_object* SymStroke::toJsonObject()
     }
     json_object_object_add(obj, "dashes", dashesobj);
 
+    JSON_ADD_DOUBLE(obj, "dashoffset", _dashOffset);
     return obj;
 }
 
@@ -117,6 +121,7 @@ size_t SymStroke::memorySize() {
     len += sizeof(size_t);          // for num of _dashes
 
     len += _dashes.size() * sizeof(double);     // for dashes
+    len += sizeof(_dashOffset);
     len += sizeof(_cap);
     len += sizeof(_join);
     len += sizeof(_miter);
@@ -128,22 +133,19 @@ size_t SymStroke::memorySize() {
 char* SymStroke::serialize(const char* buf) {
     char* p = (char*)buf;
     p = _color.serialize(p);
-    memcpy(p, (void*)&_width, sizeof(_width));
-    p += sizeof(_width);
+    SERIALIZE_TO_BUF(p, _width);
+    SERIALIZE_TO_BUF(p, _dashOffset);
     size_t numdashes = _dashes.size();
-    memcpy(p, (void*)&numdashes, sizeof(numdashes));
-    p += sizeof(numdashes);
+    SERIALIZE_TO_BUF(p, numdashes);
     for (size_t i = 0; i < numdashes; i++) {
         double dash = _dashes[i];
-        memcpy(p, (void*)&dash, sizeof(double));
-        p += sizeof(double);
+        SERIALIZE_TO_BUF(p, dash);
     }
-    memcpy(p, (void*)&_cap, sizeof(_cap));
-    p += sizeof(_cap);
-    memcpy(p, (void*)&_join, sizeof(_join));
-    p += sizeof(_join);
-    memcpy(p, (void*)&_miter, sizeof(_miter));
-    p += sizeof(_miter);
+
+    SERIALIZE_TO_BUF(p, _cap);
+    SERIALIZE_TO_BUF(p, _join);
+    SERIALIZE_TO_BUF(p, _miter);
+
     return p;
 }
 
@@ -152,26 +154,21 @@ char* SymStroke::serialize(const char* buf) {
 char* SymStroke::deserialize(const char* buf) {
     char* p = (char*)buf;
     p = _color.deserialize(p);
-    memcpy((void*)&_width, p, sizeof(_width));
-    p += sizeof(_width);
-    size_t numdashes = _dashes.size();
-    memcpy((void*)&numdashes, p, sizeof(numdashes));
-    p += sizeof(numdashes);
+    DESERIALIZE_FROM_BUF(p, _width);
+    DESERIALIZE_FROM_BUF(p, _dashOffset);
+    size_t numdashes = 0;
+    DESERIALIZE_FROM_BUF(p, numdashes);
     _dashes.clear();
     for (size_t i = 0; i < numdashes; i++) {
         double dash;
-        memcpy((void*)&dash, p, sizeof(dash));
-        p += sizeof(dash);
+        DESERIALIZE_FROM_BUF(p, dash);
         _dashes.push_back(dash);
 
     }
 
-    memcpy((void*)&_cap, p, sizeof(_cap));
-    p += sizeof(_cap);
-    memcpy((void*)&_join, p, sizeof(_join));
-    p += sizeof(_join);
-    memcpy((void*)&_miter, p, sizeof(_miter));
-    p += sizeof(_miter);
+    DESERIALIZE_FROM_BUF(p, _cap);
+    DESERIALIZE_FROM_BUF(p, _join);
+    DESERIALIZE_FROM_BUF(p, _miter);
     return p;
 }
 

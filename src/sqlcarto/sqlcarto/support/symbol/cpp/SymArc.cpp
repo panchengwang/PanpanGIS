@@ -1,6 +1,7 @@
 #include "SymArc.h"
 #include "jsonutils.h"
 #include <math.h>
+#include "serializeutils.h"
 
 SymArc::SymArc()
 {
@@ -26,6 +27,7 @@ bool SymArc::fromJsonObject(json_object* obj)
     JSON_GET_DOUBLE(obj, "yradius", _yradius, _errorMessage);
     JSON_GET_DOUBLE(obj, "startangle", _startAngle, _errorMessage);
     JSON_GET_DOUBLE(obj, "endangle", _endAngle, _errorMessage);
+    JSON_GET_DOUBLE(obj, "rotate", _rotate, _errorMessage);
     return true;
 }
 
@@ -38,6 +40,7 @@ json_object* SymArc::toJsonObject()
     JSON_ADD_DOUBLE(obj, "yradius", _yradius);
     JSON_ADD_DOUBLE(obj, "startangle", _startAngle);
     JSON_ADD_DOUBLE(obj, "endangle", _endAngle);
+    JSON_ADD_DOUBLE(obj, "rotate", _rotate);
     return obj;
 }
 
@@ -45,10 +48,12 @@ json_object* SymArc::toJsonObject()
 size_t SymArc::memorySize() {
     size_t len = SymShapeWithStroke::memorySize();
     len += _center.memorySize();
+    len += sizeof(_rotate);
     len += sizeof(_xradius);
     len += sizeof(_yradius);
     len += sizeof(_startAngle);
     len += sizeof(_endAngle);
+
     return len;
 }
 
@@ -56,30 +61,40 @@ char* SymArc::serialize(const char* buf) {
     char* p = (char*)buf;
     p = SymShapeWithStroke::serialize(p);
     p = _center.serialize(p);
-    memcpy(p, (void*)&_xradius, sizeof(_xradius));
-    p += sizeof(_xradius);
-    memcpy(p, (void*)&_yradius, sizeof(_yradius));
-    p += sizeof(_yradius);
-    memcpy(p, (void*)&_startAngle, sizeof(_startAngle));
-    p += sizeof(_startAngle);
-    memcpy(p, (void*)&_endAngle, sizeof(_endAngle));
-    p += sizeof(_endAngle);
+    SERIALIZE_TO_BUF(p, _rotate);
+    SERIALIZE_TO_BUF(p, _xradius);
+    SERIALIZE_TO_BUF(p, _yradius);
+    SERIALIZE_TO_BUF(p, _startAngle);
+    SERIALIZE_TO_BUF(p, _endAngle);
+    // memcpy(p, (void*)&_xradius, sizeof(_xradius));
+    // p += sizeof(_xradius);
+    // memcpy(p, (void*)&_yradius, sizeof(_yradius));
+    // p += sizeof(_yradius);
+    // memcpy(p, (void*)&_startAngle, sizeof(_startAngle));
+    // p += sizeof(_startAngle);
+    // memcpy(p, (void*)&_endAngle, sizeof(_endAngle));
+    // p += sizeof(_endAngle);
     return p;
 }
 
 char* SymArc::deserialize(const char* buf) {
     char* p = (char*)buf;
     p = SymShapeWithStroke::deserialize(p);
-
     p = _center.deserialize(p);
-    memcpy((void*)&_xradius, p, sizeof(_xradius));
-    p += sizeof(_xradius);
-    memcpy((void*)&_yradius, p, sizeof(_yradius));
-    p += sizeof(_yradius);
-    memcpy((void*)&_startAngle, p, sizeof(_startAngle));
-    p += sizeof(_startAngle);
-    memcpy((void*)&_endAngle, p, sizeof(_endAngle));
-    p += sizeof(_endAngle);
+    DESERIALIZE_FROM_BUF(p, _rotate);
+    DESERIALIZE_FROM_BUF(p, _xradius);
+    DESERIALIZE_FROM_BUF(p, _yradius);
+    DESERIALIZE_FROM_BUF(p, _startAngle);
+    DESERIALIZE_FROM_BUF(p, _endAngle);
+
+    // memcpy((void*)&_xradius, p, sizeof(_xradius));
+    // p += sizeof(_xradius);
+    // memcpy((void*)&_yradius, p, sizeof(_yradius));
+    // p += sizeof(_yradius);
+    // memcpy((void*)&_startAngle, p, sizeof(_startAngle));
+    // p += sizeof(_startAngle);
+    // memcpy((void*)&_endAngle, p, sizeof(_endAngle));
+    // p += sizeof(_endAngle);
     return p;
 }
 
@@ -99,7 +114,9 @@ void SymArc::draw(SymCanvas* canvas) {
 
     cairo_save(cairo);
     cairo_translate(cairo, _center.x(), _center.y());
+    cairo_rotate(cairo, _rotate / 180.0 * M_PI);
     cairo_scale(cairo, 1, _yradius / _xradius);
+
     cairo_arc(cairo, 0, 0, _xradius, _startAngle / 180.0 * M_PI, _endAngle / 180.0 * M_PI);
     cairo_restore(cairo);
 

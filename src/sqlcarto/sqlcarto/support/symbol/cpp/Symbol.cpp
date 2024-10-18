@@ -13,6 +13,7 @@
 #include "SymPolygon.h"
 #include "SymRegularPolygon.h"
 #include "SymSystemFill.h"
+#include "SymStar.h"
 #include <string.h>
 #include <iostream>
 #include <cairo.h>
@@ -138,6 +139,9 @@ bool Symbol::fromJsonObject(json_object* obj)
         else if (typestr == "SYSTEMFILL") {
             shp = new SymSystemFill();
         }
+        else if (typestr == "STAR") {
+            shp = new SymStar();
+        }
 
         if (!shp) {
             _errorMessage = std::string("Invalid shape: ") + typestr;
@@ -147,6 +151,7 @@ bool Symbol::fromJsonObject(json_object* obj)
         if (!shp->fromJsonObject(shpobj))
         {
             _errorMessage = shp->getErrorMessage();
+            clear();
             return false;
         }
 
@@ -258,9 +263,13 @@ bool Symbol::deserialize(const char* buf) {
         else if (shptype == SYM_SHAPE_REGULAR_POLYGON) {
             shp = new SymRegularPolygon();
         }
+        else if (shptype == SYM_SHAPE_STAR) {
+            shp = new SymStar();
+        }
 
         if (!shp) {
             _errorMessage = "Invalid shape type !";
+            clear();
             return false;
         }
 
@@ -280,12 +289,17 @@ SymRect Symbol::getMBR() const {
     if (_shapes.size() == 0) {
         return SymRect();
     }
-
+    bool onlysystemline = true;
     SymRect rect = _shapes[0]->getMBR();
-    for (size_t i = 1; i < _shapes.size(); i++) {
+    for (size_t i = 0; i < _shapes.size(); i++) {
         rect.extend(_shapes[i]->getMBR());
+        if (_shapes[i]->getType() != SYM_SHAPE_SYSTEM_LINE) {
+            onlysystemline = false;
+        }
     }
-    rect.extend(SymRect(-1, -1, 1, 1));
+    if (!onlysystemline) {
+        rect.extend(SymRect(-1, -1, 1, 1));
+    }
     rect.scale(_xscale, _yscale);
     return rect;
 
@@ -311,6 +325,10 @@ _write_image(void* closure,
     return CAIRO_STATUS_SUCCESS;
 }
 
+/**
+ * The return memory buffer is allocated by c function realloc,
+ * you muse use free function to destroy the memory. Don't use c++ delete operator.
+ */
 unsigned char* Symbol::toImage(const char* format, double dotsPerMM, size_t& len) {
     SymRect rect = getMBR();
     double maxstrokewidth = 0.0f;
@@ -330,58 +348,6 @@ unsigned char* Symbol::toImage(const char* format, double dotsPerMM, size_t& len
     canvas.end();
     buf = canvas.imageData(len);
     return buf;
-    // cairo_surface_t* sf;
-    // cairo_t* cr;
-
-    // sf = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, ceil(imagerect.getWidth()), ceil(imagerect.getHeight()));
-    // cr = cairo_create(sf);
-
-    // for (size_t i = 0; i < _shapes.size(); i++) {
-    //     cairo_save(cr);
-    //     cairo_translate(cr, imagerect.getWidth() * 0.5, imagerect.getHeight() * 0.5);
-    //     cairo_scale(cr, dotsPerMM, -dotsPerMM);
-    //     cairo_set_source_rgba(cr, 0, 0, 0, 1);
-    //     cairo_set_line_width(cr, 1);
-
-
-    //     cairo_save(cr);
-    //     cairo_translate(cr, 2, 2);
-    //     cairo_set_source_rgba(cr, 1, 0, 0, 1);
-    //     cairo_arc(cr, 0, 0, 5, 0, M_PI_2);
-    //     cairo_stroke(cr);
-    //     cairo_restore(cr);
-
-    //     cairo_save(cr);
-    //     cairo_translate(cr, -2, -2);
-    //     cairo_set_source_rgba(cr, 0, 1, 0, 1);
-    //     cairo_arc(cr, 0, 0, 5, 0, 360);
-    //     cairo_stroke_preserve(cr);
-    //     cairo_set_source_rgba(cr, 0, 1, 0, 0.5);
-    //     cairo_fill(cr);
-    //     cairo_restore(cr);
-
-    //     cairo_arc(cr, 0, 0, 1, 0, 360);
-    //     cairo_stroke(cr);
-
-    //     cairo_restore(cr);
-    // }
-
-
-
-    // // 保存
-    // DataBuffer buffer;
-    // buffer.data = NULL;
-    // buffer.len = 0;
-
-    // cairo_surface_flush(sf);
-    // cairo_surface_write_to_png_stream(sf, _write_image, &buffer);
-    // cairo_surface_finish(sf);
-    // cairo_destroy(cr);
-    // cairo_surface_destroy(sf);
-
-    // len = buffer.len;
-    // return buffer.data;
-
 }
 
 

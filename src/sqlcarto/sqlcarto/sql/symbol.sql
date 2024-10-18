@@ -18,3 +18,9 @@ CREATE TYPE symbol (
 	alignment = double,
 	storage = main
 );
+
+-- Availability: 0.1.0
+CREATE OR REPLACE FUNCTION sc_as_image(symbol,text,float8)
+	RETURNS bytea
+	AS 'MODULE_PATHNAME','sc_as_image'
+	LANGUAGE 'c' IMMUTABLE STRICT PARALLEL SAFE;

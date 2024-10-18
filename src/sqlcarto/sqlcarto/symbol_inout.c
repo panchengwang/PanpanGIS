@@ -28,7 +28,7 @@ Datum SYMBOL_in(PG_FUNCTION_ARGS)
 	if (str[0] == '{') {
 		hSym = sym_from_json_string(str);
 		if (!hSym) {
-			elog(ERROR, "Invalid symbol json string:");
+			elog(ERROR, "Invalid symbol json string:%s", symbol_parse_error);
 			PG_RETURN_NULL();
 		}
 		buf = sym_serialize(hSym, &len);
@@ -75,12 +75,29 @@ Datum SYMBOL_out(PG_FUNCTION_ARGS)
 }
 
 
-// GSERIALIZED* geometry_serialize(LWGEOM *lwgeom)
-// {
-// 	size_t ret_size;
-// 	GSERIALIZED *g;
+PG_FUNCTION_INFO_V1(sc_as_image);
+Datum sc_as_image(PG_FUNCTION_ARGS)
+{
+	SYMSERIALIZED* sym = PG_GETARG_SYMSERIALIZED_P(0);
+	char* format = text_to_cstring(PG_GETARG_TEXT_P(1));
+	double dotsPerMM = PG_GETARG_FLOAT8(2);
+	SYMBOL_H hSym = NULL;
+	unsigned char* buf;
+	bytea* ret = NULL;
 
-// 	g = gserialized_from_lwgeom(lwgeom, &ret_size);
-// 	SET_VARSIZE(g, ret_size);
-// 	return g;
-// }
+	size_t len;
+
+	if (!(hSym = sym_deserialize(VARDATA(sym)))) {
+		elog(ERROR, "deserialize symbol error");
+		PG_RETURN_NULL();
+	}
+
+	buf = sym_to_image(hSym, format, dotsPerMM, &len);
+
+	ret = (bytea*)palloc(VARHDRSZ + len);
+	SET_VARSIZE(ret, len + VARHDRSZ);
+	memcpy((void*)VARDATA(ret), buf, len);
+	free(buf);
+
+	PG_RETURN_BYTEA_P(ret);
+}

@@ -40,6 +40,7 @@ protected:
     SymColor    _color;
     double _width;
     std::vector<double> _dashes;
+    double _dashOffset;
     uint8_t _cap;
     uint8_t _join;
     double _miter;

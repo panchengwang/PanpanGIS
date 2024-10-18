@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "SymPoint.h"
 
 SymRect::SymRect() {
     _minx = _maxx = 0.0f;
@@ -75,3 +76,19 @@ void SymRect::extend(double len) {
     _miny -= len;
     _maxy += len;
 }
+
+
+void SymRect::offset(double x, double y) {
+    _minx += x;
+    _maxx += x;
+    _miny += y;
+    _maxy += y;
+}
+
+void SymRect::offset(const SymPoint& pt) {
+    _minx += pt.x();
+    _maxx += pt.x();
+    _miny += pt.y();
+    _maxy += pt.y();
+}
+
